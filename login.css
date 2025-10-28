@@ -1,0 +1,125 @@
+/* Thiết lập cơ bản */
+:root {
+    /* Màu từ logo Wordee */
+    --primary-blue: #2a4a87; /* Màu xanh đậm của vòng tròn và chữ */
+    --accent-blue: #4f8bda;  /* Màu xanh nhạt của quyển sách */
+    --light-gray: #f4f7f6;
+    --text-color: #333;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Khung chứa form */
+.form-wrapper {
+    padding: 20px;
+}
+
+.form-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+}
+
+/* Tiêu đề */
+.form-container h2 {
+    color: var(--primary-blue);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.form-container p {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+/* Các ô nhập liệu */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Đảm bảo padding không làm vỡ layout */
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+/* Hiệu ứng khi focus vào ô input */
+.input-group input:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 8px rgba(79, 139, 218, 0.3);
+}
+
+/* Nút Đăng ký */
+.submit-btn {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-blue);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-blue);
+}
+
+/* Link Đăng nhập */
+.login-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.login-link p {
+    margin: 0;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+.login-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+.signup-link a:hover{
+    text-align: center;
+    margin-top: 1.5rem;
+    color: black;
+}
