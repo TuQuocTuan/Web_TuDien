@@ -1,0 +1,216 @@
+/* =================================
+   BIẾN MÀU VÀ THIẾT LẬP CHUNG
+   ================================= */
+:root {
+    --primary-blue: #2a4a87;
+    --accent-blue: #4f8bda;
+    --light-gray: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-blue);
+    transition: color 0.3s ease;
+}
+
+/* =================================
+   HEADER & FOOTER (Tái sử dụng)
+   ================================= */
+#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
+.header-left { display: flex; align-items: center; }
+.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; }
+.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); }
+.header-right { display: flex; align-items: center; }
+.timkiem { display: flex; margin-right: 1.5rem; }
+#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
+.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
+.auth-buttons a { font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
+.btn-login { color: var(--primary-blue); }
+.btn-signup { background-color: var(--primary-blue); color: var(--white); }
+
+#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
+/* ... (Thêm code footer chi tiết nếu cần) ... */
+
+
+/* =================================
+   NỘI DUNG TRANG CHI TIẾT TỪ
+   ================================= */
+main#content {
+    width: 100%;
+    padding: 3rem 0;
+}
+
+.word-container {
+    max-width: 800px; /* Layout tập trung vào nội dung */
+    margin: 0 auto;
+    padding: 2.5rem 3rem;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* 1. Phần tiêu đề từ */
+.word-header {
+    display: flex;
+    align-items: baseline; /* Căn chỉnh chữ */
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1.5rem;
+}
+
+.word-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin: 0;
+}
+
+.word-pronunciation {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    font-weight: 400;
+}
+
+.audio-btn {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 1.75rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: color 0.3s ease;
+}
+
+.audio-btn:hover {
+    color: var(--primary-blue);
+}
+
+/* 2. Phần nút hành động */
+.word-actions {
+    padding: 1.5rem 0;
+    margin-bottom: 1.5rem;
+}
+
+.add-to-album-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-album-btn:hover {
+    background-color: var(--accent-blue);
+}
+
+.add-to-album-btn i {
+    margin-right: 0.5rem;
+}
+
+/* 3. Phần thân (định nghĩa) */
+.word-body {
+    /* (Không cần style đặc biệt) */
+}
+
+.definition-block {
+    margin-bottom: 2.5rem;
+}
+
+.word-type {
+    display: inline-block;
+    background-color: var(--light-gray);
+    border: 1px solid var(--border-color);
+    color: var(--primary-blue);
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+}
+
+.definition-list {
+    list-style-type: decimal;
+    list-style-position: inside;
+    padding-left: 0.5rem;
+}
+
+.definition-list li {
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+}
+
+.definition-text {
+    display: block; /* Hiển thị trên 1 dòng riêng */
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.example-text {
+    display: block;
+    font-style: italic;
+    color: var(--text-light);
+    border-left: 3px solid var(--border-color);
+    padding-left: 1rem;
+    margin-left: 0.5rem; /* Thụt vào một chút so với definition */
+}
+
+/* 4. Từ liên quan */
+.word-relations {
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.relation-group {
+    margin-bottom: 1.5rem;
+}
+
+.relation-group h3 {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.tag {
+    display: inline-block;
+    background-color: var(--light-gray);
+    color: var(--primary-blue);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}

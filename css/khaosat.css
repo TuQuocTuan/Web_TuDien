@@ -1,0 +1,174 @@
+/* =================================
+   BIẾN MÀU VÀ THIẾT LẬP CHUNG
+   (Lấy từ code trang chủ/đăng ký)
+   ================================= */
+:root {
+    --primary-blue: #2a4a87;
+    --accent-blue: #4f8bda;
+    --light-gray: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #e0e0e0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* =================================
+   LAYOUT CONTAINER
+   (Giống trang đăng ký)
+   ================================= */
+.survey-wrapper {
+    padding: 20px;
+    width: 100%;
+}
+
+.survey-container {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem 3rem;
+    width: 100%;
+    max-width: 700px; /* Rộng hơn form đăng ký để chứa grid */
+    margin: 2rem auto;
+    box-sizing: border-box;
+}
+
+/* Logo (Nếu bạn thêm vào) */
+.logo {
+    display: block;
+    width: 100px;
+    margin: 0 auto 1rem;
+}
+
+/* Tiêu đề */
+.survey-container h2 {
+    color: var(--primary-blue);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.survey-container p {
+    text-align: center;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+    font-size: 1rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =================================
+   PHẦN KHẢO SÁT (MỚI)
+   ================================= */
+
+.topic-grid {
+    display: grid;
+    /* Hiển thị 3 cột, tự động xuống hàng */
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Ẩn checkbox gốc */
+.topic-card input[type="checkbox"] {
+    display: none;
+}
+
+/* Thiết kế thẻ (label) */
+.topic-card label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* Icon */
+.topic-card i {
+    font-size: 2.5rem;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+/* Chữ */
+.topic-card span {
+    font-weight: 500;
+    color: var(--text-dark);
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+/* Hiệu ứng khi hover */
+.topic-card label:hover {
+    border-color: var(--accent-blue);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* =================================
+   HIỆU ỨNG KHI ĐƯỢC CHỌN
+   ================================= */
+.topic-card input[type="checkbox"]:checked + label {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.topic-card input[type="checkbox"]:checked + label i,
+.topic-card input[type="checkbox"]:checked + label span {
+    color: var(--white);
+}
+
+/* =================================
+   NÚT BẤM VÀ LINK
+   (Tái sử dụng từ trang đăng ký)
+   ================================= */
+.submit-btn {
+    width: 100%;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--primary-blue);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-blue);
+}
+
+.skip-link {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.skip-link a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.skip-link a:hover {
+    color: var(--primary-blue);
+    text-decoration: underline;
+}
