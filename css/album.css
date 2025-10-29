@@ -292,3 +292,78 @@ main#content {
      border-top: 1px solid #444;
       font-size: 0.9rem; 
     }
+
+/* =================================
+   BỔ SUNG CHO CSS/ALBUM.CSS
+   (Thay thế các class .card-actions, .study-btn, .action-links cũ)
+   ================================= */
+
+/* Nút hành động ở cuối thẻ */
+.card-actions {
+    margin-top: auto; /* Đẩy mục này xuống cuối cùng */
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--light-gray);
+    padding-top: 1.2rem;
+}
+
+/* MỚI: Nhóm chứa 2 nút Xem và Sửa */
+.button-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+    gap: 0.75rem;
+}
+
+.study-btn, .edit-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+/* Nút XEM (Màu chính) */
+.study-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+.study-btn:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}
+
+/* Nút SỬA (Màu phụ) */
+.edit-btn {
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+.edit-btn:hover {
+    background-color: #e9e9e9;
+}
+
+
+/* Link Xóa (nằm bên dưới) */
+.action-links {
+    text-align: center; /* Căn giữa nút xóa */
+    margin-top: 1rem;
+}
+
+.action-link {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    display: inline-flex; /* Để icon và chữ thẳng hàng */
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem;
+}
+
+.action-link:hover {
+    color: var(--primary-blue);
+}
+
+.action-link.delete:hover {
+    color: var(--danger-red); /* Màu đỏ cảnh báo */
+}

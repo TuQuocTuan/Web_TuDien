@@ -33,19 +33,89 @@ a {
 /* =================================
    HEADER & FOOTER (Tái sử dụng)
    ================================= */
-#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
-.header-left { display: flex; align-items: center; }
-.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; }
-.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); }
-.header-right { display: flex; align-items: center; }
-.timkiem { display: flex; margin-right: 1.5rem; }
-#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
-.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
-.auth-buttons a { font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
-.btn-login { color: var(--primary-blue); }
-.btn-signup { background-color: var(--primary-blue); color: var(--white); }
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    height: 80px;
+}
 
-#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-right: 2.5rem;
+}
+
+.main-nav a {
+    margin: 0 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-dark);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.timkiem {
+    display: flex;
+    margin-right: 1.5rem;
+}
+
+#thanhtimkiem {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 20px 0 0 20px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.timkiem button {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    background-color: #f9f9f9;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.auth-buttons a {
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-login {
+    color: var(--primary-blue);
+}
+
+.btn-signup {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+#footer {
+    background-color: #2c2c2c;
+    color: #aaa;
+    padding: 3rem 5%;
+    margin-top: 4rem;
+    text-align: center;
+}
+
 /* ... (Thêm code footer chi tiết nếu cần) ... */
 
 
@@ -58,22 +128,39 @@ main#content {
 }
 
 .word-container {
-    max-width: 800px; /* Layout tập trung vào nội dung */
+    max-width: 800px;
+    /* Layout tập trung vào nội dung */
     margin: 0 auto;
     padding: 2.5rem 3rem;
     background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
 }
 
 /* 1. Phần tiêu đề từ */
 .word-header {
     display: flex;
-    align-items: baseline; /* Căn chỉnh chữ */
-    flex-wrap: wrap;
-    gap: 0.5rem 1rem;
+    flex-direction: column;
+    /* Xếp chồng các mục theo chiều dọc */
+    align-items: flex-start;
+    /* Căn lề trái */
+    gap: 0.25rem;
+    /* Khoảng cách nhỏ giữa các dòng */
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 1.5rem;
+}
+
+/* Dòng 1: Chứa Tiếng Anh và Audio */
+.word-top-line {
+    display: flex;
+    align-items: center;
+    /* Căn Tiếng Anh và Loa theo chiều dọc */
+    justify-content: space-between;
+    /* Đẩy chữ và loa ra 2 bên */
+    gap: 1rem;
+    /* Khoảng cách dự phòng */
+    width: 100%;
+    /* Đảm bảo chiếm đủ chiều rộng */
 }
 
 .word-title {
@@ -81,12 +168,7 @@ main#content {
     font-weight: 700;
     color: var(--text-dark);
     margin: 0;
-}
-
-.word-pronunciation {
-    font-size: 1.5rem;
-    color: var(--text-light);
-    font-weight: 400;
+    line-height: 1.1;
 }
 
 .audio-btn {
@@ -97,6 +179,40 @@ main#content {
     cursor: pointer;
     padding: 0 0.5rem;
     transition: color 0.3s ease;
+}
+
+.audio-btn:hover {
+    color: var(--primary-blue);
+}
+
+/* Dòng 2: Phiên âm */
+.word-pronunciation {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    font-weight: 400;
+    padding-left: 0.1rem;
+    /* Căn lề nhẹ cho đẹp */
+}
+
+/* Dòng 3: Tiếng Việt */
+.word-translation {
+    font-size: 1.75rem;
+    /* Đặt cỡ chữ ở đây thay vì inline */
+    font-weight: 500;
+    color: var(--primary-blue);
+    padding-left: 0.1rem;
+}
+
+.audio-btn {
+    background: none;
+    border: none;
+    color: var(--accent-blue);
+    font-size: 1.75rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: color 0.3s ease;
+    padding-right: 550px;
+    padding-top:7px;
 }
 
 .audio-btn:hover {
@@ -162,7 +278,8 @@ main#content {
 }
 
 .definition-text {
-    display: block; /* Hiển thị trên 1 dòng riêng */
+    display: block;
+    /* Hiển thị trên 1 dòng riêng */
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
 }
@@ -173,7 +290,8 @@ main#content {
     color: var(--text-light);
     border-left: 3px solid var(--border-color);
     padding-left: 1rem;
-    margin-left: 0.5rem; /* Thụt vào một chút so với definition */
+    margin-left: 0.5rem;
+    /* Thụt vào một chút so với definition */
 }
 
 /* 4. Từ liên quan */

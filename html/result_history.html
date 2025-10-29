@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử làm bài - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/result_history.css"> 
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="vocabulary.html">Từ vựng</a>
+                <a href="albums.html">Danh sách từ</a>
+                <a href="luyentap.html" class="active">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+             <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="history-layout-container">
+            
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Lọc theo ngày</h3>
+                
+                <div class="filter-group">
+                    <div class="filter-option">
+                        <input type="radio" id="filter-all" name="filter-date" value="all" checked>
+                        <label for="filter-all">Tất cả</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-today" name="filter-date" value="today">
+                        <label for="filter-today">Hôm nay</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-yesterday" name="filter-date" value="yesterday">
+                        <label for="filter-yesterday">1 ngày trước</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-7days" name="filter-date" value="7days">
+                        <label for="filter-7days">7 ngày trước</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-30days" name="filter-date" value="30days">
+                        <label for="filter-30days">30 ngày trước</label>
+                    </div>
+                </div>
+                
+                <button class="clear-history-btn">
+                    <i class="fas fa-trash-alt"></i> Xóa lịch sử
+                </button>
+            </aside>
+
+            <section class="history-main-content">
+                
+                <h1>Lịch sử làm bài</h1>
+                <p>Dưới đây là kết quả các bài trắc nghiệm bạn đã hoàn thành.</p>
+
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Tên bài thi</th>
+                            <th>Ngày làm</th>
+                            <th>Thời gian làm</th>
+                            <th>Điểm số</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="Tên bài thi">Chủ đề: Nấu ăn</td>
+                            <td data-label="Ngày làm">29/10/2025</td>
+                            <td data-label="Thời gian làm">08:15</td>
+                            <td data-label="Điểm số" class="score passed">80 / 100</td>
+                            <td data-label="Hành động">
+                                <a href="result.html" class="action-btn view">Xem lại</a>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td data-label="Tên bài thi">Bộ từ: IELTS Band 8.0</td>
+                            <td data-label="Ngày làm">28/10/2025</td>
+                            <td data-label="Thời gian làm">12:30</td>
+                            <td data-label="Điểm số" class="score failed">40 / 100</td>
+                            <td data-label="Hành động">
+                                <a href="result.html" class="action-btn view">Xem lại</a>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td data-label="Tên bài thi">Chủ đề: Khoa học</td>
+                            <td data-label="Ngày làm">27/10/2025</td>
+                            <td data-label="Thời gian làm">05:22</td>
+                            <td data-label="Điểm số" class="score passed">95 / 100</td>
+                            <td data-label="Hành động">
+                                <a href="result.html" class="action-btn view">Xem lại</a>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+            </section>
+
+        </div> 
+    </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

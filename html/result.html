@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả trắc nghiệm - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/result.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="vocabulary.html">Từ vựng</a>
+                <a href="albums.html">Danh sách từ</a>
+                <a href="luyentap.html" class="active">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="result-container">
+            
+            <h1>Kết quả bài làm</h1>
+            <p class="user-name">Xin chúc mừng, User Name!</p>
+            
+            <div class="score-circle">
+                <span class="score-number">80</span>
+                <span class="score-label">Điểm</span>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item correct">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Đúng</span>
+                </div>
+                <div class="stat-item incorrect">
+                    <i class="fas fa-times-circle"></i>
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Sai</span>
+                </div>
+                <div class="stat-item total">
+                    <i class="fas fa-list-ol"></i>
+                    <span class="stat-number">15</span>
+                    <span class="stat-label">Tổng số câu</span>
+                </div>
+            </div>
+
+            <div class="result-actions">
+                <a href="quiz-detail.html" class="action-btn retry-btn">
+                    <i class="fas fa-redo"></i> Làm lại
+                </a>
+                <a href="practice_list.html" class="action-btn home-btn">
+                    <i class="fas fa-tasks"></i> Về trang luyện tập
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

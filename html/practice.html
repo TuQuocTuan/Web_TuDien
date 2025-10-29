@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Làm bài trắc nghiệm - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/practice.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="vocabulary.html">Từ vựng</a>
+                <a href="albums.html">Danh sách từ</a>
+                <a href="luyentap.html" class="active">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="quiz-layout-container">
+            
+            <section class="quiz-main">
+                
+                <div class="quiz-header">
+                    <h1>Ôn tập chủ đề: Nấu ăn</h1>
+                    <div class="quiz-meta">
+                        <div class="timer">
+                            <i class="fas fa-clock"></i>
+                            <span>Thời gian: </span>
+                            <span id="time-counter">14:59</span>
+                        </div>
+                        <a href="quiz-result.html" class="submit-btn">
+                            <i class="fas fa-check-circle"></i> Nộp bài
+                        </a>
+                    </div>
+                </div>
+
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 6.6%;"></div>
+                </div>
+                <span class="question-counter">Câu hỏi 1 / 15</span>
+                
+                <div class="quiz-body">
+                    <p class="question-text">
+                        Từ vựng 'Sauté' có nghĩa là gì?
+                    </p>
+                    <div class="answer-options">
+                        <button class="option">A. Luộc</button>
+                        <button class="option">B. Xào / Áp chảo</button>
+                        <button class="option">C. Nướng</button>
+                        <button class="option">D. Hấp</button>
+                    </div>
+                </div>
+
+                <div class="quiz-navigation">
+                    <button class="nav-btn prev disabled">
+                        <i class="fas fa-angle-left"></i> Câu trước
+                    </button>
+                    <button class="nav-btn next">
+                        Câu tiếp theo <i class="fas fa-angle-right"></i>
+                    </button>
+                </div>
+
+            </section>
+
+            <aside class="quiz-sidebar">
+                <h3>Danh sách câu</h3>
+                <div class="question-nav-list">
+                    <a href="#q1" class="question-nav-item current">1</a>
+                    <a href="#q2" class="question-nav-item answered">2</a>
+                    <a href="#q3" class="question-nav-item">3</a>
+                    <a href="#q4" class="question-nav-item">4</a>
+                    <a href="#q5" class="question-nav-item">5</a>
+                    <a href="#q6" class="question-nav-item">6</a>
+                    <a href="#q7" class="question-nav-item">7</a>
+                    <a href="#q8" class="question-nav-item">8</a>
+                    <a href="#q9" class="question-nav-item">9</a>
+                    <a href="#q10" class="question-nav-item">10</a>
+                    <a href="#q11" class="question-nav-item">11</a>
+                    <a href="#q12" class="question-nav-item">12</a>
+                    <a href="#q13" class="question-nav-item">13</a>
+                    <a href="#q14" class="question-nav-item">14</a>
+                    <a href="#q15" class="question-nav-item">15</a>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,168 @@
+/* =================================
+   BIẾN MÀU VÀ THIẾT LẬP CHUNG
+   ================================= */
+:root {
+    --primary-blue: #2a4a87;
+    --accent-blue: #4f8bda;
+    --light-gray: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #e0e0e0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-blue);
+    transition: color 0.3s ease;
+}
+
+/* =================================
+   HEADER & FOOTER (Tái sử dụng)
+   ================================= */
+#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
+.header-left { display: flex; align-items: center; }
+.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; text-decoration: none; }
+.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); padding-bottom: 5px; border-bottom: 3px solid transparent; text-decoration: none; }
+.main-nav a:hover { color: var(--accent-blue); }
+.main-nav a.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+.header-right { display: flex; align-items: center; }
+.timkiem { display: flex; margin-right: 1.5rem; }
+#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
+.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
+.auth-buttons a { text-decoration: none; font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
+.btn-login { color: var(--primary-blue); }
+.btn-signup { background-color: var(--primary-blue); color: var(--white); }
+
+#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
+
+
+/* =================================
+   NỘI DUNG TRANG LUYỆN TẬP
+   ================================= */
+main#content {
+    width: 100%;
+    padding: 3rem 0;
+}
+
+.practice-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* Tiêu đề trang */
+.practice-container h1 {
+    font-size: 2.5rem;
+    color: var(--primary-blue);
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.practice-container p {
+    font-size: 1.1rem;
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 3.5rem;
+}
+
+/* Tiêu đề mỗi nhóm (Chủ đề, Bộ từ) */
+.quiz-category {
+    margin-bottom: 3rem;
+}
+
+.quiz-category h2 {
+    font-size: 1.75rem;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+/* Lưới chứa các thẻ quiz */
+.quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Kiểu của mỗi thẻ quiz */
+.quiz-card {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.quiz-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    color: var(--accent-blue);
+    margin-bottom: 1rem;
+}
+
+.quiz-card h3 {
+    font-size: 1.3rem;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.quiz-info {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+}
+
+.start-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-top: auto; /* Đẩy nút xuống cuối thẻ */
+}
+
+.start-btn:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}
+
+/* Thông báo khi không có bộ từ */
+.empty-note {
+    grid-column: 1 / -1; /* Chiếm toàn bộ chiều rộng grid */
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--white);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+}
+.empty-note p {
+    text-align: center;
+    color: var(--text-light);
+    margin: 0;
+}

@@ -1,0 +1,381 @@
+/* =================================
+   BIẾN MÀU VÀ THIẾT LẬP CHUNG
+   ================================= */
+:root {
+    --primary-blue: #2a4a87;
+    --accent-blue: #4f8bda;
+    --light-gray: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #e0e0e0;
+    /* Màu cho quiz */
+    --correct-green: #28a745;
+    --incorrect-red: #dc3545;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* =================================
+   HEADER & FOOTER (Tái sử dụng)
+   ================================= */
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    height: 80px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-right: 2.5rem;
+    text-decoration: none;
+}
+
+.main-nav a {
+    margin: 0 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-dark);
+    padding-bottom: 5px;
+    border-bottom: 3px solid transparent;
+    text-decoration: none;
+}
+
+.main-nav a:hover {
+    color: var(--accent-blue);
+}
+
+.main-nav a.active {
+    color: var(--primary-blue);
+    border-bottom-color: var(--primary-blue);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.auth-buttons a {
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-login {
+    color: var(--primary-blue);
+}
+
+.btn-signup {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+#footer {
+    background-color: #2c2c2c;
+    color: #aaa;
+    padding: 3rem 5%;
+    margin-top: 4rem;
+    text-align: center;
+}
+
+
+/* =================================
+   NỘI DUNG TRANG QUIZ (MỚI)
+   ================================= */
+main#content {
+    width: 100%;
+    padding: 3rem 0;
+}
+
+/* Layout 2 cột */
+.quiz-layout-container {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    /* Cột chính linh hoạt, sidebar 280px */
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 5%;
+    align-items: flex-start;
+    /* Giữ sidebar dính lên trên */
+}
+
+/* Cột 1: Khung Quiz chính */
+.quiz-main {
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
+    padding: 2rem 2.5rem;
+}
+
+.quiz-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+/* Bộ đếm và Nút nộp */
+.quiz-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.timer {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+.timer i {
+    margin-right: 0.5rem;
+    color: var(--accent-blue);
+}
+
+.submit-btn {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    padding: 0.7rem 1.3rem;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}
+
+.submit-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Thanh tiến trình */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--accent-blue);
+    border-radius: 20px;
+    transition: width 0.4s ease;
+}
+
+.question-counter {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 2.5rem;
+}
+
+/* Câu hỏi và trả lời */
+.quiz-body {
+    /* (Không cần style đặc biệt) */
+}
+
+.question-text {
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 2.5rem;
+    line-height: 1.4;
+}
+
+
+.answer-options {
+    display: flex;
+    flex-direction: column; /* Xếp các đáp án theo chiều dọc */
+    gap: 1rem; /* Khoảng cách giữa các nút */
+}
+
+
+.option {
+    display: block;
+    width: 100%;
+    padding: 1.2rem;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    text-align: left;
+    color: var(--text-dark);
+    background-color: var(--white);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.option:hover {
+    border-color: var(--accent-blue);
+    background-color: #f0f6fc;
+    /* Màu xanh nhạt */
+}
+
+/* Thêm các class này bằng JS */
+.option.selected {
+    border-color: var(--primary-blue);
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.option.correct {
+    border-color: var(--correct-green);
+    background-color: var(--correct-green);
+    color: var(--white);
+}
+
+.option.incorrect {
+    border-color: var(--incorrect-red);
+    background-color: var(--incorrect-red);
+    color: var(--white);
+}
+
+
+/* Nút điều hướng quiz */
+.quiz-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+}
+
+.nav-btn {
+    padding: 0.8rem 1.8rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn.next {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.nav-btn.next:hover {
+    background-color: var(--accent-blue);
+}
+
+.nav-btn.prev {
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.nav-btn.prev:hover {
+    background-color: #e9e9e9;
+}
+
+.nav-btn.disabled {
+    background-color: var(--light-gray);
+    color: #ccc;
+    cursor: not-allowed;
+    border: 1px solid #eee;
+}
+
+/* Cột 2: Sidebar danh sách câu */
+.quiz-sidebar {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    align-self: start;
+    /* Dính lên trên */
+    position: sticky;
+    /* Dính khi cuộn */
+    top: 2rem;
+}
+
+.quiz-sidebar h3 {
+    font-size: 1.3rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.75rem;
+}
+
+/* Lưới các nút câu hỏi */
+.question-nav-list {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* 5 câu 1 hàng */
+    gap: 0.75rem;
+}
+
+.question-nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    /* Giữ hình vuông */
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    /* Nút tròn */
+    text-decoration: none;
+    color: var(--text-dark);
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.question-nav-item:hover {
+    background-color: var(--light-gray);
+    border-color: var(--accent-blue);
+}
+
+/* Câu hiện tại */
+.question-nav-item.current {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+
+/* Câu đã trả lời */
+.question-nav-item.answered {
+    background-color: var(--accent-blue);
+    color: var(--white);
+    border-color: var(--accent-blue);
+}

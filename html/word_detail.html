@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết từ: Example - Wordee</title>
-    
+
     <link rel="stylesheet" href="/css/word_detail.css">
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body>
 
+<body>
     <header id="header">
         <div class="header-left">
             <div class="logo">
@@ -37,47 +38,68 @@
 
     <main id="content">
         <div class="word-container">
-            
             <div class="word-header">
-                <h1 class="word-title">Example</h1>
+
+                <div class="word-top-line">
+                    <h1 class="word-title">Example</h1>
+                    <button class="audio-btn" aria-label="Nghe phát âm">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                </div>
+
                 <span class="word-pronunciation">/ɪɡˈzæmpəl/</span>
-                <button class="audio-btn" aria-label="Nghe phát âm">
-                    <i class="fas fa-volume-up"></i>
-                </button>
+
+                <span class="word-translation">Ví dụ</span>
+                <div class="word-actions">
+                    <button class="add-to-album-btn">
+                        <i class="fas fa-plus"></i> Thêm vào bộ từ
+                    </button>
+                </div>
+                <div class="word-body">
+                    <section class="definition-block">
+                        <span class="word-type">Danh từ</span>
+                        <ol class="definition-list">
+
+                            <li>
+                                <p class="definition-en-text">
+                                    A thing or person regarded as typical of its class.
+                                </p>
+                                <p class="definition-vi-text">
+                                    Một vật hoặc một người được xem là tiêu biểu cho một nhóm.
+                                </p>
+
+                                <div class="example-group">
+                                    <p class="example-en">
+                                        <i>"This is a good example of his work."</i>
+                                    </p>
+                                    <p class="example-vi">
+                                        <i>(Đây là một ví dụ tốt cho công việc của anh ấy.)</i>
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li>
+                                <p class="definition-en-text">
+                                    A model to be imitated or avoided.
+                                </p>
+                                <p class="definition-vi-text">
+                                    Một mẫu, một tấm gương (để noi theo hoặc để tránh).
+                                </p>
+
+                                <div class="example-group">
+                                    <p class="example-en">
+                                        <i>"He set a good example for the other students."</i>
+                                    </p>
+                                    <p class="example-vi">
+                                        <i>(Cậu ấy đã nêu một tấm gương tốt cho các học sinh khác.)</i>
+                                    </p>
+                                </div>
+                            </li>
+                        </ol>
+                    </section>
+
+                </div>
             </div>
-
-            <div class="word-actions">
-                <button class="add-to-album-btn">
-                    <i class="fas fa-plus"></i> Thêm vào bộ từ
-                </button>
-            </div>
-
-            <div class="word-body">
-                
-                <section class="definition-block">
-                    <span class="word-type">Danh từ</span>
-                    <ol class="definition-list">
-                        <li>
-                            <p class="definition-text">
-                                Một vật hoặc một người được xem là tiêu biểu cho một nhóm.
-                            </p>
-                            <p class="example-text">
-                                <i>Ví dụ: "This is a good example of his work."</i>
-                            </p>
-                        </li>
-                        <li>
-                            <p class="definition-text">
-                                Một mẫu, một tấm gương (để noi theo hoặc để tránh).
-                            </p>
-                            <p class="example-text">
-                                <i>Ví dụ: "He set a good example for the other students."</i>
-                            </p>
-                        </li>
-                    </ol>
-                </section>
-
-                </div> 
-        </div> 
     </main>
 
     <footer id="footer">
@@ -86,6 +108,6 @@
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
-
 </body>
+
 </html>

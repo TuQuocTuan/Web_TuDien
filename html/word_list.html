@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Từ vựng - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/word_list.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="/html/index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="/html/word_list.html" class="active">Từ vựng</a>
+                <a href="/html/album.html">Danh sách từ</a>
+                <a href="/html/practice.html">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="timkiem">
+                <input type="search" name="thanhtimkiem" id="thanhtimkiem" placeholder="Tìm kiếm từ...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="vocab-layout-container">
+            
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Bộ lọc</h3>
+                
+                <div class="filter-group">
+                    <h4>Loại từ (Part of Speech)</h4>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-all" name="filter-type" value="all" checked>
+                        <label for="filter-all">Tất cả (All)</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-noun" name="filter-type" value="noun">
+                        <label for="filter-noun">Danh từ (Noun)</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-verb" name="filter-type" value="verb">
+                        <label for="filter-verb">Động từ (Verb)</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-adj" name="filter-type" value="adjective">
+                        <label for="filter-adj">Tính từ (Adjective)</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-adv" name="filter-type" value="adverb">
+                        <label for="filter-adv">Trạng từ (Adverb)</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-pre" name="filter-type" value="preposition">
+                        <label for="filter-pre">Giới từ (Preposition)</label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <h4>Chủ đề (Topic)</h4>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-school" name="filter-topic" value="school">
+                        <label for="filter-school">Trường học</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-science" name="filter-topic" value="science">
+                        <label for="filter-science">Khoa học</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-cooking" name="filter-topic" value="cooking">
+                        <label for="filter-cooking">Nấu ăn</label>
+                    </div>
+                    </div>
+
+            </aside>
+
+            <section class="vocab-list-section">
+                
+                <div class="sort-bar">
+                    <label for="sort-by">Sắp xếp theo:</label>
+                    <select id="sort-by" name="sort-by">
+                        <option value="alphabetical-az">Thứ tự A-Z</option>
+                        <option value="alphabetical-za">Thứ tự Z-A</option>
+                        <option value="newest">Mới nhất</option>
+                        <option value="oldest">Cũ nhất</option>
+                    </select>
+                </div>
+
+                <div class="vocab-list">
+                    
+                    <div class="vocab-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">Example</a>
+                            <span class="item-pronunciation">/ɪɡˈzæmpəl/</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-type noun">Danh từ</span>
+                            <p class="item-definition">Một vật hoặc một người được xem là tiêu biểu...</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="vocab-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">Learn</a>
+                            <span class="item-pronunciation">/lɜːrn/</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-type verb">Động từ</span>
+                            <p class="item-definition">Tiếp thu kiến thức hoặc kỹ năng thông qua...</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="vocab-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">Beautiful</a>
+                            <span class="item-pronunciation">/ˈbjuːtɪfl/</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-type adjective">Tính từ</span>
+                            <p class="item-definition">Làm hài lòng các giác quan hoặc tâm trí...</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    </div> <nav class="pagination">
+                    <a href="#" class="page-link disabled"><i class="fas fa-angle-left"></i></a>
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <span class="page-link dots">...</span>
+                    <a href="#" class="page-link">10</a>
+                    <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
+                </nav>
+
+            </section>
+
+        </div> </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

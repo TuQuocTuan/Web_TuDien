@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch sử tra từ - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/word_history.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="vocabulary.html">Từ vựng</a>
+                <a href="albums.html">Danh sách từ</a>
+                <a href="luyentap.html">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+             <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="history-layout-container">
+            
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Lọc theo ngày</h3>
+                
+                <div class="filter-group">
+                    <div class="filter-option">
+                        <input type="radio" id="filter-all" name="filter-date" value="all" checked>
+                        <label for="filter-all">Tất cả</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-today" name="filter-date" value="today">
+                        <label for="filter-today">Hôm nay</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-yesterday" name="filter-date" value="yesterday">
+                        <label for="filter-yesterday">1 ngày trước</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-7days" name="filter-date" value="7days">
+                        <label for="filter-7days">7 ngày trước</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="radio" id="filter-30days" name="filter-date" value="30days">
+                        <label for="filter-30days">30 ngày trước</label>
+                    </div>
+                </div>
+                
+                <button class="clear-history-btn">
+                    <i class="fas fa-trash-alt"></i> Xóa lịch sử
+                </button>
+            </aside>
+
+            <section class="history-list-section">
+                
+                <h1>Lịch sử tra từ</h1>
+
+                <div class="word-list">
+                    
+                    <div class="word-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">Example</a>
+                            <span class="item-translation">Ví dụ</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-date">Đã tra: Hôm nay, 19:10</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="word-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">Sauté</a>
+                            <span class="item-translation">Xào / Áp chảo</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-date">Đã tra: Hôm nay, 18:30</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="word-item">
+                        <div class="item-main">
+                            <a href="word-detail.html" class="item-word">History</a>
+                            <span class="item-translation">Lịch sử</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-date">Đã tra: 1 ngày trước</span>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    </div> </section>
+
+        </div> </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

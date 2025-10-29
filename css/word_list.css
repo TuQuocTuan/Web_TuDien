@@ -1,0 +1,304 @@
+/* =================================
+   BIẾN MÀU VÀ THIẾT LẬP CHUNG
+   ================================= */
+:root {
+    --primary-blue: #2a4a87;
+    --accent-blue: #4f8bda;
+    --light-gray: #f4f7f6;
+    --white: #ffffff;
+    --text-dark: #333;
+    --text-light: #666;
+    --border-color: #e0e0e0;
+    
+    /* Màu cho loại từ */
+    --color-noun: #2a4a87;
+    --color-verb: #28a745;
+    --color-adjective: #dc3545;
+    --color-adverb: #ffc107;
+    --color-preposition: #17a2b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* =================================
+   HEADER & FOOTER (Tái sử dụng)
+   ================================= */
+#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
+.header-left { display: flex; align-items: center; }
+.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; }
+.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); padding-bottom: 5px; border-bottom: 3px solid transparent; text-decoration: none; }
+.main-nav a:hover { color: var(--accent-blue); }
+.main-nav a.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
+.header-right { display: flex; align-items: center; }
+.timkiem { display: flex; margin-right: 1.5rem; }
+#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
+.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
+.auth-buttons a { text-decoration: none; font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
+.btn-login { color: var(--primary-blue); }
+.btn-signup { background-color: var(--primary-blue); color: var(--white); }
+
+#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
+
+
+/* =================================
+   NỘI DUNG TRANG TỪ VỰNG
+   ================================= */
+main#content {
+    width: 100%;
+    padding: 3rem 0;
+}
+
+.vocab-layout-container {
+    display: grid;
+    /* Dùng grid để chia layout: 250px cho sidebar, 1fr (phần còn lại) cho nội dung */
+    grid-template-columns: 250px 1fr;
+    gap: 2.5rem;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 5%;
+}
+
+/* 1. Sidebar Bộ lọc */
+.filter-sidebar {
+    background-color: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    /* Giữ cố định chiều cao khi cuộn */
+    align-self: start; 
+}
+
+.filter-sidebar h3 {
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+}
+.filter-sidebar h3 i {
+    margin-right: 0.5rem;
+    color: var(--primary-blue);
+}
+
+.filter-group {
+    margin-bottom: 2rem;
+}
+
+.filter-group h4 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.filter-option label {
+    margin-left: 0.75rem;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.filter-option input[type="checkbox"] {
+    /* Tùy chỉnh checkbox cho đẹp (tùy chọn) */
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+}
+
+/* 2. Phần Danh sách từ vựng */
+.vocab-list-section {
+    min-width: 0; /* Fix lỗi grid */
+}
+
+/* Thanh sắp xếp */
+.sort-bar {
+    display: flex;
+    justify-content: flex-end; /* Đặt bên phải */
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.sort-bar label {
+    margin-right: 0.75rem;
+    font-weight: 500;
+    color: var(--text-light);
+}
+
+.sort-bar select {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+/* Danh sách từ */
+.vocab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.vocab-item {
+    display: grid;
+    grid-template-columns: 2fr 3fr 1fr; /* Chia 3 cột: Từ, Nghĩa, Nút */
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    transition: box-shadow 0.3s ease;
+}
+
+.vocab-item:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Cột 1: Từ và phát âm */
+.item-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.item-word {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+.item-word:hover {
+    text-decoration: underline;
+}
+
+.item-pronunciation {
+    font-size: 1rem;
+    color: var(--text-light);
+}
+
+/* Cột 2: Loại từ và định nghĩa */
+.item-info {
+    /* (không cần style đặc biệt) */
+}
+
+.item-type {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+}
+
+/* Áp màu theo loại từ */
+.item-type.noun { background-color: var(--color-noun); }
+.item-type.verb { background-color: var(--color-verb); }
+.item-type.adjective { background-color: var(--color-adjective); }
+.item-type.adverb { background-color: var(--color-adverb); }
+
+.item-definition {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    /* Giới hạn 1 dòng và thêm ... */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Cột 3: Nút hành động */
+.item-actions {
+    display: flex;
+    justify-content: flex-end; /* Đặt nút về bên phải */
+    gap: 0.75rem;
+}
+
+.action-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn.add:hover {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+.action-btn.audio:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+    border-color: var(--accent-blue);
+}
+
+/* 3. Phân trang */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 3rem;
+}
+
+.page-link {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    background-color: var(--white);
+    color: var(--primary-blue);
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-link:hover {
+    background-color: var(--light-gray);
+    border-color: var(--accent-blue);
+}
+
+.page-link.active {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border-color: var(--primary-blue);
+}
+
+.page-link.disabled {
+    color: var(--border-color);
+    pointer-events: none;
+}
+
+.page-link.dots {
+    border: none;
+    background: none;
+}

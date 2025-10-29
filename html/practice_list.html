@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luyện tập - Wordee</title>
+    
+    <link rel="stylesheet" href="../css/practice_list.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo">
+                <a href="index.html">Wordee</a>
+            </div>
+            <nav class="main-nav">
+                <a href="word_list.html">Từ vựng</a>
+                <a href="album.html">Danh sách từ</a>
+                <a href="practice_list.html" class="active">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="timkiem">
+                <input type="search" name="thanhtimkiem" id="thanhtimkiem" placeholder="Tìm kiếm từ...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+                <a href="signup.html" class="btn-signup">Đăng ký</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="practice-container">
+            
+            <h1>Luyện tập trắc nghiệm</h1>
+            <p>Chọn một bài kiểm tra để ôn tập từ vựng của bạn.</p>
+
+            <section class="quiz-category">
+                <h2>Luyện tập theo chủ đề</h2>
+                <div class="quiz-grid">
+                    
+                    <article class="quiz-card">
+                        <i class="fas fa-utensils card-icon"></i>
+                        <h3>Chủ đề: Nấu ăn</h3>
+                        <p class="quiz-info">15 câu hỏi · 10 phút</p>
+                        <a href="quiz-detail.html?topic=cooking" class="start-btn">Bắt đầu</a>
+                    </article>
+
+                    <article class="quiz-card">
+                        <i class="fas fa-flask card-icon"></i>
+                        <h3>Chủ đề: Khoa học</h3>
+                        <p class="quiz-info">20 câu hỏi · 15 phút</p>
+                        <a href="quiz-detail.html?topic=science" class="start-btn">Bắt đầu</a>
+                    </article>
+
+                    <article class="quiz-card">
+                        <i class="fas fa-plane card-icon"></i>
+                        <h3>Chủ đề: Du lịch</h3>
+                        <p class="quiz-info">10 câu hỏi · 5 phút</p>
+                        <a href="quiz-detail.html?topic=travel" class="start-btn">Bắt đầu</a>
+                    </article>
+
+                </div>
+            </section>
+
+            <section class="quiz-category">
+                <h2>Ôn tập bộ từ của bạn</h2>
+                <div class="quiz-grid">
+                    
+                    <article class="quiz-card">
+                        <i class="fas fa-book card-icon"></i>
+                        <h3>Bộ từ: IELTS Band 8.0</h3>
+                        <p class="quiz-info">Ôn tập 52 từ vựng</p>
+                        <a href="quiz-detail.html?album=1" class="start-btn">Bắt đầu</a>
+                    </article>
+
+                    <article class="quiz-card">
+                        <i class="fas fa-book card-icon"></i>
+                        <h3>Bộ từ: Giao tiếp hàng ngày</h3>
+                        <p class="quiz-info">Ôn tập 115 từ vựng</p>
+                        <a href="quiz-detail.html?album=2" class="start-btn">Bắt đầu</a>
+                    </article>
+
+                    </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="footer-content">
+            <h3>Wordee</h3>
+            <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
