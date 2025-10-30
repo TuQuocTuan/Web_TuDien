@@ -1,0 +1,5 @@
+# Bỏ qua thư mục chứa các gói đã cài
+node_modules/
+
+# Bỏ qua file bí mật chứa mật khẩu
+.env
