@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh sách Từ vựng - Wordee</title>
-    
+    <title>Danh sách từ vựng - Wordee</title>
+
     <link rel="stylesheet" href="../css/word_list.css">
-    
+    <link rel="stylesheet" href="/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
+
 <body>
 
     <header id="header">
@@ -37,10 +40,10 @@
 
     <main id="content">
         <div class="vocab-layout-container">
-            
+
             <aside class="filter-sidebar">
                 <h3><i class="fas fa-filter"></i> Bộ lọc</h3>
-                
+
                 <div class="filter-group">
                     <h4>Loại từ (Part of Speech)</h4>
                     <div class="filter-option">
@@ -83,12 +86,35 @@
                         <input type="checkbox" id="filter-cooking" name="filter-topic" value="cooking">
                         <label for="filter-cooking">Nấu ăn</label>
                     </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-entertainment" name="filter-topic" value="entertainment">
+                        <label for="filter-entertainment">Giải trí</label>
                     </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-music" name="filter-topic" value="music">
+                        <label for="filter-music">Âm nhạc</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-travel" name="filter-topic" value="travel">
+                        <label for="filter-travel">Du lịch</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-friends" name="filter-topic" value="friends">
+                        <label for="filter-friends">Bạn bè</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-sports" name="filter-topic" value="sports">
+                        <label for="filter-sports">Thể thao</label>
+                    </div>
+                    <div class="filter-option">
+                        <input type="checkbox" id="filter-health" name="filter-topic" value="health">
+                        <label for="filter-health">Y tế</label>
+                    </div>
+                </div>
 
             </aside>
-
             <section class="vocab-list-section">
-                
+
                 <div class="sort-bar">
                     <label for="sort-by">Sắp xếp theo:</label>
                     <select id="sort-by" name="sort-by">
@@ -99,66 +125,11 @@
                     </select>
                 </div>
 
-                <div class="vocab-list">
-                    
-                    <div class="vocab-item">
-                        <div class="item-main">
-                            <a href="word-detail.html" class="item-word">Example</a>
-                            <span class="item-pronunciation">/ɪɡˈzæmpəl/</span>
-                        </div>
-                        <div class="item-info">
-                            <span class="item-type noun">Danh từ</span>
-                            <p class="item-definition">Một vật hoặc một người được xem là tiêu biểu...</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button class="action-btn audio" aria-label="Nghe">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="vocab-list" id="vocab-list-container">
+                    <p>Đang tải từ vựng...</p>
+                </div>
 
-                    <div class="vocab-item">
-                        <div class="item-main">
-                            <a href="word-detail.html" class="item-word">Learn</a>
-                            <span class="item-pronunciation">/lɜːrn/</span>
-                        </div>
-                        <div class="item-info">
-                            <span class="item-type verb">Động từ</span>
-                            <p class="item-definition">Tiếp thu kiến thức hoặc kỹ năng thông qua...</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button class="action-btn audio" aria-label="Nghe">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="vocab-item">
-                        <div class="item-main">
-                            <a href="word-detail.html" class="item-word">Beautiful</a>
-                            <span class="item-pronunciation">/ˈbjuːtɪfl/</span>
-                        </div>
-                        <div class="item-info">
-                            <span class="item-type adjective">Tính từ</span>
-                            <p class="item-definition">Làm hài lòng các giác quan hoặc tâm trí...</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn add" aria-label="Thêm vào bộ từ">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button class="action-btn audio" aria-label="Nghe">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    </div> <nav class="pagination">
+                <nav class="pagination">
                     <a href="#" class="page-link disabled"><i class="fas fa-angle-left"></i></a>
                     <a href="#" class="page-link active">1</a>
                     <a href="#" class="page-link">2</a>
@@ -167,17 +138,141 @@
                     <a href="#" class="page-link">10</a>
                     <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
                 </nav>
-
             </section>
-
-        </div> </main>
+        </div>
+    </main>
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const vocabListContainer = document.getElementById('vocab-list-container');
+            const allFilterCheckboxes = document.querySelectorAll('.filter-sidebar input[type="checkbox"]');
+            const typeFilterAll = document.getElementById('filter-all');
+
+            // HÀM 1: "Vẽ" HTML
+            function renderWords(words) {
+                vocabListContainer.innerHTML = '';
+                if (words.length === 0) {
+                    vocabListContainer.innerHTML = '<p style="padding: 1rem;">Không tìm thấy từ vựng nào.</p>';
+                    return;
+                }
+                words.forEach(word => {
+                    const wordItem = document.createElement('div');
+                    wordItem.className = 'vocab-item';
+                    const typeClass = word.type.toLowerCase();
+                    wordItem.innerHTML = `
+                        <div class="item-main">
+                            <a href="word-detail.html?word=${word.word}" class="item-word">${word.word}</a>
+                            <span class="item-pronunciation">${word.pronunciation || ''}</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-type ${typeClass}">${word.type}</span>
+                            <p class="item-definition">${word.translation}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    `;
+                    vocabListContainer.appendChild(wordItem);
+                });
+            }
+
+            // HÀM 2: Lấy dữ liệu từ API
+            async function fetchAndRenderWords() {
+                const filters = { type: [], category: [] };
+
+                allFilterCheckboxes.forEach(checkbox => {
+                    if (checkbox.checked) {
+                        if (checkbox.name === 'filter-type' && checkbox.value !== 'all') {
+                            filters.type.push(checkbox.value);
+                        }
+                        if (checkbox.name === 'filter-topic') {
+                            filters.category.push(checkbox.value);
+                        }
+                    }
+                });
+
+                const queryParts = [];
+                if (filters.type.length > 0) {
+                    queryParts.push(`type=${filters.type.join(',')}`);
+                }
+                if (filters.category.length > 0) {
+                    queryParts.push(`category=${filters.category.join(',')}`);
+                }
+
+                let queryString = '';
+                if (queryParts.length > 0) {
+                    queryString = `?${queryParts.join('&')}`;
+                }
+
+                try {
+                    vocabListContainer.innerHTML = '<p>Đang tải từ vựng...</p>';
+                    const response = await fetch(`/api/words${queryString}`);
+                    if (!response.ok) throw new Error('Lỗi mạng');
+                    const words = await response.json();
+                    renderWords(words);
+                } catch (err) {
+                    console.error('Lỗi khi tải từ:', err);
+                    vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
+                }
+            }
+
+            // HÀM 3: Xử lý nút "Tất cả"
+            function handleFilterAllLogic(changedCheckbox) {
+                if (changedCheckbox.id === 'filter-all' && changedCheckbox.checked) {
+                    allFilterCheckboxes.forEach(cb => {
+                        if (cb.name === 'filter-type' && cb.id !== 'filter-all') {
+                            cb.checked = false;
+                        }
+                    });
+                } else if (changedCheckbox.name === 'filter-type' && changedCheckbox.id !== 'filter-all') {
+                    typeFilterAll.checked = false;
+                }
+
+                fetchAndRenderWords();
+            }
+
+            // Gắn "tai" cho TẤT CẢ các checkbox
+            allFilterCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', () => handleFilterAllLogic(checkbox));
+            });
+
+            // Tải danh sách lần đầu
+            fetchAndRenderWords();
+        });
+    </script>
+    <script src="../js/auth.js"></script>
 </body>
+
 </html>

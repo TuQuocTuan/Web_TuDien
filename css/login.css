@@ -123,3 +123,25 @@ body {
     margin-top: 1.5rem;
     color: black;
 }
+
+.forgot-link {
+    text-align: center;
+    margin-top: 1rem; /* Khoảng cách với nút Đăng nhập */
+}
+
+.forgot-link a {
+    color: var(--text-light); /* Màu xám nhạt */
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+.forgot-link a:hover {
+    color: var(--primary-blue); /* Đổi màu xanh khi rê chuột */
+    text-decoration: underline;
+}
+
+/* (Sửa lại) Căn lề cho link Đăng ký */
+.login-link {
+    text-align: center;
+    margin-top: 1rem; /* Căn lề đồng bộ */
+}

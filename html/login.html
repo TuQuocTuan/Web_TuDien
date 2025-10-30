@@ -23,6 +23,10 @@
                     <label for="password">Password</label>
                     <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
                 </div>
+                <div class="forgot-link">
+                    <a href="forgot_pass.html">Quên mật khẩu?</a>
+                </div>
+                <br>
                 <button type="submit" class="submit-btn">Đăng nhập</button>
                 <p class="signup-link">Chưa có tài khoản? <a href="signup.html">Đăng ký ngay</a></p>
             </form>
@@ -67,7 +71,13 @@
                         localStorage.setItem('username', data.username);
 
                         setTimeout(() => {
-                            window.location.href = 'index.html';
+                           if (data.isNewbie === true) {
+                                // Nếu là newbie -> điền khảo sát
+                                window.location.href = 'khaosat.html'; 
+                            } else {
+                                // Nếu không -> về trang chủ
+                                window.location.href = 'index.html';
+                            }
                         }, 1500);
 
                     } else { // 400, 404, 500

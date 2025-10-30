@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +9,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <div class="survey-wrapper">
         <div class="survey-container">
-            
+
             <h2>Chào mừng bạn đến với Wordee!</h2>
             <p>Hãy chọn các chủ đề bạn quan tâm để chúng tôi cá nhân hóa trải nghiệm học tập của bạn.</p>
 
             <form id="interest-survey-form" action="/submit-interests" method="POST">
-                
+
                 <div class="topic-grid">
-                    
+
                     <div class="topic-card">
                         <input type="checkbox" id="topic-school" name="topic" value="school">
                         <label for="topic-school">
@@ -76,7 +78,7 @@
                         </label>
                     </div>
 
-                      <div class="topic-card">
+                    <div class="topic-card">
                         <input type="checkbox" id="topic-hospital" name="topic" value="hospital">
                         <label for="topic-hospital">
                             <i class="fa-solid fa-hospital"></i>
@@ -84,7 +86,7 @@
                         </label>
                     </div>
 
-                      <div class="topic-card">
+                    <div class="topic-card">
                         <input type="checkbox" id="topic-sport" name="topic" value="sport">
                         <label for="topic-sport">
                             <i class="fa-solid fa-basketball"></i>
@@ -102,6 +104,60 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const surveyForm = document.getElementById('interest-survey-form');
 
+            surveyForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // 1. Lấy tất cả các ô đã được check
+                const checkedBoxes = document.querySelectorAll('input[name="topic"]:checked');
+
+                // 2. Lấy giá trị (value) của chúng
+                const selectedCategories = [];
+                checkedBoxes.forEach(box => {
+                    selectedCategories.push(box.value);
+                });
+
+                // 3. Lấy username từ localStorage (đã lưu lúc đăng nhập)
+                const username = localStorage.getItem('username');
+
+                if (!username) {
+                    alert('Lỗi: Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                try {
+                    // 4. Gửi lên API ta vừa tạo
+                    const response = await fetch('/api/user/complete-survey', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            categories: selectedCategories
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        // 5. Nếu thành công, chuyển về trang chủ
+                        alert(data.message);
+                        window.location.href = 'index.html';
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+
+                } catch (err) {
+                    alert('Không thể kết nối. Vui lòng thử lại.');
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

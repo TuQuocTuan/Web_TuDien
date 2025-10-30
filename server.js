@@ -1,45 +1,45 @@
 // DO_AN/server.js
+
+// 1. GỌI CÁC GÓI
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
+// 2. KHỞI TẠO APP VÀ KẾT NỐI DB
 const app = express();
 const port = 3000;
+require('./src/db/mongo.js'); // Kích hoạt kết nối DB
 
-app.use(express.json());// để parse JSON body
+// 3. MIDDLEWARE (Xử lý dữ liệu JSON/Form)
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const authRoutes = require('./src/routes/authRoutes.js');//import các routes xác thực
+// 4. API ROUTES (Logic Backend)
+const authRoutes = require('./src/routes/authRoutes.js');
 app.use('/api/auth', authRoutes);
 
-// (Phần code phục vụ file tĩnh của bạn giữ nguyên)
+const userRoutes = require('./src/routes/userRoutes.js');
+app.use('/api/user', userRoutes);
+
+const wordRoutes = require('./src/routes/wordRoutes.js');
+app.use('/api/words', wordRoutes); 
+
+// 5. PHỤC VỤ FILE TĨNH (CSS, JS)
+// (CSS và JS phải được phục vụ TRƯỚC các file HTML)
 app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+
+// 6. PAGE ROUTES (Phục vụ file HTML)
+// (Dòng này phải nằm SAU CÙNG)
 app.use(express.static(path.join(__dirname, 'html')));
 
-// 1. GỌI FILE KẾT NỐI CỦA BẠN
-// Khi file này được require, hàm connectDB() sẽ tự động chạy
-require('./src/db/mongo.js'); 
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'html', 'index.html'));
-});
-// 2. KHỞI ĐỘNG MÁY CHỦ WEB
-app.get('/', (req, res) => {
-  res.send('Chào mừng đến với Wordee!');
-});
-
-// Khởi động server
-app.listen(port, async () => { // 1. Thêm "async" vào đây
+// 7. KHỞI ĐỘNG SERVER
+app.listen(port, async () => { 
     console.log(`Server Wordee đang chạy tại http://localhost:${port}`);
     
-    // 2. Sử dụng (await import(...)) để gọi gói "open"
     try {
-        // Dynamically import gói 'open'
         const open = (await import('open')).default; 
-        
-        // 3. Chạy hàm open
-        open('http://localhost:3000/index.html');
-        
+        open('http://localhost:3000/index.html'); // Mở trang chủ
     } catch (err) {
         console.error('Không thể tự động mở trình duyệt:', err.message);
     }

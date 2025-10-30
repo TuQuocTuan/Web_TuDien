@@ -22,12 +22,17 @@ const userSchema = new mongoose.Schema({
         default: true
     },
     favoriteCategories: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Word' // Tham chiếu đến model Word
-    }]
+        type: String // Lưu trữ các thể loại yêu thích của user
+    }],
+    passwordResetToken: {
+        type: String
+    },
+    passwordResetExpires: {
+        type: Date
+    }
 }, {
     // Tự động thêm dấu thời gian (created_at, updated_at)
-    timestamps: true 
+    timestamps: true
 });
 
 // Tạo model tên 'User' (MongoDB sẽ tự động đổi thành 'users' trong CSDL)
