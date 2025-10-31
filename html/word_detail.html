@@ -7,7 +7,7 @@
     <title>Chi tiết từ: Example - Wordee</title>
 
     <link rel="stylesheet" href="/css/word_detail.css">
-
+    <link rel="stylesheet" href="/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -37,77 +37,121 @@
     </header>
 
     <main id="content">
-        <div class="word-container">
-            <div class="word-header">
-
-                <div class="word-top-line">
-                    <h1 class="word-title">Example</h1>
-                    <button class="audio-btn" aria-label="Nghe phát âm">
-                        <i class="fas fa-volume-up"></i>
-                    </button>
-                </div>
-
-                <span class="word-pronunciation">/ɪɡˈzæmpəl/</span>
-
-                <span class="word-translation">Ví dụ</span>
-                <div class="word-actions">
-                    <button class="add-to-album-btn">
-                        <i class="fas fa-plus"></i> Thêm vào bộ từ
-                    </button>
-                </div>
-                <div class="word-body">
-                    <section class="definition-block">
-                        <span class="word-type">Danh từ</span>
-                        <ol class="definition-list">
-
-                            <li>
-                                <p class="definition-en-text">
-                                    A thing or person regarded as typical of its class.
-                                </p>
-                                <p class="definition-vi-text">
-                                    Một vật hoặc một người được xem là tiêu biểu cho một nhóm.
-                                </p>
-
-                                <div class="example-group">
-                                    <p class="example-en">
-                                        <i>"This is a good example of his work."</i>
-                                    </p>
-                                    <p class="example-vi">
-                                        <i>(Đây là một ví dụ tốt cho công việc của anh ấy.)</i>
-                                    </p>
-                                </div>
-                            </li>
-
-                            <li>
-                                <p class="definition-en-text">
-                                    A model to be imitated or avoided.
-                                </p>
-                                <p class="definition-vi-text">
-                                    Một mẫu, một tấm gương (để noi theo hoặc để tránh).
-                                </p>
-
-                                <div class="example-group">
-                                    <p class="example-en">
-                                        <i>"He set a good example for the other students."</i>
-                                    </p>
-                                    <p class="example-vi">
-                                        <i>(Cậu ấy đã nêu một tấm gương tốt cho các học sinh khác.)</i>
-                                    </p>
-                                </div>
-                            </li>
-                        </ol>
-                    </section>
-
-                </div>
-            </div>
+        <div class="word-container" id="word-detail-container">
+            <p>Đang tải chi tiết từ...</p>
+        </div>
     </main>
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
+
+    <script src="../js/auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const detailContainer = document.getElementById('word-detail-container');
+
+            // 1. Lấy tên từ từ URL (ví dụ: ?word=Apple)
+            const urlParams = new URLSearchParams(window.location.search);
+            const wordName = urlParams.get('word');
+
+            if (!wordName) {
+                detailContainer.innerHTML = '<h1>Lỗi</h1><p>Không có từ nào được chỉ định để tra cứu.</p>';
+                return;
+            }
+
+            // 2. Hàm Fetch API
+            async function fetchWordDetails() {
+                try {
+                    // Gọi API ta vừa tạo: /api/words/Apple
+                    const response = await fetch(`/api/words/${wordName}`);
+
+                    if (response.status === 404) {
+                        detailContainer.innerHTML = `<h1>Không tìm thấy</h1><p>Không tìm thấy từ vựng: <strong>${wordName}</strong> trong từ điển.</p>`;
+                        return;
+                    }
+
+                    if (!response.ok) {
+                        throw new Error('Lỗi server');
+                    }
+
+                    const word = await response.json(); // Lấy đối tượng từ vựng
+
+                    // 3. VẼ HTML
+                    detailContainer.innerHTML = `
+                        <div class="word-header">
+                            <div class="word-title-group">
+                                <h1 class="word-title">${word.word}</h1>
+                                <span class="word-translation">${word.translation}</span>
+                            </div>
+                            <div class="word-audio-group">
+                                <span class="word-pronunciation">${word.pronunciation || 'N/A'}</span>
+                                <button class="audio-btn" aria-label="Nghe phát âm">
+                                    <i class="fas fa-volume-up"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="word-actions">
+                            <button class="add-to-album-btn" data-word-id="${word._id}">
+                                <i class="fas fa-plus"></i> Thêm vào bộ từ
+                            </button>
+                            <span class="word-category">Chủ đề: ${word.category}</span>
+                        </div>
+
+                        <div class="word-body">
+                            <section class="definition-block">
+                                <span class="word-type">${word.type}</span>
+                                <ol class="definition-list">
+                                    <li>
+                                        <p class="definition-en-text">Definition (EN): To be defined in detail.</p>
+                                        <p class="definition-vi-text">Định nghĩa (VN): Được định nghĩa chi tiết (hiện tại lấy từ translation).</p>
+                                        
+                                        ${word.example_en ? `
+                                        <div class="example-group">
+                                            <p class="example-en"><i>Ví dụ: "${word.example_en}"</i></p>
+                                            <p class="example-vi"><i>(Dịch: ${word.example_vi})</i></p>
+                                        </div>
+                                        ` : '<p class="example-vi">Không có ví dụ.</p>'}
+                                    </li>
+                                </ol>
+                            </section>
+                            </div>
+                    `;
+
+                } catch (err) {
+                    console.error('Lỗi khi tải chi tiết từ:', err);
+                    detailContainer.innerHTML = `<h1>Lỗi mạng</h1><p>Không thể kết nối đến server để tải từ.</p>`;
+                }
+            }
+
+            fetchWordDetails();
+        });
+    </script>
 </body>
 
 </html>

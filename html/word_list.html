@@ -116,12 +116,10 @@
             <section class="vocab-list-section">
 
                 <div class="sort-bar">
-                    <label for="sort-by">Sắp xếp theo:</label>
-                    <select id="sort-by" name="sort-by">
-                        <option value="alphabetical-az">Thứ tự A-Z</option>
-                        <option value="alphabetical-za">Thứ tự Z-A</option>
-                        <option value="newest">Mới nhất</option>
-                        <option value="oldest">Cũ nhất</option>
+                    <label for="sort-select">Sắp xếp theo:</label>
+                    <select id="sort-select" name="sort-by">
+                        <option value="alphabetical_asc">Thứ tự A-Z</option>
+                        <option value="alphabetical_desc">Thứ tự Z-A</option>
                     </select>
                 </div>
 
@@ -171,11 +169,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Lấy các phần tử HTML
             const vocabListContainer = document.getElementById('vocab-list-container');
             const allFilterCheckboxes = document.querySelectorAll('.filter-sidebar input[type="checkbox"]');
             const typeFilterAll = document.getElementById('filter-all');
 
-            // HÀM 1: "Vẽ" HTML
+            // Cần lấy giá trị của dropdown Sắp xếp
+            const sortSelectEl = document.getElementById('sort-select');
+            const searchInputEl = document.getElementById('thanhtimkiem');
+
+            // HÀM 1: "Vẽ" HTML (Giữ nguyên)
             function renderWords(words) {
                 vocabListContainer.innerHTML = '';
                 if (words.length === 0) {
@@ -187,31 +190,35 @@
                     wordItem.className = 'vocab-item';
                     const typeClass = word.type.toLowerCase();
                     wordItem.innerHTML = `
-                        <div class="item-main">
-                            <a href="word-detail.html?word=${word.word}" class="item-word">${word.word}</a>
-                            <span class="item-pronunciation">${word.pronunciation || ''}</span>
-                        </div>
-                        <div class="item-info">
-                            <span class="item-type ${typeClass}">${word.type}</span>
-                            <p class="item-definition">${word.translation}</p>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
-                                <i class="fas fa-plus"></i>
-                            </button>
-                            <button class="action-btn audio" aria-label="Nghe">
-                                <i class="fas fa-volume-up"></i>
-                            </button>
-                        </div>
-                    `;
+                    <div class="item-main">
+                        <a href="word_detail.html?word=${word.word}" class="item-word">${word.word}</a>
+                        <span class="item-pronunciation">${word.pronunciation || ''}</span>
+                    </div>
+                    <div class="item-info">
+                        <span class="item-type ${typeClass}">${word.type}</span>
+                        <p class="item-definition">${word.translation}</p>
+                    </div>
+                    <div class="item-actions">
+                        <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                        <button class="action-btn audio" aria-label="Nghe">
+                            <i class="fas fa-volume-up"></i>
+                        </button>
+                    </div>
+                `;
                     vocabListContainer.appendChild(wordItem);
                 });
             }
 
-            // HÀM 2: Lấy dữ liệu từ API
+            // HÀM 2: Lấy dữ liệu từ API (ĐÃ SỬA)
             async function fetchAndRenderWords() {
-                const filters = { type: [], category: [] };
+                // Lấy giá trị sắp xếp hiện tại
+                const currentSortBy = sortSelectEl.value;
+                const searchQuery = searchInputEl.value.trim();
 
+                // 1. Thu thập các lựa chọn filter (Giữ nguyên)
+                const filters = { type: [], category: [] };
                 allFilterCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
                         if (checkbox.name === 'filter-type' && checkbox.value !== 'all') {
@@ -223,7 +230,21 @@
                     }
                 });
 
+                // 2. Xây dựng chuỗi query (CHỈ CẦN KHAI BÁO MỘT LẦN)
                 const queryParts = [];
+
+                // LỖI CŨ: Tham số 'sort' bị thêm hai lần, dẫn đến lỗi
+
+                // 2.1. Thêm TÌM KIẾM
+                if (searchQuery) {
+                    queryParts.push(`search=${searchQuery}`);
+                }
+
+                // 2.2. Thêm SẮP XẾP (ĐẶT Ở ĐÂY CHỈ MỘT LẦN)
+                queryParts.push(`sort=${currentSortBy}`);
+
+
+                // 2.3. Thêm các filter
                 if (filters.type.length > 0) {
                     queryParts.push(`type=${filters.type.join(',')}`);
                 }
@@ -231,6 +252,8 @@
                     queryParts.push(`category=${filters.category.join(',')}`);
                 }
 
+
+                // 3. Tạo chuỗi query cuối cùng (ĐÃ SỬA LỖI CHÈN SORT THỪA)
                 let queryString = '';
                 if (queryParts.length > 0) {
                     queryString = `?${queryParts.join('&')}`;
@@ -247,8 +270,7 @@
                     vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
                 }
             }
-
-            // HÀM 3: Xử lý nút "Tất cả"
+            // HÀM 3: Xử lý nút "Tất cả" (Giữ nguyên)
             function handleFilterAllLogic(changedCheckbox) {
                 if (changedCheckbox.id === 'filter-all' && changedCheckbox.checked) {
                     allFilterCheckboxes.forEach(cb => {
@@ -267,6 +289,10 @@
             allFilterCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', () => handleFilterAllLogic(checkbox));
             });
+
+            searchInputEl.addEventListener('input', fetchAndRenderWords); // Lắng nghe khi người dùng gõ
+            // THÊM: Gắn sự kiện change cho dropdown Sắp xếp
+            sortSelectEl.addEventListener('change', fetchAndRenderWords);
 
             // Tải danh sách lần đầu
             fetchAndRenderWords();
