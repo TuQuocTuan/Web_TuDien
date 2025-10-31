@@ -31,26 +31,6 @@ a {
 }
 
 /* =================================
-   HEADER & FOOTER (Tái sử dụng)
-   ================================= */
-#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
-.header-left { display: flex; align-items: center; }
-.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; text-decoration: none; }
-.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); padding-bottom: 5px; border-bottom: 3px solid transparent; text-decoration: none; }
-.main-nav a:hover { color: var(--accent-blue); }
-.main-nav a.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
-.header-right { display: flex; align-items: center; }
-.timkiem { display: flex; margin-right: 1.5rem; }
-#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
-.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
-.auth-buttons a { text-decoration: none; font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
-.btn-login { color: var(--primary-blue); }
-.btn-signup { background-color: var(--primary-blue); color: var(--white); }
-
-#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
-
-
-/* =================================
    NỘI DUNG TRANG LUYỆN TẬP
    ================================= */
 main#content {
@@ -103,7 +83,7 @@ main#content {
 .quiz-card {
     background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.07);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     padding: 1.5rem;
     display: flex;
@@ -112,7 +92,7 @@ main#content {
 
 .quiz-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .card-icon {
@@ -144,7 +124,8 @@ main#content {
     font-weight: 500;
     text-decoration: none;
     transition: background-color 0.3s ease;
-    margin-top: auto; /* Đẩy nút xuống cuối thẻ */
+    margin-top: auto;
+    /* Đẩy nút xuống cuối thẻ */
 }
 
 .start-btn:hover {
@@ -154,13 +135,15 @@ main#content {
 
 /* Thông báo khi không có bộ từ */
 .empty-note {
-    grid-column: 1 / -1; /* Chiếm toàn bộ chiều rộng grid */
+    grid-column: 1 / -1;
+    /* Chiếm toàn bộ chiều rộng grid */
     text-align: center;
     padding: 2rem;
     background-color: var(--white);
     border: 1px dashed var(--border-color);
     border-radius: 8px;
 }
+
 .empty-note p {
     text-align: center;
     color: var(--text-light);

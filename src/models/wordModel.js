@@ -40,6 +40,13 @@ const wordSchema = new mongoose.Schema({
     example_vi: {
         type: String,
         trim: true
+    },
+    dailyWords: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Word'
+    }],
+    dailyWordsTimestamp: {
+        type: Date
     }
 }, { timestamps: true });
 

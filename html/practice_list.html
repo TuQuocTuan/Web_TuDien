@@ -36,65 +36,101 @@
 
     <main id="content">
         <div class="practice-container">
-
-            <h1>Luyện tập trắc nghiệm</h1>
-            <p>Chọn một bài kiểm tra để ôn tập từ vựng của bạn.</p>
+            <h1>Chọn bài luyện tập</h1>
+            <p>Chọn một chủ đề để bắt đầu bài kiểm tra "Điền vào chỗ trống".</p>
 
             <section class="quiz-category">
                 <h2>Luyện tập theo chủ đề</h2>
                 <div class="quiz-grid">
 
-                    <article class="quiz-card">
-                        <i class="fas fa-utensils card-icon"></i>
-                        <h3>Chủ đề: Nấu ăn</h3>
-                        <p class="quiz-info">15 câu hỏi · 10 phút</p>
-                        <a href="quiz-detail.html?topic=cooking" class="start-btn">Bắt đầu</a>
-                    </article>
+                    <a href="practice.html?category=school" class="quiz-card">
+                        <i class="fas fa-school card-icon"></i>
+                        <h3>Trường học</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
 
-                    <article class="quiz-card">
+                    <a href="practice.html?category=science" class="quiz-card">
                         <i class="fas fa-flask card-icon"></i>
-                        <h3>Chủ đề: Khoa học</h3>
-                        <p class="quiz-info">20 câu hỏi · 15 phút</p>
-                        <a href="quiz-detail.html?topic=science" class="start-btn">Bắt đầu</a>
-                    </article>
+                        <h3>Khoa học</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
 
-                    <article class="quiz-card">
+                    <a href="practice.html?category=cooking" class="quiz-card">
+                        <i class="fas fa-utensils card-icon"></i>
+                        <h3>Nấu ăn</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=health" class="quiz-card">
+                        <i class="fas fa-heartbeat card-icon"></i>
+                        <h3>Y tế</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=sports" class="quiz-card">
+                        <i class="fas fa-futbol card-icon"></i>
+                        <h3>Thể thao</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=travel" class="quiz-card">
                         <i class="fas fa-plane card-icon"></i>
-                        <h3>Chủ đề: Du lịch</h3>
-                        <p class="quiz-info">10 câu hỏi · 5 phút</p>
-                        <a href="quiz-detail.html?topic=travel" class="start-btn">Bắt đầu</a>
-                    </article>
+                        <h3>Du lịch</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=entertainment" class="quiz-card">
+                        <i class="fas fa-film card-icon"></i>
+                        <h3>Giải trí</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+                    
+                    <a href="practice.html?category=music" class="quiz-card">
+                        <i class="fas fa-music card-icon"></i>
+                        <h3>Âm nhạc</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=friends" class="quiz-card">
+                        <i class="fas fa-users card-icon"></i>
+                        <h3>Bạn bè</h3>
+                        <p class="quiz-info">10 câu hỏi ngẫu nhiên</p>
+                    </a>
+
+                    <a href="practice.html?category=all" class="quiz-card advanced">
+                        <i class="fas fa-random card-icon"></i>
+                        <h3>Trộn tất cả (All)</h3>
+                        <p class="quiz-info">10 câu hỏi từ mọi chủ đề</p>
+                    </a>
 
                 </div>
             </section>
-
-            <section class="quiz-category">
-                <h2>Ôn tập bộ từ của bạn</h2>
-                <div class="quiz-grid">
-
-                    <article class="quiz-card">
-                        <i class="fas fa-book card-icon"></i>
-                        <h3>Bộ từ: IELTS Band 8.0</h3>
-                        <p class="quiz-info">Ôn tập 52 từ vựng</p>
-                        <a href="quiz-detail.html?album=1" class="start-btn">Bắt đầu</a>
-                    </article>
-
-                    <article class="quiz-card">
-                        <i class="fas fa-book card-icon"></i>
-                        <h3>Bộ từ: Giao tiếp hàng ngày</h3>
-                        <p class="quiz-info">Ôn tập 115 từ vựng</p>
-                        <a href="quiz-detail.html?album=2" class="start-btn">Bắt đầu</a>
-                    </article>
-
-                </div>
-            </section>
-
         </div>
     </main>
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>

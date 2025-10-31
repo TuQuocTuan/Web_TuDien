@@ -19,8 +19,8 @@
             </div>
             <nav class="main-nav">
                 <a href="word_list.html">Từ vựng</a>
-                <a href="album.html">Bộ từ vựng</a>
-                <a href="practice_list.html">Luyện tập</a>
+                <a href="album.html" class="private-link">Bộ từ vựng</a>
+                <a href="practice_list.html" class="private-link">Luyện tập</a>
             </nav>
         </div>
         <div class="header-right">
@@ -73,10 +73,17 @@
             </div>
         </section>
 
-        <section class="cta">
+        <section class="cta" id="cta-logged-out">
             <h2>Bắt đầu hành trình của bạn ngay hôm nay!</h2>
             <p>Tạo tài khoản miễn phí để lưu tiến độ và mở khóa tất cả tính năng.</p>
             <a href="signup.html" class="cta-button">Đăng ký miễn phí</a>
+        </section>
+
+        <section class="daily-words" id="cta-logged-in" style="display: none;">
+            <h2>12 từ vựng cho hôm nay</h2>
+            <div class="word-card-grid" id="daily-words-grid">
+                <p>Đang tải từ vựng...</p>
+            </div>
         </section>
     </main>
     <footer id="footer">
@@ -181,6 +188,69 @@
                     suggestionsBox.classList.remove('show');
                 }
             });
+
+            // =================================
+            // ===== LOGIC MỚI (TỪ VỰNG HÔM NAY) =====
+            // =================================
+            const token = localStorage.getItem('token');
+            const ctaLoggedOut = document.getElementById('cta-logged-out');
+            const ctaLoggedIn = document.getElementById('cta-logged-in');
+
+            if (token && ctaLoggedOut && ctaLoggedIn) {
+                // Nếu đã đăng nhập:
+                // 1. Ẩn CTA cũ
+                ctaLoggedOut.style.display = 'none';
+                // 2. Hiện CTA mới
+                ctaLoggedIn.style.display = 'block';
+                // 3. Gọi API để lấy 10 từ
+                fetchDailyWords(token);
+            }
+
+            async function fetchDailyWords(token) {
+                const grid = document.getElementById('daily-words-grid');
+                try {
+                    // 1. Gọi API mới
+                    const response = await fetch('/api/user/my-daily-words', {
+                        method: 'GET',
+                        headers: {
+                            // 2. GỬI "VÉ" (TOKEN) ĐI
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (response.status === 401) {
+                        // Nếu token hết hạn hoặc không hợp lệ
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('username');
+                        window.location.reload(); // Tải lại trang (tự động log out)
+                        return;
+                    }
+                    if (!response.ok) {
+                        throw new Error('Không thể tải từ vựng');
+                    }
+
+                    const words = await response.json();
+
+                    grid.innerHTML = ''; // Xóa chữ "Đang tải..."
+
+                    // 3. Vẽ 10 thẻ từ (Giữ nguyên)
+                    words.forEach(word => {
+                        const card = document.createElement('div');
+                        card.className = 'word-card';
+                        card.innerHTML = `
+                            <a href="word_detail.html?word=${encodeURIComponent(word.word)}">
+                                <h3>${word.word}</h3>
+                                <p>${word.translation.split(';')[0]}</p>
+                            </a>
+                        `;
+                        grid.appendChild(card);
+                    });
+
+                } catch (err) {
+                    console.error("Lỗi fetchDailyWords:", err.message);
+                    grid.innerHTML = '<p style.color="red;">Lỗi khi tải từ vựng hôm nay.</p>';
+                }
+            }
         });
     </script>
 </body>

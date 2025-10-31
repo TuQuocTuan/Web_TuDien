@@ -27,23 +27,6 @@ body {
 }
 
 /* =================================
-   HEADER & FOOTER (Tái sử dụng)
-   ================================= */
-#header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: var(--white); border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.05); height: 80px; }
-.header-left { display: flex; align-items: center; }
-.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; text-decoration: none; }
-.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); padding-bottom: 5px; border-bottom: 3px solid transparent; text-decoration: none; }
-.main-nav a:hover { color: var(--accent-blue); }
-.main-nav a.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
-.header-right { display: flex; align-items: center; }
-.auth-buttons a { text-decoration: none; font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
-.btn-login { color: var(--primary-blue); }
-.btn-signup { background-color: var(--primary-blue); color: var(--white); }
-
-#footer { background-color: #2c2c2c; color: #aaa; padding: 3rem 5%; margin-top: 4rem; text-align: center; }
-
-
-/* =================================
    NỘI DUNG TRANG KẾT QUẢ (MỚI)
    ================================= */
 main#content {
@@ -52,14 +35,15 @@ main#content {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 160px); /* Chiều cao trừ header và footer */
+    min-height: calc(100vh - 160px);
+    /* Chiều cao trừ header và footer */
 }
 
 /* Thẻ kết quả chính */
 .result-container {
     background-color: var(--white);
     border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
     padding: 2.5rem 3rem;
     width: 100%;
     max-width: 600px;
@@ -142,13 +126,17 @@ main#content {
 
 /* Tô màu cho Đúng/Sai */
 .stat-item.correct {
-    background-color: #f0fff4; /* Xanh lá nhạt */
+    background-color: #f0fff4;
+    /* Xanh lá nhạt */
     color: var(--correct-green);
 }
+
 .stat-item.incorrect {
-    background-color: #fff0f0; /* Đỏ nhạt */
+    background-color: #fff0f0;
+    /* Đỏ nhạt */
     color: var(--incorrect-red);
 }
+
 .stat-item.total {
     background-color: var(--light-gray);
     color: var(--text-dark);
@@ -160,7 +148,8 @@ main#content {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    flex-wrap: wrap; /* Cho responsive */
+    flex-wrap: wrap;
+    /* Cho responsive */
 }
 
 .action-btn {
@@ -181,6 +170,7 @@ main#content {
     background-color: var(--primary-blue);
     color: var(--white);
 }
+
 .action-btn.retry-btn:hover {
     background-color: var(--accent-blue);
 }
@@ -190,6 +180,7 @@ main#content {
     color: var(--text-dark);
     border: 1px solid var(--border-color);
 }
+
 .action-btn.home-btn:hover {
     background-color: var(--light-gray);
 }

@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kết quả trắc nghiệm - Wordee</title>
-    
+
     <link rel="stylesheet" href="../css/result.css">
-    
+    <link rel="stylesheet" href="../css/main.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <header id="header">
@@ -33,39 +36,39 @@
 
     <main id="content">
         <div class="result-container">
-            
+
             <h1>Kết quả bài làm</h1>
-            <p class="user-name">Xin chúc mừng, User Name!</p>
-            
+            <p class="user-name">Xin chúc mừng, <span id="username-display">User</span>!</p>
+
             <div class="score-circle">
-                <span class="score-number">80</span>
+                <span class="score-number" id="score-number">...</span>
                 <span class="score-label">Điểm</span>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-item correct">
                     <i class="fas fa-check-circle"></i>
-                    <span class="stat-number">12</span>
+                    <span class="stat-number" id="correct-count">...</span>
                     <span class="stat-label">Đúng</span>
                 </div>
                 <div class="stat-item incorrect">
                     <i class="fas fa-times-circle"></i>
-                    <span class="stat-number">3</span>
+                    <span class="stat-number" id="incorrect-count">...</span>
                     <span class="stat-label">Sai</span>
                 </div>
                 <div class="stat-item total">
                     <i class="fas fa-list-ol"></i>
-                    <span class="stat-number">15</span>
+                    <span class="stat-number" id="total-count">...</span>
                     <span class="stat-label">Tổng số câu</span>
                 </div>
             </div>
 
             <div class="result-actions">
-                <a href="quiz-detail.html" class="action-btn retry-btn">
-                    <i class="fas fa-redo"></i> Làm lại
+                <a href="practice_list.html" class="action-btn retry-btn">
+                    <i class="fas fa-redo"></i> Làm bài khác
                 </a>
-                <a href="practice_list.html" class="action-btn home-btn">
-                    <i class="fas fa-tasks"></i> Về trang luyện tập
+                <a href="index.html" class="action-btn home-btn">
+                    <i class="fas fa-home"></i> Về trang chủ
                 </a>
             </div>
 
@@ -74,10 +77,59 @@
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
 
+    <script src="../js/auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Đọc điểm số từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const score = urlParams.get('score');
+            const total = urlParams.get('total');
+            const username = localStorage.getItem('username');
+
+            // 2. Điền thông tin
+            if (score !== null && total !== null) {
+                const scoreNum = parseInt(score);
+                const totalNum = parseInt(total);
+                const percent = Math.round((scoreNum / totalNum) * 100);
+
+                document.getElementById('username-display').textContent = username || 'bạn';
+                document.getElementById('score-number').textContent = percent; // Hiển thị %
+                document.getElementById('correct-count').textContent = scoreNum;
+                document.getElementById('total-count').textContent = totalNum;
+                document.getElementById('incorrect-count').textContent = totalNum - scoreNum;
+            } else {
+                // Xử lý nếu ai đó vào thẳng trang result.html
+                document.querySelector('.result-container h1').textContent = 'Không có dữ liệu';
+                document.getElementById('score-number').textContent = '?';
+            }
+        });
+    </script>
 </body>
+
 </html>

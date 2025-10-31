@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Làm bài trắc nghiệm - Wordee</title>
-    
+
     <link rel="stylesheet" href="../css/practice.css">
-    
+    <link rel="stylesheet" href="/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <header id="header">
@@ -32,82 +34,237 @@
     </header>
 
     <main id="content">
-        <div class="quiz-layout-container">
-            
+        <div class="quiz-layout-container-single">
             <section class="quiz-main">
-                
-                <div class="quiz-header">
-                    <h1>Ôn tập chủ đề: Nấu ăn</h1>
-                    <div class="quiz-meta">
-                        <div class="timer">
-                            <i class="fas fa-clock"></i>
-                            <span>Thời gian: </span>
-                            <span id="time-counter">14:59</span>
-                        </div>
-                        <a href="quiz-result.html" class="submit-btn">
-                            <i class="fas fa-check-circle"></i> Nộp bài
-                        </a>
-                    </div>
-                </div>
+
+               
 
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 6.6%;"></div>
+                    <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
                 </div>
-                <span class="question-counter">Câu hỏi 1 / 15</span>
+                <span class="question-counter" id="question-counter">Câu 0 / 0</span>
+
+                 <div class="quiz-header">
+                    <h1 id="quiz-title">Đang tải bài quiz...</h1>
+                    <a href="result.html" class="submit-btn" id="submit-btn" style="display: none;">
+                        <i class="fas fa-check-circle"></i> Nộp bài
+                    </a>
+                </div>
                 
                 <div class="quiz-body">
-                    <p class="question-text">
-                        Từ vựng 'Sauté' có nghĩa là gì?
+                    <p class="question-text" id="question-text">
+                        Xin vui lòng chờ...
                     </p>
-                    <div class="answer-options">
-                        <button class="option">A. Luộc</button>
-                        <button class="option">B. Xào / Áp chảo</button>
-                        <button class="option">C. Nướng</button>
-                        <button class="option">D. Hấp</button>
+                    <p class="question-hint" id="question-hint"></p>
+                    <div class="answer-options-fill">
+                        <input type="text" id="answer-input" placeholder="Điền từ còn thiếu...">
                     </div>
                 </div>
 
                 <div class="quiz-navigation">
-                    <button class="nav-btn prev disabled">
-                        <i class="fas fa-angle-left"></i> Câu trước
-                    </button>
-                    <button class="nav-btn next">
-                        Câu tiếp theo <i class="fas fa-angle-right"></i>
+                    <button class="nav-btn next" id="check-answer-btn">
+                        Kiểm tra
                     </button>
                 </div>
+
+                <div id="feedback-zone" class="feedback-zone"></div>
 
             </section>
-
-            <aside class="quiz-sidebar">
-                <h3>Danh sách câu</h3>
-                <div class="question-nav-list">
-                    <a href="#q1" class="question-nav-item current">1</a>
-                    <a href="#q2" class="question-nav-item answered">2</a>
-                    <a href="#q3" class="question-nav-item">3</a>
-                    <a href="#q4" class="question-nav-item">4</a>
-                    <a href="#q5" class="question-nav-item">5</a>
-                    <a href="#q6" class="question-nav-item">6</a>
-                    <a href="#q7" class="question-nav-item">7</a>
-                    <a href="#q8" class="question-nav-item">8</a>
-                    <a href="#q9" class="question-nav-item">9</a>
-                    <a href="#q10" class="question-nav-item">10</a>
-                    <a href="#q11" class="question-nav-item">11</a>
-                    <a href="#q12" class="question-nav-item">12</a>
-                    <a href="#q13" class="question-nav-item">13</a>
-                    <a href="#q14" class="question-nav-item">14</a>
-                    <a href="#q15" class="question-nav-item">15</a>
-                </div>
-            </aside>
-
         </div>
     </main>
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
 
+    <script src="../js/auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Lấy các phần tử
+            const titleEl = document.getElementById('quiz-title');
+            const questionTextEl = document.getElementById('question-text');
+            const hintEl = document.getElementById('question-hint');
+            const answerInputEl = document.getElementById('answer-input');
+            const checkBtn = document.getElementById('check-answer-btn');
+            const feedbackZone = document.getElementById('feedback-zone');
+            const counterEl = document.getElementById('question-counter');
+            const progressBar = document.getElementById('progress-bar');
+            const submitBtn = document.getElementById('submit-btn');
+
+            let quizQuestions = [];
+            let currentQuestionIndex = 0;
+            let score = 0;
+            let category = '';
+
+            // 1. Hàm khởi động: Lấy dữ liệu từ API (Giữ nguyên)
+            async function startQuiz() {
+                // ... (Code startQuiz của bạn y hệt như cũ) ...
+                const urlParams = new URLSearchParams(window.location.search);
+                category = urlParams.get('category');
+                const token = localStorage.getItem('token');
+                if (!category) { /* ... */ }
+                titleEl.textContent = `Quiz Chủ đề: ${category}`;
+                try {
+                    const response = await fetch(`/api/quiz/start?category=${category}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (!response.ok) { const err = await response.json(); throw new Error(err.message); }
+                    quizQuestions = await response.json();
+                    if (quizQuestions.length === 0) { throw new Error('Không có đủ từ vựng để tạo bài quiz.'); }
+                    currentQuestionIndex = 0; score = 0;
+                    renderQuestion();
+                } catch (err) {
+                    questionTextEl.textContent = `Lỗi: ${err.message}`;
+                }
+            }
+
+            // 2. Hàm hiển thị câu hỏi (Giữ nguyên)
+            function renderQuestion() {
+                if (currentQuestionIndex >= quizQuestions.length) {
+                    showResults();
+                    return;
+                }
+                const question = quizQuestions[currentQuestionIndex];
+                questionTextEl.textContent = question.questionText;
+                hintEl.textContent = `(Gợi ý: Từ này dài ${question.answerLength} ký tự)`;
+                answerInputEl.value = '';
+                answerInputEl.disabled = false;
+                checkBtn.textContent = 'Kiểm tra';
+                checkBtn.disabled = false;
+                feedbackZone.innerHTML = '';
+                counterEl.textContent = `Câu ${currentQuestionIndex + 1} / ${quizQuestions.length}`;
+                const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+                progressBar.style.width = `${progress}%`;
+
+                // Tự động focus vào ô input
+                answerInputEl.focus();
+            }
+
+            // =================================
+            // ===== 3. HÀM KIỂM TRA ĐÁP ÁN (ĐÃ SỬA) =====
+            // =================================
+            function checkAnswer() {
+                const userAnswer = answerInputEl.value.trim();
+
+                // ===== THÊM KIỂM TRA Ô RỖNG =====
+                if (userAnswer.length === 0) {
+                    feedbackZone.innerHTML = '<p class="feedback-incorrect">Bạn chưa điền câu trả lời!</p>';
+                    return; // Dừng hàm, không cho "Kiểm tra"
+                }
+                // ==================================
+
+                const correctAnswer = quizQuestions[currentQuestionIndex].answer;
+
+                answerInputEl.disabled = true;
+                checkBtn.textContent = 'Tiếp theo'; // Đổi nút
+
+                let feedbackHTML = '';
+                if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
+                    score++;
+                    feedbackHTML = `<p class="feedback-correct">Chính xác! <strong>${correctAnswer}</strong></p>`;
+                } else {
+                    feedbackHTML = `
+                        <p class="feedback-incorrect">Sai rồi!</p>
+                        <p>Đáp án đúng là: <strong>${correctAnswer}</strong></p>
+                        <p><em>(Nghĩa là: ${quizQuestions[currentQuestionIndex].translation})</em></p>
+                    `;
+                }
+                feedbackZone.innerHTML = feedbackHTML;
+
+                // Chuyển sang câu tiếp theo
+                currentQuestionIndex++;
+            }
+
+            // 4. Hàm kết thúc (Giữ nguyên)
+            function showResults() {
+                // ... (Code showResults của bạn y hệt như cũ) ...
+                questionTextEl.textContent = 'Bạn đã hoàn thành bài quiz!';
+                answerInputEl.style.display = 'none';
+                hintEl.style.display = 'none'; // Ẩn luôn gợi ý
+                checkBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+                const percent = Math.round((score / quizQuestions.length) * 100);
+                feedbackZone.innerHTML = `
+                    <h2>Kết quả: ${score} / ${quizQuestions.length} (${percent}%)</h2>
+                    <p>Nhấn "Nộp bài" để lưu kết quả.</p>
+                `;
+            }
+
+            // 5. Gắn sự kiện cho nút "Kiểm tra / Tiếp theo" (Giữ nguyên)
+            checkBtn.addEventListener('click', () => {
+                if (checkBtn.textContent === 'Kiểm tra') {
+                    checkAnswer();
+                } else {
+                    renderQuestion();
+                }
+            });
+
+            // 6. Gắn sự kiện Enter cho ô input (SỬA LẠI)
+            answerInputEl.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    // Chỉ kích hoạt nếu nút đang là "Kiểm tra" hoặc "Tiếp theo"
+                    checkBtn.click();
+                }
+            });
+
+            // 7. Logic Nộp bài (Giữ nguyên)
+            submitBtn.addEventListener('click', async (e) => {
+                // ... (Code submit của bạn y hệt như cũ) ...
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
+                const token = localStorage.getItem('token');
+                try {
+                    const response = await fetch('/api/quiz/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            category: category,
+                            score: score,
+                            totalQuestions: quizQuestions.length
+                        })
+                    });
+                    const data = await response.json();
+                    if (!response.ok) throw new Error(data.message);
+                    window.location.href = `result.html?score=${data.score}&total=${data.total}`;
+                } catch (err) {
+                    alert('Lỗi khi lưu kết quả: ' + err.message);
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Nộp bài';
+                }
+            });
+
+            // 8. Chạy
+            startQuiz();
+        });
+    </script>
 </body>
+
 </html>

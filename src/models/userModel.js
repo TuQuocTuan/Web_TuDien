@@ -29,6 +29,13 @@ const userSchema = new mongoose.Schema({
     },
     passwordResetExpires: {
         type: Date
+    }, 
+    dailyWords: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Word'
+    }],
+    dailyWordsTimestamp: {
+        type: Date
     }
 }, {
     // Tự động thêm dấu thời gian (created_at, updated_at)

@@ -24,6 +24,9 @@ app.use('/api/user', userRoutes);
 const wordRoutes = require('./src/routes/wordRoutes.js');
 app.use('/api/words', wordRoutes);
 
+const quizRoutes = require('./src/routes/quizRoutes.js');
+app.use('/api/quiz', quizRoutes);   
+
 // 5. PHỤC VỤ FILE TĨNH (CSS, JS)
 // (CSS và JS phải được phục vụ TRƯỚC các file HTML)
 app.use('/css', express.static(path.join(__dirname, 'css')));
