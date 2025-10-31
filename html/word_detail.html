@@ -38,7 +38,7 @@
 
     <main id="content">
         <div class="word-container" id="word-detail-container">
-            <p>Đang tải chi tiết từ...</p>
+            <p style="text-align: center; padding: 2rem;">Đang tải chi tiết từ...</p>
         </div>
     </main>
 
@@ -94,26 +94,23 @@
                         detailContainer.innerHTML = `<h1>Không tìm thấy</h1><p>Không tìm thấy từ vựng: <strong>${wordName}</strong> trong từ điển.</p>`;
                         return;
                     }
-
                     if (!response.ok) {
                         throw new Error('Lỗi server');
                     }
 
                     const word = await response.json(); // Lấy đối tượng từ vựng
 
-                    // 3. VẼ HTML
+                    // 3. VẼ HTML (Sử dụng code layout cũ của bạn)
                     detailContainer.innerHTML = `
                         <div class="word-header">
-                            <div class="word-title-group">
+                            <div class="word-top-line">
                                 <h1 class="word-title">${word.word}</h1>
-                                <span class="word-translation">${word.translation}</span>
-                            </div>
-                            <div class="word-audio-group">
-                                <span class="word-pronunciation">${word.pronunciation || 'N/A'}</span>
                                 <button class="audio-btn" aria-label="Nghe phát âm">
                                     <i class="fas fa-volume-up"></i>
                                 </button>
                             </div>
+                            <span class="word-pronunciation">${word.pronunciation || 'N/A'}</span>
+                            <span class="word-translation">${word.translation.split(';')[0]}</span>
                         </div>
 
                         <div class="word-actions">
@@ -128,19 +125,18 @@
                                 <span class="word-type">${word.type}</span>
                                 <ol class="definition-list">
                                     <li>
-                                        <p class="definition-en-text">Definition (EN): To be defined in detail.</p>
-                                        <p class="definition-vi-text">Định nghĩa (VN): Được định nghĩa chi tiết (hiện tại lấy từ translation).</p>
+                                        <p class="definition-vi-text">${word.translation}</p>
                                         
                                         ${word.example_en ? `
                                         <div class="example-group">
                                             <p class="example-en"><i>Ví dụ: "${word.example_en}"</i></p>
-                                            <p class="example-vi"><i>(Dịch: ${word.example_vi})</i></p>
+                                            <p class="example-vi"><i>(Dịch: ${word.example_vi || '...'})</i></p>
                                         </div>
-                                        ` : '<p class="example-vi">Không có ví dụ.</p>'}
+                                        ` : ''}
                                     </li>
                                 </ol>
                             </section>
-                            </div>
+                        </div>
                     `;
 
                 } catch (err) {
@@ -149,6 +145,7 @@
                 }
             }
 
+            // 4. Chạy hàm
             fetchWordDetails();
         });
     </script>

@@ -9,33 +9,35 @@ const Word = require('../models/wordModel.js'); // Gọi khuôn mẫu Word
  */
 router.get('/', async (req, res) => {
     try {
-        // 1. Khởi tạo query và tùy chọn
-        let filter = {}; // Dùng cho tìm kiếm và lọc
+        let filter = {}; // Đối tượng filter
         let sortOptions = {};
 
-        const { type, category, sort, search } = req.query; // Lấy các tham số
+        const { type, category, sort, search } = req.query;
 
-        // 2. XỬ LÝ TÌM KIẾM (MỚI)
-        if (search) {
-            // $regex: tìm các từ có chứa chuỗi tìm kiếm (search)
-            // $options: 'i' để không phân biệt chữ hoa/thường
-            filter.word = { $regex: search, $options: 'i' };
-        }
-
-        // 3. XỬ LÝ LỌC
+        // 1. XỬ LÝ LỌC (Filter)
+        // (Những filter này sẽ được AND (kết hợp) với tìm kiếm)
         if (type) {
-            // $in: tìm tất cả các từ có 'type' nằm TRONG mảng này
             filter.type = { $in: type.split(',') };
         }
         if (category) {
             filter.category = { $in: category.split(',') };
         }
 
-        // 4. XỬ LÝ SẮP XẾP
+        // 2. XỬ LÝ TÌM KIẾM (ĐÃ NÂNG CẤP)
+        if (search) {
+            // $regex: tìm các từ BẮT ĐẦU BẰNG (^) 'search'
+            // $options: 'i' (không phân biệt hoa/thường)
+            const searchRegex = { $regex: `^${search}`, $options: 'i' };
+
+            // $or: Tìm trong TRƯỜNG NÀY hoặc TRƯỜNG KIA
+            filter.$or = [
+                { word: searchRegex },         // Tìm trong tiếng Anh
+                { translation: searchRegex }  // HOẶC Tìm trong tiếng Việt
+            ];
+        }
+
+        // 3. XỬ LÝ SẮP XẾP (Giữ nguyên)
         switch (sort) {
-            case 'alphabetical_asc':
-                sortOptions = { word: 1 };
-                break;
             case 'alphabetical_desc':
                 sortOptions = { word: -1 };
                 break;
@@ -46,14 +48,14 @@ router.get('/', async (req, res) => {
                 sortOptions = { createdAt: 1 };
                 break;
             default:
-                sortOptions = { word: 1 };
+                sortOptions = { word: 1 }; // Mặc định A-Z
                 break;
         }
 
-        // 5. Thực hiện truy vấn (kết hợp cả filter và sort)
+        // 4. Thực hiện truy vấn
+        // Mongoose sẽ tự hiểu: (Filter A AND Filter B) AND (Search 1 OR Search 2)
         const words = await Word.find(filter).sort(sortOptions);
 
-        // 6. Gửi danh sách đã sắp xếp về frontend
         res.status(200).json(words);
 
     } catch (err) {
@@ -62,12 +64,41 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/suggest', async (req, res) => {
+    try {
+        const searchTerm = req.query.q; 
+        if (!searchTerm) {
+            return res.json([]); 
+        }
+
+        // Tạo regex
+        const searchRegex = { $regex: `^${searchTerm}`, $options: 'i' };
+
+        // Tìm 5 từ BẮT ĐẦU BẰNG từ khóa
+        const suggestions = await Word.find(
+            { 
+                $or: [
+                    { word: searchRegex },         // Tìm trong tiếng Anh
+                    { translation: searchRegex }  // HOẶC Tìm trong tiếng Việt
+                ]
+            },
+            'word translation' // Lấy cả 2 trường để hiển thị
+        ).limit(5); // Giới hạn 5 kết quả
+        
+        res.status(200).json(suggestions);
+
+    } catch (err) {
+        console.error("Lỗi khi lấy gợi ý:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+});
+
 router.get('/:word', async (req, res) => {
     try {
-        // 1. Lấy tên từ từ URL (ví dụ: /api/words/apple -> req.params.word = 'apple')
+        // 1. Lấy tên từ từ URL (ví dụ: /api/words/apple)
         const wordName = req.params.word;
 
-        // 2. Tìm kiếm từ đó trong database (không phân biệt chữ hoa/thường)
+        // 2. Tìm từ đó (không phân biệt hoa/thường)
         const wordDetail = await Word.findOne({
             word: { $regex: new RegExp(`^${wordName}$`, 'i') }
         });
@@ -84,4 +115,6 @@ router.get('/:word', async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
+
+
 module.exports = router;

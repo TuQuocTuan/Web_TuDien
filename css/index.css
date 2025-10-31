@@ -194,3 +194,42 @@ main#content {
     display: flex;
     align-items: center;
 }
+
+.suggestions-list {
+    display: none; /* Mặc định ẩn đi */
+    position: absolute;
+    top: 100%; /* Nằm ngay dưới thanh tìm kiếm */
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    z-index: 100;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.suggestions-list.show {
+    display: block; /* Hiện ra khi có class .show */
+}
+
+/* Kiểu của mỗi gợi ý */
+.suggestion-item {
+    display: block;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid var(--light-gray);
+}
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: var(--light-gray);
+    color: var(--primary-blue);
+}

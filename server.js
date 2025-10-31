@@ -22,7 +22,7 @@ const userRoutes = require('./src/routes/userRoutes.js');
 app.use('/api/user', userRoutes);
 
 const wordRoutes = require('./src/routes/wordRoutes.js');
-app.use('/api/words', wordRoutes); 
+app.use('/api/words', wordRoutes);
 
 // 5. PHỤC VỤ FILE TĨNH (CSS, JS)
 // (CSS và JS phải được phục vụ TRƯỚC các file HTML)
@@ -37,11 +37,11 @@ app.get('/word_detail.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'word_detail.html'));
 });
 // 7. KHỞI ĐỘNG SERVER
-app.listen(port, async () => { 
+app.listen(port, async () => {
     console.log(`Server Wordee đang chạy tại http://localhost:${port}`);
-    
+
     try {
-        const open = (await import('open')).default; 
+        const open = (await import('open')).default;
         open('http://localhost:3000/index.html'); // Mở trang chủ
     } catch (err) {
         console.error('Không thể tự động mở trình duyệt:', err.message);

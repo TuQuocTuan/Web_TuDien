@@ -173,12 +173,24 @@
             const vocabListContainer = document.getElementById('vocab-list-container');
             const allFilterCheckboxes = document.querySelectorAll('.filter-sidebar input[type="checkbox"]');
             const typeFilterAll = document.getElementById('filter-all');
-
-            // Cần lấy giá trị của dropdown Sắp xếp
             const sortSelectEl = document.getElementById('sort-select');
             const searchInputEl = document.getElementById('thanhtimkiem');
 
-            // HÀM 1: "Vẽ" HTML (Giữ nguyên)
+            // =================================
+            // ===== BƯỚC 1: ĐỌC URL (MỚI) =====
+            // =================================
+            // Lấy tham số 'search' từ URL (ví dụ: ?search=app)
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchFromURL = urlParams.get('search');
+            
+            // Nếu có từ khóa từ URL, gán nó vào thanh tìm kiếm
+            if (searchFromURL) {
+                searchInputEl.value = searchFromURL;
+            }
+            // =================================
+            // =================================
+
+            // HÀM 1: "Vẽ" HTML (Giữ nguyên code của bạn)
             function renderWords(words) {
                 vocabListContainer.innerHTML = '';
                 if (words.length === 0) {
@@ -190,34 +202,35 @@
                     wordItem.className = 'vocab-item';
                     const typeClass = word.type.toLowerCase();
                     wordItem.innerHTML = `
-                    <div class="item-main">
-                        <a href="word_detail.html?word=${word.word}" class="item-word">${word.word}</a>
-                        <span class="item-pronunciation">${word.pronunciation || ''}</span>
-                    </div>
-                    <div class="item-info">
-                        <span class="item-type ${typeClass}">${word.type}</span>
-                        <p class="item-definition">${word.translation}</p>
-                    </div>
-                    <div class="item-actions">
-                        <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="action-btn audio" aria-label="Nghe">
-                            <i class="fas fa-volume-up"></i>
-                        </button>
-                    </div>
-                `;
+ <div class="item-main">
+ <a href="word_detail.html?word=${word.word}" class="item-word">${word.word}</a>
+ <span class="item-pronunciation">${word.pronunciation || ''}</span>
+ </div>
+ <div class="item-info">
+ <span class="item-type ${typeClass}">${word.type}</span>
+ <p class="item-definition">${word.translation}</p>
+</div>
+ <div class="item-actions">
+ <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
+ <i class="fas fa-plus"></i>
+ </button>  
+ <button class="action-btn audio" aria-label="Nghe">
+ <i class="fas fa-volume-up"></i>
+ </button>
+ </div>
+`;
                     vocabListContainer.appendChild(wordItem);
                 });
             }
 
-            // HÀM 2: Lấy dữ liệu từ API (ĐÃ SỬA)
+            // HÀM 2: Lấy dữ liệu từ API (Giữ nguyên code của bạn)
             async function fetchAndRenderWords() {
-                // Lấy giá trị sắp xếp hiện tại
+                // Lấy giá trị sắp xếp
                 const currentSortBy = sortSelectEl.value;
+                // Lấy giá trị tìm kiếm (GIỜ ĐÃ CÓ TỪ URL)
                 const searchQuery = searchInputEl.value.trim();
 
-                // 1. Thu thập các lựa chọn filter (Giữ nguyên)
+                // Thu thập filter
                 const filters = { type: [], category: [] };
                 allFilterCheckboxes.forEach(checkbox => {
                     if (checkbox.checked) {
@@ -230,35 +243,22 @@
                     }
                 });
 
-                // 2. Xây dựng chuỗi query (CHỈ CẦN KHAI BÁO MỘT LẦN)
+                // Xây dựng query (Giữ nguyên code của bạn)
                 const queryParts = [];
-
-                // LỖI CŨ: Tham số 'sort' bị thêm hai lần, dẫn đến lỗi
-
-                // 2.1. Thêm TÌM KIẾM
                 if (searchQuery) {
-                    queryParts.push(`search=${searchQuery}`);
+                    queryParts.push(`search=${encodeURIComponent(searchQuery)}`); // (Thêm encodeURIComponent cho an toàn)
                 }
-
-                // 2.2. Thêm SẮP XẾP (ĐẶT Ở ĐÂY CHỈ MỘT LẦN)
-                queryParts.push(`sort=${currentSortBy}`);
-
-
-                // 2.3. Thêm các filter
                 if (filters.type.length > 0) {
                     queryParts.push(`type=${filters.type.join(',')}`);
                 }
                 if (filters.category.length > 0) {
                     queryParts.push(`category=${filters.category.join(',')}`);
                 }
+                queryParts.push(`sort=${currentSortBy}`);
 
+                let queryString = `?${queryParts.join('&')}`;
 
-                // 3. Tạo chuỗi query cuối cùng (ĐÃ SỬA LỖI CHÈN SORT THỪA)
-                let queryString = '';
-                if (queryParts.length > 0) {
-                    queryString = `?${queryParts.join('&')}`;
-                }
-
+                // Gọi API
                 try {
                     vocabListContainer.innerHTML = '<p>Đang tải từ vựng...</p>';
                     const response = await fetch(`/api/words${queryString}`);
@@ -270,7 +270,8 @@
                     vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
                 }
             }
-            // HÀM 3: Xử lý nút "Tất cả" (Giữ nguyên)
+
+            // HÀM 3: Xử lý nút "Tất cả" (Giữ nguyên code của bạn)
             function handleFilterAllLogic(changedCheckbox) {
                 if (changedCheckbox.id === 'filter-all' && changedCheckbox.checked) {
                     allFilterCheckboxes.forEach(cb => {
@@ -285,16 +286,14 @@
                 fetchAndRenderWords();
             }
 
-            // Gắn "tai" cho TẤT CẢ các checkbox
+            // Gắn "tai" cho TẤT CẢ các bộ lọc (Giữ nguyên code của bạn)
             allFilterCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', () => handleFilterAllLogic(checkbox));
             });
-
-            searchInputEl.addEventListener('input', fetchAndRenderWords); // Lắng nghe khi người dùng gõ
-            // THÊM: Gắn sự kiện change cho dropdown Sắp xếp
             sortSelectEl.addEventListener('change', fetchAndRenderWords);
+            searchInputEl.addEventListener('input', fetchAndRenderWords);
 
-            // Tải danh sách lần đầu
+            // Tải danh sách lần đầu (BÂY GIỜ NÓ SẼ ĐỌC TỪ THANH SEARCH ĐÃ ĐIỀN SẴN)
             fetchAndRenderWords();
         });
     </script>

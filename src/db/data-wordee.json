@@ -1,0 +1,893 @@
+[
+    {
+        "word": "Student",
+        "translation": "Học sinh, Sinh viên",
+        "type": "noun",
+        "pronunciation": "/ˈstuːdnt/",
+        "category": "school",
+        "example_en": "She is a good student.",
+        "example_vi": "Cô ấy là một học sinh giỏi."
+    },
+    {
+        "word": "Teacher",
+        "translation": "Giáo viên",
+        "type": "noun",
+        "pronunciation": "/ˈtiːtʃər/",
+        "category": "school",
+        "example_en": "The teacher wrote on the whiteboard.",
+        "example_vi": "Giáo viên viết lên bảng trắng."
+    },
+    {
+        "word": "Homework",
+        "translation": "Bài tập về nhà",
+        "type": "noun",
+        "pronunciation": "/ˈhoʊmwɜːrk/",
+        "category": "school",
+        "example_en": "I have a lot of homework tonight.",
+        "example_vi": "Tôi có rất nhiều bài tập về nhà tối nay."
+    },
+    {
+        "word": "Exam",
+        "translation": "Bài kiểm tra",
+        "type": "noun",
+        "pronunciation": "/ɪɡˈzæm/",
+        "category": "school",
+        "example_en": "She passed the final exam.",
+        "example_vi": "Cô ấy đã vượt qua bài thi cuối kỳ."
+    },
+    {
+        "word": "Study",
+        "translation": "Học tập, Nghiên cứu",
+        "type": "verb",
+        "pronunciation": "/ˈstʌdi/",
+        "category": "school",
+        "example_en": "I need to study for the test.",
+        "example_vi": "Tôi cần học bài cho kỳ thi."
+    },
+    {
+        "word": "Library",
+        "translation": "Thư viện",
+        "type": "noun",
+        "pronunciation": "/ˈlaɪbreri/",
+        "category": "school",
+        "example_en": "We can borrow books from the library.",
+        "example_vi": "Chúng ta có thể mượn sách từ thư viện."
+    },
+    {
+        "word": "University",
+        "translation": "Trường đại học",
+        "type": "noun",
+        "pronunciation": "/ˌjuːnɪˈvɜːrsəti/",
+        "category": "school",
+        "example_en": "He graduated from a famous university.",
+        "example_vi": "Anh ấy đã tốt nghiệp từ một trường đại học danh tiếng."
+    },
+    {
+        "word": "Classroom",
+        "translation": "Lớp học",
+        "type": "noun",
+        "pronunciation": "/ˈklæsruːm/",
+        "category": "school",
+        "example_en": "The students are in the classroom.",
+        "example_vi": "Các học sinh đang ở trong lớp học."
+    },
+    {
+        "word": "Textbook",
+        "translation": "Sách giáo khoa",
+        "type": "noun",
+        "pronunciation": "/ˈtekstbʊk/",
+        "category": "school",
+        "example_en": "Please open your textbook to page 42.",
+        "example_vi": "Mời các em mở sách giáo khoa trang 42."
+    },
+    {
+        "word": "Education",
+        "translation": "Giáo dục",
+        "type": "noun",
+        "pronunciation": "/ˌedʒuˈkeɪʃn/",
+        "category": "school",
+        "example_en": "Education is the key to success.",
+        "example_vi": "Giáo dục là chìa khóa của thành công."
+    },
+    {
+        "word": "Principal",
+        "translation": "Hiệu trưởng",
+        "type": "noun",
+        "pronunciation": "/ˈprɪnsəpl/",
+        "category": "school",
+        "example_en": "The principal gave a speech.",
+        "example_vi": "Thầy hiệu trưởng đã có một bài phát biểu."
+    },
+    {
+        "word": "Experiment",
+        "translation": "Thí nghiệm",
+        "type": "noun",
+        "pronunciation": "/ɪkˈsperɪmənt/",
+        "category": "science",
+        "example_en": "The experiment was successful.",
+        "example_vi": "Cuộc thí nghiệm đã thành công."
+    },
+    {
+        "word": "Research",
+        "translation": "Nghiên cứu",
+        "type": "noun",
+        "pronunciation": "/ˈriːsɜːrtʃ/",
+        "category": "science",
+        "example_en": "He is doing research on cancer.",
+        "example_vi": "Ông ấy đang nghiên cứu về ung thư."
+    },
+    {
+        "word": "Hypothesis",
+        "translation": "Giả thuyết",
+        "type": "noun",
+        "pronunciation": "/haɪˈpɒθəsɪs/",
+        "category": "science",
+        "example_en": "We need to test this hypothesis.",
+        "example_vi": "Chúng ta cần kiểm chứng giả thuyết này."
+    },
+    {
+        "word": "Molecule",
+        "translation": "Phân tử",
+        "type": "noun",
+        "pronunciation": "/ˈmɒlɪkjuːl/",
+        "category": "science",
+        "example_en": "A molecule of water consists of two hydrogen atoms and one oxygen atom.",
+        "example_vi": "Một phân tử nước bao gồm hai nguyên tử hydro và một nguyên tử oxy."
+    },
+    {
+        "word": "Physics",
+        "translation": "Vật lý",
+        "type": "noun",
+        "pronunciation": "/ˈfɪzɪks/",
+        "category": "science",
+        "example_en": "Physics explains how the world works.",
+        "example_vi": "Vật lý giải thích cách thế giới vận hành."
+    },
+    {
+        "word": "Chemistry",
+        "translation": "Hóa học",
+        "type": "noun",
+        "pronunciation": "/ˈkemɪstri/",
+        "category": "science",
+        "example_en": "She is studying chemistry at university.",
+        "example_vi": "Cô ấy đang học Hóa học ở trường đại học."
+    },
+    {
+        "word": "Biology",
+        "translation": "Sinh học",
+        "type": "noun",
+        "pronunciation": "/baɪˈɒlədʒi/",
+        "category": "science",
+        "example_en": "Biology is the study of living organisms.",
+        "example_vi": "Sinh học là ngành nghiên cứu về các sinh vật sống."
+    },
+    {
+        "word": "Gravity",
+        "translation": "Trọng lực",
+        "type": "noun",
+        "pronunciation": "/ˈɡrævɪti/",
+        "category": "science",
+        "example_en": "Gravity pulls everything towards the earth.",
+        "example_vi": "Trọng lực kéo mọi thứ về phía Trái Đất."
+    },
+    {
+        "word": "Laboratory",
+        "translation": "Phòng thí nghiệm",
+        "type": "noun",
+        "pronunciation": "/ˈlæbrətɔːri/",
+        "category": "science",
+        "example_en": "Scientists work in a laboratory.",
+        "example_vi": "Các nhà khoa học làm việc trong phòng thí nghiệm."
+    },
+    {
+        "word": "Scientist",
+        "translation": "Nhà khoa học",
+        "type": "noun",
+        "pronunciation": "/ˈsaɪəntɪst/",
+        "category": "science",
+        "example_en": "The scientist discovered a new element.",
+        "example_vi": "Nhà khoa học đã phát hiện ra một nguyên tố mới."
+    },
+    {
+        "word": "Discovery",
+        "translation": "Khám phá",
+        "type": "noun",
+        "pronunciation": "/dɪˈskʌvəri/",
+        "category": "science",
+        "example_en": "It was a major scientific discovery.",
+        "example_vi": "Đó là một phát kiến khoa học lớn."
+    },
+    {
+        "word": "Recipe",
+        "translation": "Công thức nấu ăn",
+        "type": "noun",
+        "pronunciation": "/ˈresəpi/",
+        "category": "cooking",
+        "example_en": "Do you have a recipe for this cake?",
+        "example_vi": "Bạn có công thức cho món bánh này không?"
+    },
+    {
+        "word": "Ingredient",
+        "translation": "Nguyên liệu",
+        "type": "noun",
+        "pronunciation": "/ɪnˈɡriːdiənt/",
+        "category": "cooking",
+        "example_en": "Please buy all the ingredients for this dish.",
+        "example_vi": "Làm ơn mua tất cả nguyên liệu cho món này."
+    },
+    {
+        "word": "Oven",
+        "translation": "Lò nướng",
+        "type": "noun",
+        "pronunciation": "/ˈʌv(ə)n/",
+        "category": "cooking",
+        "example_en": "Preheat the oven to 180 degrees.",
+        "example_vi": "Làm nóng lò nướng trước ở 180 độ."
+    },
+    {
+        "word": "Sauté",
+        "translation": "Áp chảo / Xào",
+        "type": "verb",
+        "pronunciation": "/soʊˈteɪ/",
+        "category": "cooking",
+        "example_en": "Sauté the onions until they are soft.",
+        "example_vi": "Xào hành tây cho đến khi chúng mềm."
+    },
+    {
+        "word": "Boil",
+        "translation": "Luộc",
+        "type": "verb",
+        "pronunciation": "/bɔɪl/",
+        "category": "cooking",
+        "example_en": "Boil the eggs for 10 minutes.",
+        "example_vi": "Luộc trứng trong 10 phút."
+    },
+    {
+        "word": "Fry",
+        "translation": "Chiên",
+        "type": "verb",
+        "pronunciation": "/fraɪ/",
+        "category": "cooking",
+        "example_en": "I will fry some chicken.",
+        "example_vi": "Tôi sẽ chiên một ít gà."
+    },
+    {
+        "word": "Kitchen",
+        "translation": "Nhà bếp",
+        "type": "noun",
+        "pronunciation": "/ˈkɪtʃɪn/",
+        "category": "cooking",
+        "example_en": "My mother is in the kitchen.",
+        "example_vi": "Mẹ tôi đang ở trong bếp."
+    },
+    {
+        "word": "Chef",
+        "translation": "Đầu bếp",
+        "type": "noun",
+        "pronunciation": "/ʃef/",
+        "category": "cooking",
+        "example_en": "He is a famous chef.",
+        "example_vi": "Ông ấy là một đầu bếp nổi tiếng."
+    },
+    {
+        "word": "Flour",
+        "translation": "Bột mì",
+        "type": "noun",
+        "pronunciation": "/ˈflaʊər/",
+        "category": "cooking",
+        "example_en": "You need flour to make bread.",
+        "example_vi": "Bạn cần bột mì để làm bánh mì."
+    },
+    {
+        "word": "Spice",
+        "translation": "Gia vị",
+        "type": "noun",
+        "pronunciation": "/spaɪs/",
+        "category": "cooking",
+        "example_en": "This dish needs more spice.",
+        "example_vi": "Món này cần thêm gia vị."
+    },
+    {
+        "word": "Stir",
+        "translation": "Khuấy",
+        "type": "verb",
+        "pronunciation": "/stɜːr/",
+        "category": "cooking",
+        "example_en": "Stir the soup constantly.",
+        "example_vi": "Hãy khuấy món súp liên tục."
+    },
+    {
+        "word": "Movie",
+        "translation": "Phim điện ảnh",
+        "type": "noun",
+        "pronunciation": "/ˈmuːvi/",
+        "category": "entertainment",
+        "example_en": "Let's watch a movie tonight.",
+        "example_vi": "Tối nay đi xem phim đi."
+    },
+    {
+        "word": "Audience",
+        "translation": "Khán giả",
+        "type": "noun",
+        "pronunciation": "/ˈɔːdiəns/",
+        "category": "entertainment",
+        "example_en": "The audience clapped loudly.",
+        "example_vi": "Khán giả vỗ tay nồng nhiệt."
+    },
+    {
+        "word": "Hilarious",
+        "translation": "Vui nhộn, Hài hước",
+        "type": "adjective",
+        "pronunciation": "/hɪˈleriəs/",
+        "category": "entertainment",
+        "example_en": "The movie was hilarious.",
+        "example_vi": "Bộ phim rất hài hước."
+    },
+    {
+        "word": "Actor",
+        "translation": "Diễn viên nam",
+        "type": "noun",
+        "pronunciation": "/ˈæktər/",
+        "category": "entertainment",
+        "example_en": "He is a talented actor.",
+        "example_vi": "Anh ấy là một diễn viên tài năng."
+    },
+    {
+        "word": "Theater",
+        "translation": "Rạp hát",
+        "type": "noun",
+        "pronunciation": "/ˈθiːətər/",
+        "category": "entertainment",
+        "example_en": "We are going to the theater.",
+        "example_vi": "Chúng tôi sắp đến rạp hát."
+    },
+    {
+        "word": "Game",
+        "translation": "Trò chơi",
+        "type": "noun",
+        "pronunciation": "/ɡeɪm/",
+        "category": "entertainment",
+        "example_en": "Do you want to play a game?",
+        "example_vi": "Bạn có muốn chơi một trò chơi không?"
+    },
+    {
+        "word": "Festival",
+        "translation": "Lễ hội",
+        "type": "noun",
+        "pronunciation": "/ˈfestɪvl/",
+        "category": "entertainment",
+        "example_en": "The music festival was amazing.",
+        "example_vi": "Lễ hội âm nhạc thật tuyệt vời."
+    },
+    {
+        "word": "Perform",
+        "translation": "Trình diễn",
+        "type": "verb",
+        "pronunciation": "/pərˈfɔːrm/",
+        "category": "entertainment",
+        "example_en": "The band will perform live.",
+        "example_vi": "Ban nhạc sẽ trình diễn trực tiếp."
+    },
+    {
+        "word": "Comedy",
+        "translation": "Hài kịch",
+        "type": "noun",
+        "pronunciation": "/ˈkɒmədi/",
+        "category": "entertainment",
+        "example_en": "I prefer comedy to drama.",
+        "example_vi": "Tôi thích hài kịch hơn chính kịch."
+    },
+    {
+        "word": "Magic",
+        "translation": "Ảo thuật",
+        "type": "noun",
+        "pronunciation": "/ˈmædʒɪk/",
+        "category": "entertainment",
+        "example_en": "He performed a magic trick.",
+        "example_vi": "Anh ấy đã biểu diễn một trò ảo thuật."
+    },
+    {
+        "word": "Circus",
+        "translation": "Rạp xiếc",
+        "type": "noun",
+        "pronunciation": "/ˈsɜːrkəs/",
+        "category": "entertainment",
+        "example_en": "The children loved the circus.",
+        "example_vi": "Bọn trẻ rất thích rạp xiếc."
+    },
+    {
+        "word": "Melody",
+        "translation": "Giai điệu",
+        "type": "noun",
+        "pronunciation": "/ˈmelədi/",
+        "category": "music",
+        "example_en": "That's a beautiful melody.",
+        "example_vi": "Đó là một giai điệu thật hay."
+    },
+    {
+        "word": "Rhythm",
+        "translation": "Nhịp điệu",
+        "type": "noun",
+        "pronunciation": "/ˈrɪðəm/",
+        "category": "music",
+        "example_en": "This song has a catchy rhythm.",
+        "example_vi": "Bài hát này có nhịp điệu bắt tai."
+    },
+    {
+        "word": "Instrument",
+        "translation": "Nhạc cụ",
+        "type": "noun",
+        "pronunciation": "/ˈɪnstrəmənt/",
+        "category": "music",
+        "example_en": "The piano is a keyboard instrument.",
+        "example_vi": "Đàn piano là một loại nhạc cụ phím."
+    },
+    {
+        "word": "Guitar",
+        "translation": "Đàn ghi-ta",
+        "type": "noun",
+        "pronunciation": "/ɡɪˈtɑːr/",
+        "category": "music",
+        "example_en": "He plays the guitar very well.",
+        "example_vi": "Anh ấy chơi ghi-ta rất giỏi."
+    },
+    {
+        "word": "Song",
+        "translation": "Bài hát",
+        "type": "noun",
+        "pronunciation": "/sɔːŋ/",
+        "category": "music",
+        "example_en": "This is my favorite song.",
+        "example_vi": "Đây là bài hát yêu thích của tôi."
+    },
+    {
+        "word": "Sing",
+        "translation": "Hát",
+        "type": "verb",
+        "pronunciation": "/sɪŋ/",
+        "category": "music",
+        "example_en": "She loves to sing.",
+        "example_vi": "Cô ấy rất thích hát."
+    },
+    {
+        "word": "Band",
+        "translation": "Ban nhạc",
+        "type": "noun",
+        "pronunciation": "/bænd/",
+        "category": "music",
+        "example_en": "My favorite band is playing tonight.",
+        "example_vi": "Ban nhạc yêu thích của tôi sẽ chơi tối nay."
+    },
+    {
+        "word": "Lyrics",
+        "translation": "Lời bài hát",
+        "type": "noun",
+        "pronunciation": "/ˈlɪrɪks/",
+        "category": "music",
+        "example_en": "He forgot the lyrics to the song.",
+        "example_vi": "Anh ấy đã quên lời bài hát."
+    },
+    {
+        "word": "Genre",
+        "translation": "Thể loại",
+        "type": "noun",
+        "pronunciation": "/ˈʒɑːnrə/",
+        "category": "music",
+        "example_en": "What is your favorite music genre?",
+        "example_vi": "Thể loại âm nhạc yêu thích của bạn là gì?"
+    },
+    {
+        "word": "Concert",
+        "translation": "Buổi hòa nhạc",
+        "type": "noun",
+        "pronunciation": "/ˈkɒnsərt/",
+        "category": "music",
+        "example_en": "We are going to a concert on Friday.",
+        "example_vi": "Chúng tôi sẽ đi xem hòa nhạc vào thứ Sáu."
+    },
+    {
+        "word": "Vocalist",
+        "translation": "Ca sĩ",
+        "type": "noun",
+        "pronunciation": "/ˈvoʊkəlɪst/",
+        "category": "music",
+        "example_en": "She is the lead vocalist of the band.",
+        "example_vi": "Cô ấy là ca sĩ chính của ban nhạc."
+    },
+    {
+        "word": "Journey",
+        "translation": "Hành trình",
+        "type": "noun",
+        "pronunciation": "/ˈdʒɜːrni/",
+        "category": "travel",
+        "example_en": "Life is a long journey.",
+        "example_vi": "Cuộc đời là một hành trình dài."
+    },
+    {
+        "word": "Destination",
+        "translation": "Điểm đến",
+        "type": "noun",
+        "pronunciation": "/ˌdestɪˈneɪʃ(ə)n/",
+        "category": "travel",
+        "example_en": "We reached our destination.",
+        "example_vi": "Chúng tôi đã đến đích."
+    },
+    {
+        "word": "Luggage",
+        "translation": "Hành lý",
+        "type": "noun",
+        "pronunciation": "/ˈlʌɡɪdʒ/",
+        "category": "travel",
+        "example_en": "Please check your luggage.",
+        "example_vi": "Vui lòng kiểm tra hành lý của bạn."
+    },
+    {
+        "word": "Explore",
+        "translation": "Khám phá",
+        "type": "verb",
+        "pronunciation": "/ɪkˈsplɔːr/",
+        "category": "travel",
+        "example_en": "We want to explore the new city.",
+        "example_vi": "Chúng tôi muốn khám phá thành phố mới."
+    },
+    {
+        "word": "Tourist",
+        "translation": "Khách du lịch",
+        "type": "noun",
+        "pronunciation": "/ˈtʊrɪst/",
+        "category": "travel",
+        "example_en": "Many tourists visit this place.",
+        "example_vi": "Rất nhiều khách du lịch thăm nơi này."
+    },
+    {
+        "word": "Hotel",
+        "translation": "Khách sạn",
+        "type": "noun",
+        "pronunciation": "/hoʊˈtel/",
+        "category": "travel",
+        "example_en": "We are staying at a nice hotel.",
+        "example_vi": "Chúng tôi đang ở một khách sạn tốt."
+    },
+    {
+        "word": "Passport",
+        "translation": "Hộ chiếu",
+        "type": "noun",
+        "pronunciation": "/ˈpæspɔːrt/",
+        "category": "travel",
+        "example_en": "You need a passport to travel abroad.",
+        "example_vi": "Bạn cần hộ chiếu để đi du lịch nước ngoài."
+    },
+    {
+        "word": "Flight",
+        "translation": "Chuyến bay",
+        "type": "noun",
+        "pronunciation": "/flaɪt/",
+        "category": "travel",
+        "example_en": "Our flight was delayed.",
+        "example_vi": "Chuyến bay của chúng tôi đã bị hoãn."
+    },
+    {
+        "word": "Vacation",
+        "translation": "Kỳ nghỉ",
+        "type": "noun",
+        "pronunciation": "/veɪˈkeɪʃn/",
+        "category": "travel",
+        "example_en": "I need a long vacation.",
+        "example_vi": "Tôi cần một kỳ nghỉ dài."
+    },
+    {
+        "word": "Adventure",
+        "translation": "Phiêu lưu",
+        "type": "noun",
+        "pronunciation": "/ədˈventʃər/",
+        "category": "travel",
+        "example_en": "It was a great adventure.",
+        "example_vi": "Đó là một chuyến phiêu lưu tuyệt vời."
+    },
+    {
+        "word": "Beach",
+        "translation": "Bãi biển",
+        "type": "noun",
+        "pronunciation": "/biːtʃ/",
+        "category": "travel",
+        "example_en": "Let's go to the beach.",
+        "example_vi": "Chúng ta ra bãi biển đi."
+    },
+    {
+        "word": "Loyal",
+        "translation": "Trung thành",
+        "type": "adjective",
+        "pronunciation": "/ˈlɔɪəl/",
+        "category": "friends",
+        "example_en": "He is a loyal friend.",
+        "example_vi": "Anh ấy là một người bạn trung thành."
+    },
+    {
+        "word": "Trust",
+        "translation": "Tin tưởng",
+        "type": "noun",
+        "pronunciation": "/trʌst/",
+        "category": "friends",
+        "example_en": "Trust is important in a friendship.",
+        "example_vi": "Sự tin tưởng là quan trọng trong tình bạn."
+    },
+    {
+        "word": "Support",
+        "translation": "Hỗ trợ, Ủng hộ",
+        "type": "verb",
+        "pronunciation": "/səˈpɔːrt/",
+        "category": "friends",
+        "example_en": "I will always support you.",
+        "example_vi": "Tôi sẽ luôn ủng hộ bạn."
+    },
+    {
+        "word": "Relationship",
+        "translation": "Mối quan hệ",
+        "type": "noun",
+        "pronunciation": "/rɪˈleɪʃ(ə)nʃɪp/",
+        "category": "friends",
+        "example_en": "They have a strong relationship.",
+        "example_vi": "Họ có một mối quan hệ bền chặt."
+    },
+    {
+        "word": "Share",
+        "translation": "Chia sẻ",
+        "type": "verb",
+        "pronunciation": "/ʃer/",
+        "category": "friends",
+        "example_en": "Friends share everything.",
+        "example_vi": "Bạn bè chia sẻ mọi thứ."
+    },
+    {
+        "word": "Kindness",
+        "translation": "Lòng tốt",
+        "type": "noun",
+        "pronunciation": "/ˈkaɪndnəs/",
+        "category": "friends",
+        "example_en": "Thank you for your kindness.",
+        "example_vi": "Cảm ơn lòng tốt của bạn."
+    },
+    {
+        "word": "Honest",
+        "translation": "Trung thực",
+        "type": "adjective",
+        "pronunciation": "/ˈɒnɪst/",
+        "category": "friends",
+        "example_en": "She is an honest person.",
+        "example_vi": "Cô ấy là một người trung thực."
+    },
+    {
+        "word": "Friendship",
+        "translation": "Tình bạn",
+        "type": "noun",
+        "pronunciation": "/ˈfrendʃɪp/",
+        "category": "friends",
+        "example_en": "Their friendship lasted for years.",
+        "example_vi": "Tình bạn của họ kéo dài nhiều năm."
+    },
+    {
+        "word": "Laugh",
+        "translation": "Cười",
+        "type": "verb",
+        "pronunciation": "/læf/",
+        "category": "friends",
+        "example_en": "He made everyone laugh.",
+        "example_vi": "Anh ấy làm mọi người cười."
+    },
+    {
+        "word": "Together",
+        "translation": "Cùng nhau",
+        "type": "adverb",
+        "pronunciation": "/təˈɡeðər/",
+        "category": "friends",
+        "example_en": "They always go to parties together.",
+        "example_vi": "Họ luôn đi tiệc cùng nhau."
+    },
+    {
+        "word": "Party",
+        "translation": "Bữa tiệc",
+        "type": "noun",
+        "pronunciation": "/ˈpɑːrti/",
+        "category": "friends",
+        "example_en": "We are having a party on Saturday.",
+        "example_vi": "Chúng tôi sẽ tổ chức tiệc vào thứ Bảy."
+    },
+    {
+        "word": "Athlete",
+        "translation": "Vận động viên",
+        "type": "noun",
+        "pronunciation": "/ˈæθliːt/",
+        "category": "sports",
+        "example_en": "He is a professional athlete.",
+        "example_vi": "Anh ấy là một vận động viên chuyên nghiệp."
+    },
+    {
+        "word": "Score",
+        "translation": "Tỷ số / Ghi điểm",
+        "type": "noun",
+        "pronunciation": "/skɔːr/",
+        "category": "sports",
+        "example_en": "What's the final score?",
+        "example_vi": "Tỷ số cuối cùng là gì?"
+    },
+    {
+        "word": "Championship",
+        "translation": "Giải vô địch",
+        "type": "noun",
+        "pronunciation": "/ˈtʃæmpiənʃɪp/",
+        "category": "sports",
+        "example_en": "They won the championship.",
+        "example_vi": "Họ đã vô địch giải đấu."
+    },
+    {
+        "word": "Exercise",
+        "translation": "Tập thể dục",
+        "type": "verb",
+        "pronunciation": "/ˈeksərsaɪz/",
+        "category": "sports",
+        "example_en": "You should exercise regularly.",
+        "example_vi": "Bạn nên tập thể dục thường xuyên."
+    },
+    {
+        "word": "Team",
+        "translation": "Đội",
+        "type": "noun",
+        "pronunciation": "/tiːm/",
+        "category": "sports",
+        "example_en": "He plays for the national team.",
+        "example_vi": "Anh ấy chơi cho đội tuyển quốc gia."
+    },
+    {
+        "word": "Match",
+        "translation": "Trận đấu",
+        "type": "noun",
+        "pronunciation": "/mætʃ/",
+        "category": "sports",
+        "example_en": "It was an exciting match.",
+        "example_vi": "Đó là một trận đấu hấp dẫn."
+    },
+    {
+        "word": "Football",
+        "translation": "Bóng đá",
+        "type": "noun",
+        "pronunciation": "/ˈfʊtbɔːl/",
+        "category": "sports",
+        "example_en": "He loves playing football.",
+        "example_vi": "Cậu ấy thích chơi bóng đá."
+    },
+    {
+        "word": "Swim",
+        "translation": "Bơi",
+        "type": "verb",
+        "pronunciation": "/swɪm/",
+        "category": "sports",
+        "example_en": "I swim twice a week.",
+        "example_vi": "Tôi đi bơi hai lần một tuần."
+    },
+    {
+        "word": "Victory",
+        "translation": "Chiến thắng",
+        "type": "noun",
+        "pronunciation": "/ˈvɪktəri/",
+        "category": "sports",
+        "example_en": "It was a great victory for the team.",
+        "example_vi": "Đó là một chiến thắng tuyệt vời cho cả đội."
+    },
+    {
+        "word": "Stadium",
+        "translation": "Sân vận động",
+        "type": "noun",
+        "pronunciation": "/ˈsteɪdiəm/",
+        "category": "sports",
+        "example_en": "The stadium was full of fans.",
+        "example_vi": "Sân vận động chật kín người hâm mộ."
+    },
+    {
+        "word": "Coach",
+        "translation": "Huấn luyện viên",
+        "type": "noun",
+        "pronunciation": "/koʊtʃ/",
+        "category": "sports",
+        "example_en": "The coach gave instructions.",
+        "example_vi": "Huấn luyện viên đã đưa ra chỉ dẫn."
+    },
+    {
+        "word": "Doctor",
+        "translation": "Bác sĩ",
+        "type": "noun",
+        "pronunciation": "/ˈdɒktər/",
+        "category": "health",
+        "example_en": "You should see a doctor.",
+        "example_vi": "Bạn nên đi gặp bác sĩ."
+    },
+    {
+        "word": "Medicine",
+        "translation": "Thuốc / Y học",
+        "type": "noun",
+        "pronunciation": "/ˈmedɪs(ə)n/",
+        "category": "health",
+        "example_en": "Have you taken your medicine?",
+        "example_vi": "Bạn đã uống thuốc chưa?"
+    },
+    {
+        "word": "Symptom",
+        "translation": "Triệu chứng",
+        "type": "noun",
+        "pronunciation": "/ˈsɪmptəm/",
+        "category": "health",
+        "example_en": "Fever is a common symptom of flu.",
+        "example_vi": "Sốt là một triệu chứng phổ biến của bệnh cúm."
+    },
+    {
+        "word": "Healthy",
+        "translation": "Khỏe mạnh",
+        "type": "adjective",
+        "pronunciation": "/ˈhelθi/",
+        "category": "health",
+        "example_en": "It's important to stay healthy.",
+        "example_vi": "Việc giữ gìn sức khỏe rất quan trọng."
+    },
+    {
+        "word": "Hospital",
+        "translation": "Bệnh viện",
+        "type": "noun",
+        "pronunciation": "/ˈhɒspɪtl/",
+        "category": "health",
+        "example_en": "He was taken to the hospital.",
+        "example_vi": "Anh ấy đã được đưa đến bệnh viện."
+    },
+    {
+        "word": "Virus",
+        "translation": "Vi-rút",
+        "type": "noun",
+        "pronunciation": "/ˈvaɪrəs/",
+        "category": "health",
+        "example_en": "The computer has a virus.",
+        "example_vi": "Cái máy tính đã bị nhiễm vi-rút."
+    },
+    {
+        "word": "Patient",
+        "translation": "Bệnh nhân",
+        "type": "noun",
+        "pronunciation": "/ˈpeɪʃnt/",
+        "category": "health",
+        "example_en": "The doctor is checking the patient.",
+        "example_vi": "Bác sĩ đang khám cho bệnh nhân."
+    },
+    {
+        "word": "Nurse",
+        "translation": "Y tá",
+        "type": "noun",
+        "pronunciation": "/nɜːrs/",
+        "category": "health",
+        "example_en": "The nurse gave him an injection.",
+        "example_vi": "Cô y tá đã tiêm cho anh ấy."
+    },
+    {
+        "word": "Headache",
+        "translation": "Đau đầu",
+        "type": "noun",
+        "pronunciation": "/ˈhedeɪk/",
+        "category": "health",
+        "example_en": "I have a terrible headache.",
+        "example_vi": "Tôi bị đau đầu kinh khủng."
+    },
+    {
+        "word": "Fever",
+        "translation": "Sốt",
+        "type": "noun",
+        "pronunciation": "/ˈfiːvər/",
+        "category": "health",
+        "example_en": "He has a high fever.",
+        "example_vi": "Anh ấy bị sốt cao."
+    },
+    {
+        "word": "Wellness",
+        "translation": "Sức khỏe (tinh thần/thể chất)",
+        "type": "noun",
+        "pronunciation": "/ˈwelnəs/",
+        "category": "health",
+        "example_en": "The company focuses on employee wellness.",
+        "example_vi": "Công ty tập trung vào sức khỏe của nhân viên."
+    }
+]
