@@ -293,7 +293,27 @@
             sortSelectEl.addEventListener('change', fetchAndRenderWords);
             searchInputEl.addEventListener('input', fetchAndRenderWords);
 
+
             // Tải danh sách lần đầu (BÂY GIỜ NÓ SẼ ĐỌC TỪ THANH SEARCH ĐÃ ĐIỀN SẴN)
+
+            //THÊM MỚI: SỰ KIỆN PHÁT ÂM CHO CẢ DANH SÁCH
+            vocabListContainer.addEventListener('click', (event) => {
+                const audioButton = event.target.closest('.action-btn.audio');
+                if (!audioButton)
+                    return;
+
+                const wordItem = audioButton.closest('.vocab-item');
+                const wordToSpeak = wordItem.querySelector('.item-word').innerText;
+                
+                if (wordToSpeak && 'speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(wordToSpeak);
+                    utterance.lang = 'en-US'; 
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                }
+            });
+
+            // Tải danh sách lần đầu
             fetchAndRenderWords();
         });
     </script>
