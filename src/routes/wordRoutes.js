@@ -9,34 +9,32 @@ const Word = require('../models/wordModel.js'); // Gọi khuôn mẫu Word
  */
 router.get('/', async (req, res) => {
     try {
+        // --- 1. LẤY CÁC THAM SỐ (BAO GỒM 'PAGE') ---
         let filter = {}; // Đối tượng filter
         let sortOptions = {};
+        const { type, category, sort, search, page } = req.query; // Thêm 'page'
 
-        const { type, category, sort, search } = req.query;
+        // --- 2. CÀI ĐẶT PHÂN TRANG ---
+        const currentPage = parseInt(page) || 1; // Lấy số trang, mặc định là 1
+        const limit = 5; // <-- BẠN YÊU CẦU 5 TỪ MỖI TRANG
+        const skip = (currentPage - 1) * limit; // Bỏ qua bao nhiêu từ
 
-        // 1. XỬ LÝ LỌC (Filter)
-        // (Những filter này sẽ được AND (kết hợp) với tìm kiếm)
+        // --- 3. LOGIC LỌC VÀ TÌM KIẾM (GIỮ NGUYÊN CỦA BẠN) ---
         if (type) {
             filter.type = { $in: type.split(',') };
         }
         if (category) {
             filter.category = { $in: category.split(',') };
         }
-
-        // 2. XỬ LÝ TÌM KIẾM (ĐÃ NÂNG CẤP)
         if (search) {
-            // $regex: tìm các từ BẮT ĐẦU BẰNG (^) 'search'
-            // $options: 'i' (không phân biệt hoa/thường)
             const searchRegex = { $regex: `^${search}`, $options: 'i' };
-
-            // $or: Tìm trong TRƯỜNG NÀY hoặc TRƯỜNG KIA
             filter.$or = [
-                { word: searchRegex },         // Tìm trong tiếng Anh
-                { translation: searchRegex }  // HOẶC Tìm trong tiếng Việt
+                { word: searchRegex },
+                { translation: searchRegex }
             ];
         }
 
-        // 3. XỬ LÝ SẮP XẾP (Giữ nguyên)
+        // --- 4. LOGIC SẮP XẾP (GIỮ NGUYÊN CỦA BẠN) ---
         switch (sort) {
             case 'alphabetical_desc':
                 sortOptions = { word: -1 };
@@ -48,15 +46,28 @@ router.get('/', async (req, res) => {
                 sortOptions = { createdAt: 1 };
                 break;
             default:
-                sortOptions = { word: 1 }; // Mặc định A-Z
+                sortOptions = { word: 1 };
                 break;
         }
 
-        // 4. Thực hiện truy vấn
-        // Mongoose sẽ tự hiểu: (Filter A AND Filter B) AND (Search 1 OR Search 2)
-        const words = await Word.find(filter).sort(sortOptions);
+        // --- 5. THỰC HIỆN TRUY VẤN (ĐÃ NÂNG CẤP) ---
 
-        res.status(200).json(words);
+        // A. Đếm TỔNG SỐ từ khớp với bộ lọc (để biết có bao nhiêu trang)
+        const totalWords = await Word.countDocuments(filter);
+        const totalPages = Math.ceil(totalWords / limit); // Tính tổng số trang
+
+        // B. Lấy 5 từ của trang hiện tại
+        const words = await Word.find(filter)
+            .sort(sortOptions)
+            .skip(skip)   // Bỏ qua các trang trước
+            .limit(limit); // Chỉ lấy 5
+
+        // --- 6. TRẢ VỀ DỮ LIỆU (ĐÃ NÂNG CẤP) ---
+        res.status(200).json({
+            words: words,               // Mảng 5 từ
+            totalPages: totalPages,     // Tổng số trang
+            currentPage: currentPage    // Trang hiện tại
+        });
 
     } catch (err) {
         console.error("Lỗi khi lấy danh sách từ vựng:", err.message);
@@ -66,9 +77,9 @@ router.get('/', async (req, res) => {
 
 router.get('/suggest', async (req, res) => {
     try {
-        const searchTerm = req.query.q; 
+        const searchTerm = req.query.q;
         if (!searchTerm) {
-            return res.json([]); 
+            return res.json([]);
         }
 
         // Tạo regex
@@ -76,7 +87,7 @@ router.get('/suggest', async (req, res) => {
 
         // Tìm 5 từ BẮT ĐẦU BẰNG từ khóa
         const suggestions = await Word.find(
-            { 
+            {
                 $or: [
                     { word: searchRegex },         // Tìm trong tiếng Anh
                     { translation: searchRegex }  // HOẶC Tìm trong tiếng Việt
@@ -84,7 +95,7 @@ router.get('/suggest', async (req, res) => {
             },
             'word translation' // Lấy cả 2 trường để hiển thị
         ).limit(5); // Giới hạn 5 kết quả
-        
+
         res.status(200).json(suggestions);
 
     } catch (err) {
