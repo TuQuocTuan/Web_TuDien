@@ -12,6 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const createAlbumForm = document.getElementById('create-album-form');
     const modalErrorMsg = document.getElementById('modal-error-message');
 
+    // === BIẾN MODAL XÓA ===
+    const deleteModal = document.getElementById('delete-confirm-modal');
+    const deleteModalMsg = document.getElementById('delete-confirm-message');
+    const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+    // === THÊM MỚI: CÁC BIẾN MODAL SỬA ===
+    const editModal = document.getElementById('edit-album-modal');
+    const editForm = document.getElementById('edit-album-form');
+    const editTitleInput = document.getElementById('edit-album-title');
+    const editIdInput = document.getElementById('edit-album-id'); // Input ẩn
+    const editErrorMsg = document.getElementById('edit-error-message');
+    const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+    // === Biến tạm để lưu thông tin album sắp xóa ===
+    let albumToDelete = {
+        id: null,
+        cardElement: null
+    };
+
     // === KIỂM TRA ĐĂNG NHẬP ===
     if (!token) {
         albumGrid.innerHTML = '<p>Vui lòng <a href="login.html">đăng nhập</a> để xem bộ từ vựng.</p>';
@@ -38,6 +58,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 4. Tải danh sách album ngay khi vào trang
     loadAlbums();
+
+    // 5. Lắng nghe tất cả các cú click trên lưới (cho Xóa và Sửa)
+    albumGrid.addEventListener('click', handleGridClick);
+
+    // === SỰ KIỆN CHO MODAL XÓA ===
+    // 6. Nút "Hủy" trên modal xóa
+    cancelDeleteBtn.addEventListener('click', () => {
+        deleteModal.style.display = 'none';
+        albumToDelete = { id: null, cardElement: null }; // Reset
+    });
+
+    // 7. Nút "Xóa" (xác nhận) trên modal xóa
+    confirmDeleteBtn.addEventListener('click', executeDelete);
+
+    // 8. Nút "Hủy" trên modal sửa
+    cancelEditBtn.addEventListener('click', () => {
+        editModal.style.display = 'none';
+        editErrorMsg.textContent = '';
+        editForm.reset();
+    });
+
+    // 9. Khi submit form "Sửa"
+    editForm.addEventListener('submit', handleUpdateAlbum);
 
     // === CÁC HÀM XỬ LÝ ===
 
@@ -143,7 +186,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         card.innerHTML = `
             <div class="card-content">
-                <h3 class="card-title">${album.title}</h3>
+                <div class="card-title-container">
+                    <h3 class="card-title">${album.title}</h3>
+                    <i class="fas fa-pencil-alt edit-icon" title="Sửa tên"></i>
+                </div>
                 <p class="card-stats">
                     <i class="fas fa-list-ol"></i> ${wordCount} từ vựng
                 </p>
@@ -151,8 +197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="card-actions">
                 <div class="button-group">
                     <a href="album-detail.html?id=${album._id}" class="study-btn">Xem</a>
-                    <a href="edit-album.html?id=${album._id}" class="edit-btn">Sửa</a>
-                </div>
+                    </div>
                 <div class="action-links">
                     <a href="#" class="action-link delete" data-id="${album._id}">
                         <i class="fas fa-trash-alt"></i> Xóa
@@ -177,4 +222,124 @@ document.addEventListener('DOMContentLoaded', () => {
         createAlbumForm.reset(); // Cách reset form nhanh
         modalErrorMsg.textContent = '';
     }
+
+    /**
+     * Xử lý tất cả click trên lưới (Xóa và Sửa)
+     */
+    function handleGridClick(e) {
+        // Kiểm tra xem có nhấn nút XÓA không
+        const deleteButton = e.target.closest('.action-link.delete');
+        if (deleteButton) {
+            e.preventDefault(); 
+            // Lấy thông tin
+            const albumId = deleteButton.dataset.id;
+            const albumCard = deleteButton.closest('.album-card');
+            const albumTitle = albumCard.querySelector('.card-title').textContent;
+
+            // Lưu thông tin vào biến tạm
+            albumToDelete.id = albumId;
+            albumToDelete.cardElement = albumCard;
+
+            // Cập nhật text và hiển thị modal XÓA
+            deleteModalMsg.textContent = `Bạn có chắc chắn muốn xóa bộ từ: "${albumTitle}" không?`;
+            deleteModal.style.display = 'flex';
+            return; // Dừng lại
+        }
+
+        // Kiểm tra xem có nhấn nút SỬA không
+        const editButton = e.target.closest('.edit-icon');
+        if (editButton) {
+            e.preventDefault();
+            const albumCard = editButton.closest('.album-card');
+            const albumId = albumCard.dataset.id;
+            const currentTitle = albumCard.querySelector('.card-title').textContent;
+
+            // Điền thông tin vào modal SỬA
+            editTitleInput.value = currentTitle;
+            editIdInput.value = albumId; // Lưu ID vào input ẩn
+            editErrorMsg.textContent = ''; // Xóa lỗi cũ
+            
+            // Hiển thị modal SỬA
+            editModal.style.display = 'flex';
+            editTitleInput.focus(); // Focus vào ô nhập liệu
+            return; // Dừng lại
+        }
+    }
+    
+    /**
+     * Hàm này thực thi việc xóa (được gọi bởi nút "Xóa" trên modal)
+     */
+    async function executeDelete() {
+        const { id, cardElement } = albumToDelete;
+        if (!id || !cardElement) return; // Không có gì để xóa
+
+        try {
+            const res = await fetch(`/api/albums/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}` 
+                }
+            });
+
+            if (res.status === 204) {
+                cardElement.remove(); // Xóa khỏi giao diện
+            } else {
+                const data = await res.json();
+                throw new Error(data.message || 'Xóa thất bại');
+            }
+        } catch (err) {
+            alert(`Có lỗi xảy ra: ${err.message}`);
+        } finally {
+            // Luôn ẩn modal và reset biến tạm sau khi xong
+            deleteModal.style.display = 'none';
+            albumToDelete = { id: null, cardElement: null };
+        }
+    }
+
+    /**
+     * Hàm này thực thi việc CẬP NHẬT (được gọi bởi form Sửa)
+     */
+    async function handleUpdateAlbum(e) {
+        e.preventDefault(); // Ngăn reload
+        editErrorMsg.textContent = '';
+
+        const newTitle = editTitleInput.value;
+        const albumId = editIdInput.value;
+
+        try {
+            const res = await fetch(`/api/albums/${albumId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ title: newTitle })
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                // Cập nhật thành công!
+                // 1. Tìm thẻ card trong DOM
+                const cardToUpdate = albumGrid.querySelector(`.album-card[data-id="${albumId}"]`);
+                if (cardToUpdate) {
+                    // 2. Cập nhật tiêu đề
+                    const titleElement = cardToUpdate.querySelector('.card-title');
+                    if (titleElement) {
+                        titleElement.textContent = data.data.title; // Lấy title mới nhất từ server
+                    }
+                }
+                
+                // 3. Ẩn modal và reset
+                editModal.style.display = 'none';
+                editForm.reset();
+            } else {
+                // Hiển thị lỗi
+                editErrorMsg.textContent = data.message || 'Cập nhật thất bại';
+            }
+        } catch (err) {
+            editErrorMsg.textContent = 'Lỗi kết nối. Vui lòng thử lại.';
+        }
+    }
+
 });
