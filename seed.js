@@ -48,7 +48,8 @@ function parseTxtFile(filePath) {
                     translation: '', 
                     example_en: '',
                     example_vi: '',
-                    category: 'general' 
+                    category: 'general' ,
+                    tags: []
                 };
                 wordsMap.set(currentWordKey, currentWordObject);
             } else {

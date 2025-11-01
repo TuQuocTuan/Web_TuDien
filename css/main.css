@@ -1,8 +1,13 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
 body a {
     text-decoration: none;
 }
-   
+
 /* =================================
    HEADER (TỪ CODE CỦA BẠN)
    ================================= */
@@ -106,7 +111,8 @@ body a {
    ================================= */
 /* 1. Khung chứa */
 .user-menu-container {
-    position: relative; /* Quan trọng để định vị dropdown */
+    position: relative;
+    /* Quan trọng để định vị dropdown */
     display: inline-block;
 }
 
@@ -127,7 +133,8 @@ body a {
     transition: background-color 0.3s ease;
 }
 
-.user-menu-btn:hover, .user-menu-btn:focus {
+.user-menu-btn:hover,
+.user-menu-btn:focus {
     background-color: #e9e9e9;
     outline: none;
 }
@@ -141,12 +148,14 @@ body a {
     display: none;
     position: absolute;
     background-color: var(--white);
-    min-width: 220px; /* Độ rộng của dropdown */
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    min-width: 220px;
+    /* Độ rộng của dropdown */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     padding: 0.5rem 0;
     z-index: 100;
-    right: 0; /* Căn lề phải */
+    right: 0;
+    /* Căn lề phải */
     margin-top: 0.5rem;
 }
 
@@ -187,10 +196,12 @@ body a {
 .logout-link {
     color: var(--danger-red, #dc3545) !important;
 }
+
 .logout-link:hover {
     color: var(--danger-red, #dc3545) !important;
     font-weight: 500;
 }
+
 .logout-link i {
     color: var(--danger-red, #dc3545) !important;
 }
@@ -273,7 +284,7 @@ body a {
 .auth-buttons {
     display: flex;
     align-items: center;
-}   
+}
 
 /* =================================
    CSS CHO POP-UP MODAL (ĐẸP HƠN)
@@ -281,13 +292,16 @@ body a {
 
 /* Lớp mờ nền */
 .modal-overlay {
-    display: none; /* Mặc định ẩn */
-    position: fixed; /* Phủ lên toàn màn hình */
+    display: none;
+    /* Mặc định ẩn */
+    position: fixed;
+    /* Phủ lên toàn màn hình */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Màu đen mờ 60% */
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Màu đen mờ 60% */
     z-index: 1000;
     justify-content: center;
     align-items: center;
@@ -295,7 +309,8 @@ body a {
 
 /* Kích hoạt (thêm class .show) */
 .modal-overlay.show {
-    display: flex; /* Hiện ra */
+    display: flex;
+    /* Hiện ra */
 }
 
 /* Khung pop-up */
@@ -303,7 +318,7 @@ body a {
     background-color: var(--white);
     padding: 2rem;
     border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     width: 90%;
     max-width: 450px;
     text-align: center;
@@ -346,6 +361,7 @@ body a {
     color: var(--text-dark);
     border: 1px solid var(--border-color);
 }
+
 .modal-btn.cancel:hover {
     background-color: #e9e9e9;
 }
@@ -355,6 +371,7 @@ body a {
     background-color: var(--primary-blue);
     color: var(--white);
 }
+
 .modal-btn.confirm:hover {
     background-color: var(--accent-blue);
 }

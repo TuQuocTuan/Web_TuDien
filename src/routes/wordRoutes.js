@@ -2,39 +2,38 @@
 const express = require('express');
 const router = express.Router();
 const Word = require('../models/wordModel.js'); // Gọi khuôn mẫu Word
+const { protect } = require('../middleware/authMiddleware.js');
+const crypto = require('crypto'); // (Bạn cần cái này cho /forgot-password)
 
 /**
  * @route   GET /api/words
- * @desc    Lấy TẤT CẢ từ vựng (HOẶC LỌC theo thể loại/loại từ)
+ * @desc    Lấy TẤT CẢ từ vựng (Hỗ trợ Lọc, Sắp xếp, Tìm kiếm, Phân trang)
  */
 router.get('/', async (req, res) => {
     try {
-        // --- 1. LẤY CÁC THAM SỐ (BAO GỒM 'PAGE') ---
-        let filter = {}; // Đối tượng filter
+        let filter = {};
         let sortOptions = {};
-        const { type, category, sort, search, page } = req.query; // Thêm 'page'
 
-        // --- 2. CÀI ĐẶT PHÂN TRANG ---
-        const currentPage = parseInt(page) || 1; // Lấy số trang, mặc định là 1
-        const limit = 5; // <-- BẠN YÊU CẦU 5 TỪ MỖI TRANG
-        const skip = (currentPage - 1) * limit; // Bỏ qua bao nhiêu từ
+        const { type, category, sort, search, page, tag } = req.query;
 
-        // --- 3. LOGIC LỌC VÀ TÌM KIẾM (GIỮ NGUYÊN CỦA BẠN) ---
-        if (type) {
-            filter.type = { $in: type.split(',') };
+        const currentPage = parseInt(page) || 1;
+        const limit = 5;
+        const skip = (currentPage - 1) * limit;
+
+        if (tag) {
+            filter.tags = tag;
         }
-        if (category) {
-            filter.category = { $in: category.split(',') };
-        }
-        if (search) {
+        else if (search) {
             const searchRegex = { $regex: `^${search}`, $options: 'i' };
             filter.$or = [
                 { word: searchRegex },
                 { translation: searchRegex }
             ];
         }
+        else if (type && type !== 'all') {
+            filter.type = type;
+        }
 
-        // --- 4. LOGIC SẮP XẾP (GIỮ NGUYÊN CỦA BẠN) ---
         switch (sort) {
             case 'alphabetical_desc':
                 sortOptions = { word: -1 };
@@ -50,23 +49,17 @@ router.get('/', async (req, res) => {
                 break;
         }
 
-        // --- 5. THỰC HIỆN TRUY VẤN (ĐÃ NÂNG CẤP) ---
-
-        // A. Đếm TỔNG SỐ từ khớp với bộ lọc (để biết có bao nhiêu trang)
         const totalWords = await Word.countDocuments(filter);
-        const totalPages = Math.ceil(totalWords / limit); // Tính tổng số trang
-
-        // B. Lấy 5 từ của trang hiện tại
+        const totalPages = Math.ceil(totalWords / limit);
         const words = await Word.find(filter)
             .sort(sortOptions)
-            .skip(skip)   // Bỏ qua các trang trước
-            .limit(limit); // Chỉ lấy 5
+            .skip(skip)
+            .limit(limit);
 
-        // --- 6. TRẢ VỀ DỮ LIỆU (ĐÃ NÂNG CẤP) ---
         res.status(200).json({
-            words: words,               // Mảng 5 từ
-            totalPages: totalPages,     // Tổng số trang
-            currentPage: currentPage    // Trang hiện tại
+            words: words,
+            totalPages: totalPages,
+            currentPage: currentPage
         });
 
     } catch (err) {
@@ -75,6 +68,13 @@ router.get('/', async (req, res) => {
     }
 });
 
+// ===========================================
+// ===== SỬA LỖI THỨ TỰ (ĐẶT /suggest LÊN TRÊN) =====
+// ===========================================
+/**
+ * @route   GET /api/words/suggest
+ * @desc    Lấy gợi ý từ vựng (autocomplete)
+ */
 router.get('/suggest', async (req, res) => {
     try {
         const searchTerm = req.query.q;
@@ -82,19 +82,17 @@ router.get('/suggest', async (req, res) => {
             return res.json([]);
         }
 
-        // Tạo regex
         const searchRegex = { $regex: `^${searchTerm}`, $options: 'i' };
 
-        // Tìm 5 từ BẮT ĐẦU BẰNG từ khóa
         const suggestions = await Word.find(
             {
                 $or: [
-                    { word: searchRegex },         // Tìm trong tiếng Anh
-                    { translation: searchRegex }  // HOẶC Tìm trong tiếng Việt
+                    { word: searchRegex },
+                    { translation: searchRegex }
                 ]
             },
-            'word translation' // Lấy cả 2 trường để hiển thị
-        ).limit(5); // Giới hạn 5 kết quả
+            'word translation'
+        ).limit(5);
 
         res.status(200).json(suggestions);
 
@@ -104,12 +102,80 @@ router.get('/suggest', async (req, res) => {
     }
 });
 
+/**
+ * @route   POST /api/words/:wordId/tags
+ * @desc    Thêm 1 tag mới vào từ vựng
+ */
+router.post('/:wordId/tags', protect, async (req, res) => {
+    try {
+        const { wordId } = req.params;
+        let { tagName } = req.body;
+
+        if (!tagName) {
+            return res.status(400).json({ message: 'Tên tag không được rỗng' });
+        }
+
+        tagName = tagName.trim().toLowerCase();
+
+        const word = await Word.findById(wordId);
+        if (!word) {
+            return res.status(404).json({ message: 'Không tìm thấy từ vựng' });
+        }
+
+        await Word.updateOne(
+            { _id: wordId },
+            { $addToSet: { tags: tagName } }
+        );
+
+        res.status(201).json({ message: 'Đã thêm tag!', newTag: tagName });
+
+    } catch (err) {
+        console.error("Lỗi khi thêm tag:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+});
+
+router.delete('/:wordId/tags', protect, async (req, res) => {
+    try {
+        const { wordId } = req.params;
+        const { tagName } = req.body; // Lấy tag name từ body
+
+        if (!tagName) {
+            return res.status(400).json({ message: 'Tên tag không được rỗng' });
+        }
+
+        // 1. Tìm từ vựng
+        const word = await Word.findById(wordId);
+        if (!word) {
+            return res.status(404).json({ message: 'Không tìm thấy từ vựng' });
+        }
+
+        // 2. Xóa tag khỏi mảng (dùng $pull)
+        await Word.updateOne(
+            { _id: wordId },
+            { $pull: { tags: tagName } } // $pull: Kéo ra khỏi mảng
+        );
+
+        // 3. Trả về thành công
+        res.status(200).json({ message: 'Đã xóa tag!' });
+
+    } catch (err) {
+        console.error("Lỗi khi xóa tag:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+});
+
+// ===========================================
+// ===== ĐẶT /:word (ROUTE ĐỘNG) XUỐNG DƯỚI CÙNG =====
+// ===========================================
+/**
+ * @route   GET /api/words/:word
+ * @desc    Lấy chi tiết MỘT từ vựng
+ */
 router.get('/:word', async (req, res) => {
     try {
-        // 1. Lấy tên từ từ URL (ví dụ: /api/words/apple)
         const wordName = req.params.word;
 
-        // 2. Tìm từ đó (không phân biệt hoa/thường)
         const wordDetail = await Word.findOne({
             word: { $regex: new RegExp(`^${wordName}$`, 'i') }
         });
@@ -118,7 +184,6 @@ router.get('/:word', async (req, res) => {
             return res.status(404).json({ message: `Không tìm thấy từ: ${wordName}` });
         }
 
-        // 3. Gửi chi tiết từ vựng về frontend
         res.status(200).json(wordDetail);
 
     } catch (err) {

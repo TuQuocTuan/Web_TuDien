@@ -40,6 +40,11 @@ const wordSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    tags: [{
+        type: String,
+        trim: true,
+        lowercase: true // Tự động đổi "School" thành "school"
+    }],
     dailyWords: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Word'

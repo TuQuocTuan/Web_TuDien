@@ -42,9 +42,9 @@
         <div class="vocab-layout-container">
 
             <aside class="filter-sidebar">
-                <h3><i class="fas fa-filter"></i> Bộ lọc</h3>
-
-                <div class="filter-group">
+                    <h3><i class="fas fa-filter"></i> <span id="filter-title">Bộ lọc</span></h3>
+                               
+                    <div class="filter-group" id="filter-group-container">        
                     <h4>Loại từ (Part of Speech)</h4>
 
                     <div class="filter-option">
@@ -134,32 +134,39 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Lấy các phần tử HTML
             const vocabListContainer = document.getElementById('vocab-list-container');
-            const allFilterRadios = document.querySelectorAll('.filter-sidebar input[type="radio"]'); // Sửa (Checkbox -> Radio)
-            const typeFilterAll = document.getElementById('filter-all'); // Nút "Tất cả"
+            const allFilterRadios = document.querySelectorAll('.filter-sidebar input[name="filter-type"]');
             const sortSelectEl = document.getElementById('sort-select');
             const searchInputEl = document.getElementById('thanhtimkiem');
             const paginationContainer = document.querySelector('.pagination');
+            const filterTitleEl = document.getElementById('filter-title');
+            const filterGroupContainer = document.getElementById('filter-group-container');
 
-            // BẢNG DỊCH LOẠI TỪ (Sửa lỗi CSS)
+            // BẢNG DỊCH LOẠI TỪ
             const typeTranslationMap = {
-                'danh từ': 'noun',
-                'động từ': 'verb',
-                'tính từ': 'adjective',
-                'trạng từ': 'adverb',
-                'phó từ': 'adverb',
-                'giới từ': 'preposition',
-                'mạo từ': 'article',
-                'thán từ': 'interjection'
+                'danh từ': 'noun', 'động từ': 'verb', 'tính từ': 'adjective',
+                'trạng từ': 'adverb', 'phó từ': 'adverb', 'giới từ': 'preposition',
+                'mạo từ': 'article', 'thán từ': 'interjection'
             };
 
-            // ĐỌC URL (Khi chuyển từ trang chủ)
+            // ĐỌC URL (NÂNG CẤP: Đọc cả 'search' và 'tag')
             const urlParams = new URLSearchParams(window.location.search);
             const searchFromURL = urlParams.get('search');
+            const tagFromURL = urlParams.get('tag');
+
             if (searchFromURL) {
                 searchInputEl.value = searchFromURL;
             }
 
-            // HÀM 1: "Vẽ" HTML (Sửa lỗi CSS)
+            // NẾU LỌC THEO TAG TỪ URL (Click từ link)
+            if (tagFromURL) {
+                searchInputEl.value = `[tag]: ${tagFromURL}`;
+                filterTitleEl.textContent = `Tag: "${tagFromURL}"`;
+                searchInputEl.disabled = true;
+                sortSelectEl.disabled = true;
+                if (filterGroupContainer) filterGroupContainer.style.display = 'none';
+            }
+
+            // HÀM 1: "Vẽ" HTML (Code đầy đủ)
             function renderWords(words) {
                 vocabListContainer.innerHTML = '';
                 if (words.length === 0) {
@@ -169,36 +176,31 @@
                 words.forEach(word => {
                     const wordItem = document.createElement('div');
                     wordItem.className = 'vocab-item';
-
-                    let typeText = word.type || ''; // Lấy "danh từ"
-                    let typeClass = 'default';
-                    if (typeText) {
-                        typeClass = typeTranslationMap[typeText.toLowerCase()] || 'default'; // Dịch sang "noun"
-                    }
-
+                    let typeText = word.type || '';
+                    let typeClass = typeTranslationMap[typeText.toLowerCase()] || 'default';
                     wordItem.innerHTML = `
-<div class="item-main">
-<a href="word_detail.html?word=${word.word}" class="item-word">${word.word}</a>
- <span class="item-pronunciation">${word.pronunciation || ''}</span>
-</div>
- <div class="item-info">
-                        <span class="item-type ${typeClass}">${typeText}</span>
-                <p class="item-definition">${word.translation}</p>
-                </div>
-                <div class="item-actions">
-                <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
-                <i class="fas fa-plus"></i>
-                </button>
-                <button class="action-btn audio" aria-label="Nghe">
-                <i class="fas fa-volume-up"></i>
-                </button>
-                </div>
-                `;
+                        <div class="item-main">
+                            <a href="word_detail.html?word=${word.word}" class="item-word">${word.word}</a>
+                            <span class="item-pronunciation">${word.pronunciation || ''}</span>
+                        </div>
+                        <div class="item-info">
+                            <span class="item-type ${typeClass}">${typeText}</span>
+                            <p class="item-definition">${word.translation}</p>
+                        </div>
+                        <div class="item-actions">
+                            <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <button class="action-btn audio" aria-label="Nghe">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                        </div>
+                    `;
                     vocabListContainer.appendChild(wordItem);
                 });
             }
 
-            // HÀM 2: VẼ PHÂN TRANG (PAGINATION)
+            // HÀM 2: VẼ PHÂN TRANG (Code đầy đủ)
             function renderPagination(totalPages, currentPage) {
                 paginationContainer.innerHTML = '';
                 if (totalPages <= 1) return;
@@ -206,9 +208,7 @@
                 if (currentPage === 1) prevButton.classList.add('disabled');
                 paginationContainer.appendChild(prevButton);
                 const pagesToShow = new Set();
-                pagesToShow.add(1);
-                pagesToShow.add(totalPages);
-                pagesToShow.add(currentPage);
+                pagesToShow.add(1); pagesToShow.add(totalPages); pagesToShow.add(currentPage);
                 if (currentPage > 1) pagesToShow.add(currentPage - 1);
                 if (currentPage < totalPages) pagesToShow.add(currentPage + 1);
                 if (currentPage > 3) pagesToShow.add(currentPage - 2);
@@ -227,7 +227,7 @@
                 paginationContainer.appendChild(nextButton);
             }
 
-            // HÀM 3: HÀM TẠO NÚT
+            // HÀM 3: HÀM TẠO NÚT (Code đầy đủ)
             function createPageLink(pageText, pageNumber, isDots = false, currentPage = 0) {
                 const pageLink = document.createElement('a');
                 pageLink.href = '#';
@@ -241,13 +241,15 @@
                     }
                     pageLink.addEventListener('click', (e) => {
                         e.preventDefault();
-                        if (pageNumber) fetchAndRenderWords(pageNumber);
+                        if (pageNumber && !pageLink.classList.contains('disabled')) {
+                            fetchAndRenderWords(pageNumber);
+                        }
                     });
                 }
                 return pageLink;
             }
 
-            // HÀM 4: GẮN LOGIC PHÁT ÂM (AUDIO)
+            // HÀM 4: GẮN LOGIC PHÁT ÂM (Code đầy đủ)
             function attachAudioListeners() {
                 const audioButtons = document.querySelectorAll('.action-btn.audio');
                 audioButtons.forEach(button => {
@@ -265,27 +267,49 @@
                 });
             }
 
-            // HÀM 5: LẤY DỮ LIỆU TỪ API (Hàm chính - Đã sửa lỗi)
+            // HÀM 5: LẤY DỮ LIỆU TỪ API (Hàm chính - ĐÃ GỘP)
             async function fetchAndRenderWords(page = 1) {
-                const currentSortBy = sortSelectEl.value;
-                const searchQuery = searchInputEl.value.trim();
-
                 const queryParts = [];
-                if (searchQuery) queryParts.push(`search=${encodeURIComponent(searchQuery)}`);
 
-                // Lấy giá trị filter (Radio)
-                let typeFilter = '';
-                allFilterRadios.forEach(radio => {
-                    if (radio.checked && radio.value !== 'all') {
-                        typeFilter = radio.value;
-                    }
-                });
-                if (typeFilter) {
-                    queryParts.push(`type=${typeFilter}`);
+                const currentParams = new URLSearchParams(window.location.search);
+                const currentTag = currentParams.get('tag');
+
+                const searchQuery = searchInputEl.value.trim();
+                const tagSyntax = /\[tag\]:\s*(.*)/i;
+                const searchMatch = searchQuery.match(tagSyntax);
+
+                if (currentTag) {
+                    // KỊCH BẢN 1: Lọc Tag (từ link)
+                    queryParts.push(`tag=${encodeURIComponent(currentTag)}`);
+                    queryParts.push(`page=${page}`);
                 }
+                else if (searchMatch && searchMatch[1]) {
+                    // KỊCH BẢN 2: Lọc Tag (từ gõ tay)
+                    const tagName = searchMatch[1].trim();
+                    queryParts.push(`tag=${encodeURIComponent(tagName)}`);
+                    queryParts.push(`page=${page}`);
 
-                queryParts.push(`sort=${currentSortBy}`);
-                queryParts.push(`page=${page}`);
+                    if (filterTitleEl) filterTitleEl.textContent = `Tag: "${tagName}"`;
+                    if (sortSelectEl) sortSelectEl.disabled = true;
+                    if (filterGroupContainer) filterGroupContainer.style.display = 'none';
+                }
+                else {
+                    // KỊCH BẢN 3: Lọc bình thường
+                    if (filterTitleEl) filterTitleEl.textContent = 'Bộ lọc';
+                    if (sortSelectEl) sortSelectEl.disabled = false;
+                    if (filterGroupContainer) filterGroupContainer.style.display = 'block';
+
+                    if (searchQuery) queryParts.push(`search=${encodeURIComponent(searchQuery)}`);
+
+                    let typeFilter = '';
+                    allFilterRadios.forEach(radio => {
+                        if (radio.checked && radio.value !== 'all') typeFilter = radio.value;
+                    });
+                    if (typeFilter) queryParts.push(`type=${typeFilter}`);
+
+                    queryParts.push(`sort=${sortSelectEl.value}`);
+                    queryParts.push(`page=${page}`);
+                }
 
                 let queryString = `?${queryParts.join('&')}`;
 
@@ -307,16 +331,25 @@
                 }
             }
 
-            // HÀM 6: Xử lý nút "Tất cả" (ĐÃ BỊ XÓA - Không cần nữa)
+            // Gắn "tai"
+            if (!tagFromURL) {
+                allFilterRadios.forEach(radio => {
+                    radio.addEventListener('change', () => fetchAndRenderWords(1));
+                });
+                sortSelectEl.addEventListener('change', () => fetchAndRenderWords(1));
 
-            // Gắn "tai" cho TẤT CẢ các bộ lọc
-            allFilterRadios.forEach(radio => {
-                radio.addEventListener('change', () => fetchAndRenderWords(1));
-            });
-            sortSelectEl.addEventListener('change', () => fetchAndRenderWords(1));
-            searchInputEl.addEventListener('input', () => fetchAndRenderWords(1));
+                searchInputEl.addEventListener('input', () => {
+                    const query = searchInputEl.value.trim();
+                    if (!query.startsWith('[tag]:')) {
+                        fetchAndRenderWords(1);
+                    }
+                });
+                searchInputEl.addEventListener('change', () => {
+                    fetchAndRenderWords(1);
+                });
+            }
 
-            // Tải danh sách lần đầu (trang 1)
+            // Tải danh sách lần đầu
             fetchAndRenderWords(1);
         });
     </script>
