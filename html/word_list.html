@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="/css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 </head>
 
 <body>
@@ -100,6 +99,18 @@
                     <a href="#" class="page-link"><i class="fas fa-angle-right"></i></a>
                 </nav>
             </section>
+
+            <!-- Form popup chọn album ở đây -->
+            <div id="add-to-album-modal" class="form-modal-overlay" style="display: none;"> <div class="form-modal-content"> <h2>Thêm từ vào bộ từ vựng</h2>
+                    <p id="add-to-album-error" class="form-error-text"></p> <p>Chọn một bộ từ vựng để thêm từ:</p>
+                    
+                    <div id="album-select-list" class="form-album-select-list"> <p>Đang tải...</p>
+                    </div>
+                    
+                    <div class="form-modal-actions"> <button type="button" id="cancel-add-btn" class="form-btn-cancel">Hủy</button> <button type="button" id="save-to-album-btn" class="form-btn-submit">Lưu</button> </div>
+                </div>
+            </div>
+
         </div>
     </main>
 
@@ -141,7 +152,18 @@
             const filterTitleEl = document.getElementById('filter-title');
             const filterGroupContainer = document.getElementById('filter-group-container');
 
-            // BẢNG DỊCH LOẠI TỪ
+
+            // Lấy token
+            const token = localStorage.getItem('token');
+
+            // === LẤY CÁC PHẦN TỬ MODAL "THÊM TỪ" ===
+            const addToAlbumModal = document.getElementById('add-to-album-modal');
+            const albumSelectList = document.getElementById('album-select-list');
+            const saveToAlbumBtn = document.getElementById('save-to-album-btn');
+            const cancelAddBtn = document.getElementById('cancel-add-btn');
+            const addToAlbumError = document.getElementById('add-to-album-error');
+
+            // BẢNG DỊCH LOẠI TỪ (Sửa lỗi CSS)
             const typeTranslationMap = {
                 'danh từ': 'noun', 'động từ': 'verb', 'tính từ': 'adjective',
                 'trạng từ': 'adverb', 'phó từ': 'adverb', 'giới từ': 'preposition',
@@ -191,7 +213,7 @@
                             <button class="action-btn add" aria-label="Thêm vào bộ từ" data-word-id="${word._id}">
                                 <i class="fas fa-plus"></i>
                             </button>
-                            <button class="action-btn audio" aria-label="Nghe">
+                            <button class="action-btn audio" aria-label="Nghe" data-word="${word.word}">
                                 <i class="fas fa-volume-up"></i>
                             </button>
                         </div>
@@ -268,6 +290,8 @@
             }
 
             // HÀM 5: LẤY DỮ LIỆU TỪ API (Hàm chính - ĐÃ GỘP)
+
+            // HÀM 4: LẤY DỮ LIỆU TỪ API (Hàm chính - Đã sửa lỗi)
             async function fetchAndRenderWords(page = 1) {
                 const queryParts = [];
 
@@ -323,13 +347,14 @@
 
                     renderWords(data.words);
                     renderPagination(data.totalPages, data.currentPage);
-                    attachAudioListeners();
+                    //attachAudioListeners();
 
                 } catch (err) {
                     console.error('Lỗi khi tải từ:', err);
                     vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
                 }
             }
+
 
             // Gắn "tai"
             if (!tagFromURL) {
@@ -350,7 +375,134 @@
             }
 
             // Tải danh sách lần đầu
+
+
+            // === GẮN SỰ KIỆN (Listeners) ===
+            allFilterRadios.forEach(radio => {
+                radio.addEventListener('change', () => fetchAndRenderWords(1));
+            });
+            sortSelectEl.addEventListener('change', () => fetchAndRenderWords(1));
+            searchInputEl.addEventListener('input', () => fetchAndRenderWords(1));
+
+            // === THÊM MỚI: GẮN SỰ KIỆN CHO NÚT "+" (BẰNG EVENT DELEGATION) ===
+            vocabListContainer.addEventListener('click', handleVocabListClick);
+            
+            // === THÊM MỚI: GẮN SỰ KIỆN CHO MODAL ===
+            cancelAddBtn.addEventListener('click', () => addToAlbumModal.style.display = 'none');
+            saveToAlbumBtn.addEventListener('click', executeSaveToAlbum);
+
+            // Tải danh sách lần đầu (trang 1)
+
             fetchAndRenderWords(1);
+
+            // === CÁC HÀM MỚI CHO CHỨC NĂNG "THÊM VÀO ALBUM" ===
+
+            /**
+             * Hàm này xử lý tất cả click trên danh sách từ
+             * (Bao gồm nút "+" và nút "Audio")
+             */
+            async function handleVocabListClick(e) {
+                // 1. Xử lý nút Thêm (dấu +)
+                const addButton = e.target.closest('.action-btn.add');
+                if (addButton) {
+                    if (!token) { // Kiểm tra đăng nhập
+                        alert('Vui lòng đăng nhập để sử dụng chức năng này.');
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    const wordId = addButton.dataset.wordId;
+                    saveToAlbumBtn.dataset.wordId = wordId; // Lưu wordId vào nút Save
+                    
+                    // Tải danh sách album và hiển thị modal
+                    await loadAlbumsForModal();
+                    addToAlbumModal.style.display = 'flex';
+                }
+
+                // 2. Xử lý nút Audio (loa)
+                const audioButton = e.target.closest('.action-btn.audio');
+                if (audioButton) {
+                    const word = audioButton.dataset.word;
+                    if (word) {
+                        const utterance = new SpeechSynthesisUtterance(word);
+                        utterance.lang = 'en-US';
+                        window.speechSynthesis.speak(utterance);
+                    }
+                }
+            }
+
+            /**
+             * Tải danh sách album của người dùng về cho modal
+             */
+            async function loadAlbumsForModal() {
+                albumSelectList.innerHTML = '<p>Đang tải bộ từ vựng...</p>';
+                addToAlbumError.textContent = '';
+                saveToAlbumBtn.disabled = true; // Vô hiệu hóa nút Save khi đang tải
+
+                try {
+                    const res = await fetch('/api/albums', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.message);
+                    
+                    if (data.results === 0) {
+                        albumSelectList.innerHTML = '<p>Bạn chưa có bộ từ nào. <a href="album.html" target="_blank">Tạo bộ từ mới?</a></p>';
+                        // Vẫn giữ nút Save bị vô hiệu hóa
+                    } else {
+                        // Vẽ danh sách album bằng radio button
+                        albumSelectList.innerHTML = data.data.map((album, index) => `
+                            <div class="album-select-option">
+                                <input type="radio" name="album-select" id="album-${album._id}" value="${album._id}" ${index === 0 ? 'checked' : ''}>
+                                <label for="album-${album._id}">${album.title} (${album.words.length} từ)</label>
+                            </div>
+                        `).join('');
+                        saveToAlbumBtn.disabled = false; // Bật nút Save
+                    }
+                } catch (err) {
+                    albumSelectList.innerHTML = `<p style="color: red;">Lỗi tải album: ${err.message}</p>`;
+                }
+            }
+
+            /**
+             * Thực thi việc lưu từ vào album (khi nhấn nút "Lưu")
+             */
+            async function executeSaveToAlbum() {
+                const wordId = saveToAlbumBtn.dataset.wordId;
+                const selectedAlbumRadio = albumSelectList.querySelector('input[name="album-select"]:checked');
+                
+                if (!selectedAlbumRadio) {
+                    addToAlbumError.textContent = 'Bạn chưa chọn bộ từ nào.';
+                    return;
+                }
+                
+                const albumId = selectedAlbumRadio.value;
+                addToAlbumError.textContent = '';
+
+                try {
+                    const res = await fetch(`/api/albums/${albumId}/words`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ wordId: wordId })
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (res.ok) {
+                        alert('Đã thêm từ vào bộ từ vựng thành công!');
+                        addToAlbumModal.style.display = 'none';
+                        // Tùy chọn: Bạn có thể đổi icon `+` thành `✓`
+                        // (Cần code thêm)
+                    } else {
+                        throw new Error(data.message);
+                    }
+                } catch (err) {
+                    addToAlbumError.textContent = err.message;
+                }
+            }
+
         });
     </script>
     <script src="../js/auth.js"></script>
