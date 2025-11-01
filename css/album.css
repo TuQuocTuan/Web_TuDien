@@ -367,3 +367,81 @@ main#content {
 .action-link.delete:hover {
     color: var(--danger-red); /* Màu đỏ cảnh báo */
 }
+
+
+/* === CSS CHO MODAL TẠO ALBUM === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-content .form-group {
+    margin-bottom: 15px;
+}
+.modal-content .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+.modal-content .form-group input,
+.modal-content .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.modal-actions .btn-cancel {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.modal-actions .btn-submit {
+    /* (Bạn có thể dùng class .create-new-btn nếu muốn đồng bộ) */
+    background-color: #007bff; 
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.error-text {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    min-height: 1.2em; /* Giữ khoảng trống */
+}
