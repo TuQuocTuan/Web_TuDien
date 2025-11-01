@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Album = require('../models/albumModel');
+const Word = require('../models/wordModel.js');
 // Import middleware xác thực của bạn
-const { protect } = require('../middleware/authMiddleware'); 
+const { protect } = require('../middleware/authMiddleware');
 
 // === GET: LẤY TẤT CẢ BỘ TỪ CỦA NGƯỜI DÙNG ===
 // (GET /api/albums)
@@ -27,12 +28,12 @@ router.get('/', protect, async (req, res) => {
 router.post('/', protect, async (req, res) => {
     try {
         // CHỈ LẤY TITLE
-        const { title } = req.body; 
+        const { title } = req.body;
 
         const newAlbum = await Album.create({
             title,
             // (ĐÃ XÓA DESCRIPTION)
-            user: req.user.id 
+            user: req.user.id
         });
 
         res.status(201).json({
@@ -55,16 +56,16 @@ router.delete('/:id', protect, async (req, res) => {
         // đảm bảo 2 việc:
         // 1. Album phải tồn tại.
         // 2. Album đó phải thuộc về người dùng đang đăng nhập.
-        const deletedAlbum = await Album.findOneAndDelete({ 
-            _id: albumId, 
-            user: req.user.id 
+        const deletedAlbum = await Album.findOneAndDelete({
+            _id: albumId,
+            user: req.user.id
         });
 
         // Nếu không tìm thấy (vì sai ID hoặc không phải chủ)
         if (!deletedAlbum) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Không tìm thấy bộ từ vựng hoặc bạn không có quyền xóa.' 
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Không tìm thấy bộ từ vựng hoặc bạn không có quyền xóa.'
             });
         }
 
@@ -102,9 +103,9 @@ router.patch('/:id', protect, async (req, res) => {
 
         // 3. Nếu không tìm thấy
         if (!updatedAlbum) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Không tìm thấy bộ từ vựng hoặc bạn không có quyền.' 
+            return res.status(404).json({
+                status: 'fail',
+                message: 'Không tìm thấy bộ từ vựng hoặc bạn không có quyền.'
             });
         }
 
@@ -125,43 +126,46 @@ router.patch('/:id', protect, async (req, res) => {
 router.post('/:albumId/words', protect, async (req, res) => {
     try {
         const { albumId } = req.params;
-        const { wordId } = req.body; // Lấy wordId từ body
+        const { wordId } = req.body;
 
-        if (!wordId) {
-            return res.status(400).json({ status: 'fail', message: 'Không có wordId' });
-        }
-
-        // 1. Tìm album và kiểm tra chủ sở hữu
+        // 1. Tìm album (và kiểm tra xem có phải của user này không)
         const album = await Album.findOne({ _id: albumId, user: req.user.id });
-
         if (!album) {
-            return res.status(404).json({ 
-                status: 'fail', 
-                message: 'Không tìm thấy bộ từ vựng hoặc bạn không có quyền.' 
-            });
+            return res.status(404).json({ message: 'Không tìm thấy bộ từ vựng này.' });
         }
 
-        // 2. Kiểm tra xem từ này đã có trong album chưa
-        if (album.words.includes(wordId)) {
-            return res.status(400).json({ 
-                status: 'fail', 
-                message: 'Từ này đã có trong bộ từ vựng' 
-            });
+        // 2. Tìm từ vựng
+        const word = await Word.findById(wordId);
+        if (!word) {
+            return res.status(404).json({ message: 'Không tìm thấy từ vựng.' });
         }
 
-        // 3. Thêm từ vào mảng và lưu lại
-        album.words.push(wordId);
-        await album.save();
+        // 3. THỰC HIỆN CHỨC NĂNG CŨ: Thêm WordID vào Album
+        // ($addToSet: Tự động chống trùng lặp)
+        await Album.updateOne(
+            { _id: albumId },
+            { $addToSet: { words: wordId } }
+        );
 
-        res.status(200).json({
-            status: 'success',
-            message: 'Đã thêm từ vào bộ từ vựng',
-            data: album
-        });
+        // 4. THỰC HIỆN CHỨC NĂNG MỚI: Thêm Tên Album làm Tag
+        const newTag = album.title; // Lấy tên album (ví dụ: "school")
+
+        // Kiểm tra 10 tag (như bạn yêu cầu)
+        if (word.tags.length < 10) {
+            await Word.updateOne(
+                { _id: wordId },
+                // $addToSet: Tự động chống tag trùng lặp (như bạn yêu cầu)
+                { $addToSet: { tags: newTag } }
+            );
+        } else {
+            console.log(`Word ${word.word} đã đạt 10 tag. Bỏ qua thêm tag ${newTag}.`);
+        }
+
+        res.status(200).json({ message: 'Đã thêm từ vào bộ từ vựng!' });
 
     } catch (err) {
-        console.error('Lỗi khi thêm từ vào album:', err);
-        res.status(500).json({ status: 'fail', message: 'Lỗi máy chủ' });
+        console.error("Lỗi khi thêm từ vào album:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
 

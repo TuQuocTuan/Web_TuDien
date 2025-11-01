@@ -25,12 +25,6 @@ const wordSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    // Thể loại (đây là cái bạn cần)
-    category: {
-        type: String, // Ví dụ: 'food', 'school', 'science'
-        required: true,
-        trim: true
-    },
     // Câu ví dụ
     example_en: {
         type: String,

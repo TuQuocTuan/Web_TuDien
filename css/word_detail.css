@@ -125,7 +125,7 @@ main#content {
     padding: 0 0.5rem;
     transition: color 0.3s ease;
     padding-right: 550px;
-    padding-top:7px;
+    padding-top: 7px;
 }
 
 .audio-btn:hover {
@@ -224,24 +224,273 @@ main#content {
     font-weight: 500;
 }
 
+.tag-section {
+    margin-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+}
+
+.tag-section h3 {
+    font-size: 1.25rem;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+/* Danh sách các tag đã có */
 .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
+    margin-bottom: 1.5rem;
 }
 
-.tag {
-    display: inline-block;
-    background-color: var(--light-gray);
-    color: var(--primary-blue);
+/* Kiểu của mỗi thẻ tag */
+.tag-item {
+    display: inline-flex;
+    align-items: center;
+
+    /* Thiết kế màu sắc nổi bật */
+    background-color: #86b9e6;
+    /* Xanh da trời rất nhạt */
+    color: #0e1318;
+    /* Xanh dương đậm hơn */
+
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: 8px;
+    /* Vuông vắn hơn một chút */
     font-size: 0.95rem;
     font-weight: 500;
-    transition: all 0.3s ease;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #91d5ff;
+    /* Thêm viền nhẹ */
+
+    /* Căn chỉnh nút X (nếu có) */
+    padding-left: 1rem;
 }
 
-.tag:hover {
-    background-color: var(--accent-blue);
-    color: var(--white);
+.tag-item:hover {
+    background-color: #bae7ff;
+    /* Đậm hơn khi hover */
+    color: #096dd9;
+    border-color: #096dd9;
+    box-shadow: 0 2px 5px rgba(24, 144, 255, 0.2);
+}
+
+/* Nút xóa tag */
+.delete-tag {
+    display: inline-block;
+    padding: 0.5rem 0.35rem;
+    /* Giảm padding */
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fa541c;
+    /* Màu đỏ cam */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    /* Xóa khoảng trắng thừa */
+    line-height: 1;
+}
+
+.tag-item:hover .delete-tag {
+    color: #fff;
+    /* Màu trắng khi tag bị hover */
+    background-color: #ff7875;
+    /* Đổi màu nền nút X */
+    border-radius: 50%;
+    /* Trở thành hình tròn */
+    margin-right: -0.35rem;
+    /* Kéo nút vào sát */
+}
+
+/* Form thêm tag mới (Giữ nguyên layout flex) */
+.add-tag-form {
+    display: flex;
+    gap: 0.5rem;
+}
+
+
+/* ================================================================== */
+/* === KHỐI 1: CSS CHUNG CHO FORM MODAL (Copy từ album.css) === */
+.form-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.form-modal-content {
+    background-color: #fff;
+    padding: 25px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+}
+
+.form-modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.form-modal-content .form-group {
+    margin-bottom: 15px;
+}
+
+.form-modal-content .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-modal-content .form-group input,
+.form-modal-content .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.form-modal-actions .form-btn-cancel {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    color: #333;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-modal-actions .form-btn-submit {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.form-error-text {
+    color: red;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    min-height: 1.2em;
+}
+
+.form-btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.form-btn-danger:hover {
+    background-color: #043467;
+}
+
+.form-btn-cancel:hover {
+    background-color: rgb(151, 149, 149);
+}
+
+
+/* === KHỐI 2: CSS CHO DANH SÁCH ALBUM (Copy từ word_list.css) === */
+.form-album-select-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin: 15px 0;
+}
+
+.form-album-select-option {
+    display: block;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+}
+
+.form-album-select-option:last-child {
+    border-bottom: none;
+}
+
+.form-album-select-option:hover {
+    background-color: #f9f9f9;
+}
+
+.form-album-select-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.form-album-select-option label {
+    cursor: pointer;
+}
+
+/* =================================
+   CSS CHO MODAL (POP-UP) "THÊM TỪ"
+   ================================= */
+
+/* (Bạn có thể đã có .modal-overlay và .modal-box từ auth.js) */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    /* (Thêm) */
+}
+
+/* CSS cho Dropdown bên trong Modal */
+.album-select-container {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.album-select-dropdown {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    font-family: 'Roboto', Arial, sans-serif;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--white);
+}
+
+.modal-error {
+    font-size: 0.9rem;
+    color: var(--danger-red, #dc3545);
+    margin-top: 1rem;
+    min-height: 1.2em;
 }

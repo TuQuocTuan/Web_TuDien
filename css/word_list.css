@@ -374,7 +374,8 @@ main#content {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    display: flex; /* Dùng display: flex thay vì display: none */
+    display: flex;
+    /* Dùng display: flex thay vì display: none */
     align-items: center;
     justify-content: center;
     z-index: 1000;
@@ -386,7 +387,7 @@ main#content {
     border-radius: 8px;
     width: 90%;
     max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
 
@@ -399,18 +400,20 @@ main#content {
 .form-modal-content .form-group {
     margin-bottom: 15px;
 }
+
 .form-modal-content .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
 }
+
 .form-modal-content .form-group input,
 .form-modal-content .form-group textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .form-modal-actions {
@@ -428,32 +431,38 @@ main#content {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .form-modal-actions .form-btn-submit {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
+
 .form-error-text {
     color: red;
     font-size: 0.9em;
     margin-bottom: 10px;
     min-height: 1.2em;
 }
+
 .form-btn-danger {
     background-color: #dc3545;
     border-color: #dc3545;
 }
+
 .form-btn-danger:hover {
     background-color: #043467;
 }
+
 .form-btn-cancel:hover {
     background-color: rgb(151, 149, 149);
 }
 
-.form-album-select-list { /* Đổi tên */
+.form-album-select-list {
+    /* Đổi tên */
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #eee;
@@ -461,22 +470,76 @@ main#content {
     margin: 15px 0;
 }
 
-.form-album-select-option { /* Đổi tên */
+.form-album-select-option {
+    /* Đổi tên */
     display: block;
     padding: 12px 15px;
     border-bottom: 1px solid #f0f0f0;
     cursor: pointer;
 }
+
 .form-album-select-option:last-child {
     border-bottom: none;
 }
+
 .form-album-select-option:hover {
     background-color: #f9f9f9;
 }
 
-.form-album-select-option input[type="radio"] { /* Đổi tên */
+.form-album-select-option input[type="radio"] {
+    /* Đổi tên */
     margin-right: 10px;
 }
-.form-album-select-option label { /* Đổi tên */
+
+.form-album-select-option label {
+    /* Đổi tên */
     cursor: pointer;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.show {
+    display: flex;
+}
+
+.modal-box {
+    background-color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+}
+
+/* CSS cho Dropdown bên trong Modal */
+.album-select-container {
+    margin-bottom: 1rem;
+    text-align: left;
+}
+
+.album-select-dropdown {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    font-family: 'Roboto', Arial, sans-serif;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--white);
+}
+
+.modal-error {
+    font-size: 0.9rem;
+    color: var(--danger-red, #dc3545);
+    margin-top: 1rem;
+    min-height: 1.2em;
 }

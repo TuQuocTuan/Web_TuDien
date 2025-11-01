@@ -37,6 +37,26 @@
         <div class="word-container" id="word-detail-container">
             <p style="text-align: center; padding: 2rem;">Đang tải chi tiết từ...</p>
         </div>
+
+        <!-- Form chọn bộ từ vựng -->
+        <div id="add-to-album-modal" class="form-modal-overlay" style="display: none;">
+            <div class="form-modal-content">
+                <h2>Thêm từ vào bộ từ vựng</h2>
+                <p id="add-to-album-error" class="form-error-text"></p>
+                
+                <p>Chọn một bộ từ vựng để thêm từ:</p>
+                
+                <div id="album-select-list" class="form-album-select-list">
+                    <p>Đang tải...</p>
+                </div>
+                
+                <div class="form-modal-actions">
+                    <button type="button" id="cancel-add-btn" class="form-btn-cancel">Hủy</button>
+                    <button type="button" id="save-to-album-btn" class="form-btn-submit">Lưu</button>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer id="footer">
@@ -66,7 +86,26 @@
         </div>
     </footer>
 
+     <div class="modal-overlay" id="add-to-album-modal">
+        <div class="modal-box">
+            <h3>Thêm từ vào bộ từ vựng</h3>
+            <p>Chọn một bộ từ vựng bạn muốn thêm từ này vào:</p>
+
+            <div class="album-select-container" id="album-select-list">
+                <p>Đang tải bộ từ vựng...</p>
+            </div>
+
+            <p class="modal-error" id="add-to-album-error"></p>
+
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" id="cancel-add-btn">Hủy</button>
+                <button class="modal-btn confirm" id="save-to-album-btn">Lưu</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="../js/auth.js"></script>
+
     <script src="/js/word_detail.js"></script>
 </body>
 
