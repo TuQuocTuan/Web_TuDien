@@ -18,7 +18,6 @@ const wordSchema = new mongoose.Schema({
     // Loại từ (ví dụ: 'noun', 'verb')
     type: {
         type: String,
-        required: true,
         trim: true
     },
     // Phiên âm (ví dụ: '/ˈæpəl/')

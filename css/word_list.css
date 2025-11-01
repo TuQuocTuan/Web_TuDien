@@ -84,23 +84,86 @@ main#content {
 }
 
 .filter-option {
-    display: flex;
-    align-items: center;
-    margin-bottom: 0.75rem;
-}
-
-.filter-option label {
-    margin-left: 0.75rem;
-    color: var(--text-light);
+    display: block;
+    position: relative;
+    /* Tăng khoảng cách để nút và chữ không dính nhau */
+    padding-left: 30px;
+    margin-bottom: 1rem;
     cursor: pointer;
     font-size: 0.95rem;
 }
 
-.filter-option input[type="checkbox"] {
-    /* Tùy chỉnh checkbox cho đẹp (tùy chọn) */
-    width: 1.1rem;
-    height: 1.1rem;
+/* Ẩn nút radio gốc */
+.filter-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
     cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Tùy chỉnh (style) cho label */
+.filter-option label {
+    color: var(--text-light);
+    cursor: pointer;
+    line-height: 20px;
+    /* Căn giữa theo chiều dọc */
+}
+
+/* Tạo vòng tròn bên ngoài (::before) */
+.filter-option label::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 18px;
+    width: 18px;
+    background-color: var(--white);
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+/* Tạo dấu chấm bên trong (::after - mặc định bị ẩn) */
+.filter-option label::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    /* (22px - 12px) / 2 = 5px (đã trừ border) */
+    top: 50%;
+    transform: translateY(-50%) scale(0);
+    /* Ẩn đi */
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: var(--primary-blue);
+    /* Màu xanh chủ đạo */
+    transition: all 0.2s ease;
+}
+
+/* --- TƯƠNG TÁC --- */
+
+/* Khi rê chuột (hover) */
+.filter-option input[type="radio"]:hover~label::before {
+    border-color: var(--accent-blue);
+}
+
+/* Khi được chọn (checked) -> Hiện dấu chấm */
+.filter-option input[type="radio"]:checked~label::after {
+    transform: translateY(-50%) scale(1);
+    /* Hiện ra */
+}
+
+/* Khi được chọn -> Đổi màu vòng tròn */
+.filter-option input[type="radio"]:checked~label::before {
+    border-color: var(--primary-blue);
+}
+
+/* Khi được chọn -> Đổi màu chữ */
+.filter-option input[type="radio"]:checked~label {
+    color: var(--text-dark);
+    font-weight: 500;
 }
 
 /* 2. Phần Danh sách từ vựng */
@@ -299,4 +362,4 @@ main#content {
 .page-link.dots {
     border: none;
     background: none;
-}   
+}
