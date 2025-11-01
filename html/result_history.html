@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lịch sử làm bài - Wordee</title>
-    
-    <link rel="stylesheet" href="../css/result_history.css"> 
-    
+
+    <link rel="stylesheet" href="../css/result_history.css">
+    <link rel="stylesheet" href="/css/main.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
 
     <header id="header">
@@ -24,7 +27,7 @@
             </nav>
         </div>
         <div class="header-right">
-             <div class="auth-buttons">
+            <div class="auth-buttons">
                 <a href="login.html" class="btn-login">Đăng nhập</a>
                 <a href="signup.html" class="btn-signup">Đăng ký</a>
             </div>
@@ -33,10 +36,10 @@
 
     <main id="content">
         <div class="history-layout-container">
-            
+
             <aside class="filter-sidebar">
                 <h3><i class="fas fa-filter"></i> Lọc theo ngày</h3>
-                
+
                 <div class="filter-group">
                     <div class="filter-option">
                         <input type="radio" id="filter-all" name="filter-date" value="all" checked>
@@ -59,72 +62,177 @@
                         <label for="filter-30days">30 ngày trước</label>
                     </div>
                 </div>
-                
+
                 <button class="clear-history-btn">
                     <i class="fas fa-trash-alt"></i> Xóa lịch sử
                 </button>
             </aside>
-
             <section class="history-main-content">
-                
+
                 <h1>Lịch sử làm bài</h1>
                 <p>Dưới đây là kết quả các bài trắc nghiệm bạn đã hoàn thành.</p>
 
                 <table class="history-table">
                     <thead>
                         <tr>
-                            <th>Tên bài thi</th>
+                            <th>Tên bài thi (Chủ đề)</th>
                             <th>Ngày làm</th>
-                            <th>Thời gian làm</th>
                             <th>Điểm số</th>
-                            <th>Hành động</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="history-table-body">
                         <tr>
-                            <td data-label="Tên bài thi">Chủ đề: Nấu ăn</td>
-                            <td data-label="Ngày làm">29/10/2025</td>
-                            <td data-label="Thời gian làm">08:15</td>
-                            <td data-label="Điểm số" class="score passed">80 / 100</td>
-                            <td data-label="Hành động">
-                                <a href="result.html" class="action-btn view">Xem lại</a>
+                            <td colspan="4" style="text-align: center; padding: 2rem;">
+                                Đang tải lịch sử...
                             </td>
                         </tr>
-                        
-                        <tr>
-                            <td data-label="Tên bài thi">Bộ từ: IELTS Band 8.0</td>
-                            <td data-label="Ngày làm">28/10/2025</td>
-                            <td data-label="Thời gian làm">12:30</td>
-                            <td data-label="Điểm số" class="score failed">40 / 100</td>
-                            <td data-label="Hành động">
-                                <a href="result.html" class="action-btn view">Xem lại</a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td data-label="Tên bài thi">Chủ đề: Khoa học</td>
-                            <td data-label="Ngày làm">27/10/2025</td>
-                            <td data-label="Thời gian làm">05:22</td>
-                            <td data-label="Điểm số" class="score passed">95 / 100</td>
-                            <td data-label="Hành động">
-                                <a href="result.html" class="action-btn view">Xem lại</a>
-                            </td>
-                        </tr>
-                        
                     </tbody>
                 </table>
 
             </section>
 
-        </div> 
+        </div>
     </main>
 
     <footer id="footer">
         <div class="footer-content">
-            <h3>Wordee</h3>
+            <div class="footer-about">
+                <h3>Wordee</h3>
+                <p>Trang web từ điển Anh-Việt, giúp bạn học tập và tra cứu từ vựng một cách hiệu quả nhất.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="word_list.html">Từ vựng</a></li>
+                    <li><a href="album.html">Bộ từ vựng</a></li>
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>Email: support@wordee.com</p>
+                <p>Hotline: 1900 1234</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2025 Wordee. Phát triển bởi bạn.</p>
         </div>
     </footer>
 
+    <script src="../js/auth.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.getElementById('history-table-body');
+            const token = localStorage.getItem('token');
+            const filterRadios = document.querySelectorAll('.filter-sidebar input[name="filter-date"]');
+
+            // 1. LẤY NÚT XÓA (MỚI)
+            const clearBtn = document.querySelector('.clear-history-btn');
+
+            // 2. HÀM GỌI API (Giữ nguyên)
+            async function fetchHistory() {
+                if (!token) {
+                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: red;">Bạn cần đăng nhập để xem lịch sử.</td></tr>';
+                    return;
+                }
+                // ... (Code fetchHistory của bạn y hệt như cũ) ...
+                let selectedDuration = 'all';
+                filterRadios.forEach(radio => {
+                    if (radio.checked) selectedDuration = radio.value;
+                });
+                tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">Đang tải lịch sử...</td></tr>';
+                try {
+                    const response = await fetch(`/api/quiz/history?duration=${selectedDuration}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (!response.ok) throw new Error('Không thể tải lịch sử');
+                    const results = await response.json();
+                    renderHistory(results);
+                } catch (err) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: red;">${err.message}</td></tr>`;
+                }
+            }
+
+            // 3. HÀM "Vẽ" BẢNG (Giữ nguyên)
+            function renderHistory(results) {
+                // ... (Code renderHistory của bạn y hệt như cũ) ...
+                tableBody.innerHTML = '';
+                if (results.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Không tìm thấy kết quả nào.</td></tr>';
+                    return;
+                }
+                results.forEach(result => {
+                    const row = document.createElement('tr');
+                    const percent = Math.round((result.score / result.totalQuestions) * 100);
+                    const scoreClass = percent >= 50 ? 'score passed' : 'score failed';
+                    const date = new Date(result.createdAt).toLocaleDateString('vi-VN', {
+                        day: '2-digit', month: '2-digit', year: 'numeric'
+                    });
+                    row.innerHTML = `
+                        <td data-label="Tên bài thi">${result.category}</td>
+                        <td data-label="Ngày làm">${date}</td>
+                        <td data-label="Điểm số" class="${scoreClass}">
+                            ${result.score} / ${result.totalQuestions}
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+            }
+
+            // 4. GẮN SỰ KIỆN "NGHE" CHO FILTER (Giữ nguyên)
+            filterRadios.forEach(radio => {
+                radio.addEventListener('change', fetchHistory);
+            });
+
+            // =================================
+            // ===== 5. GẮN SỰ KIỆN CHO NÚT XÓA (MỚI) =====
+            // =================================
+            if (clearBtn) {
+                clearBtn.addEventListener('click', async () => {
+                    // A. Hỏi xác nhận
+                    const isConfirmed = confirm('Bạn có chắc chắn muốn xóa TOÀN BỘ lịch sử làm bài không? Hành động này không thể hoàn tác.');
+
+                    if (isConfirmed) {
+                        try {
+                            clearBtn.textContent = 'Đang xóa...';
+                            clearBtn.disabled = true;
+
+                            // B. Gọi API XÓA (DELETE)
+                            const response = await fetch('/api/quiz/history', {
+                                method: 'DELETE',
+                                headers: {
+                                    'Authorization': `Bearer ${token}`
+                                }
+                            });
+
+                            const data = await response.json();
+
+                            if (!response.ok) {
+                                throw new Error(data.message || 'Lỗi không xác định');
+                            }
+
+                            // C. Xóa thành công, tải lại bảng (bây giờ sẽ rỗng)
+                            alert(data.message);
+                            fetchHistory(); // Tải lại
+
+                        } catch (err) {
+                            alert('Lỗi: ' + err.message);
+                        } finally {
+                            clearBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Xóa lịch sử';
+                            clearBtn.disabled = false;
+                        }
+                    }
+                });
+            }
+
+            // 6. Chạy
+            fetchHistory(); // Tải lần đầu
+        });
+    </script>
+
 </body>
+
 </html>

@@ -96,4 +96,73 @@ router.post('/submit', protect, async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
+// LẤY LỊCH SỬ QUIZ VỚI BỘ LỌC THỜI GIAN
+router.get('/history', protect, async (req, res) => {
+    try {
+        // 1. Lấy ID user từ token
+        const userId = req.user.id;
+
+        // 2. Lấy tham số filter thời gian (ví dụ: 'today', '7days')
+        const { duration } = req.query;
+
+        // 3. Xây dựng bộ lọc
+        const filter = {
+            user: userId // Luôn lọc theo user
+        };
+
+        // 4. Thêm logic lọc thời gian
+        if (duration && duration !== 'all') {
+            const now = new Date();
+            let startDate;
+
+            switch (duration) {
+                case 'today':
+                    startDate = new Date(now.setHours(0, 0, 0, 0)); // Bắt đầu từ 0h sáng nay
+                    break;
+                case 'yesterday': // (Tính là 1 ngày trước)
+                    startDate = new Date(now.setDate(now.getDate() - 1));
+                    break;
+                case '7days':
+                    startDate = new Date(now.setDate(now.getDate() - 7));
+                    break;
+                case '30days':
+                    startDate = new Date(now.setDate(now.getDate() - 30));
+                    break;
+            }
+
+            // $gte = Greater than or equal (Lớn hơn hoặc bằng)
+            if (startDate) {
+                filter.createdAt = { $gte: startDate };
+            }
+        }
+
+        // 5. Tìm tất cả kết quả khớp filter, sắp xếp mới nhất
+        const results = await Result.find(filter)
+            .sort({ createdAt: -1 });
+
+        res.status(200).json(results);
+
+    } catch (err) {
+        console.error("Lỗi khi lấy lịch sử quiz:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+});
+
+router.delete('/history', protect, async (req, res) => {
+    try {
+        // 1. Lấy ID user từ token (đã được 'protect' giải mã)
+        const userId = req.user.id;
+
+        // 2. Tìm VÀ XÓA TẤT CẢ kết quả của user đó
+        await Result.deleteMany({ user: userId }); 
+
+        // 3. Gửi thông báo thành công
+        res.status(200).json({ message: 'Đã xóa toàn bộ lịch sử thành công!' });
+
+    } catch (err) {
+        console.error("Lỗi khi xóa lịch sử quiz:", err.message);
+        res.status(500).json({ message: 'Lỗi máy chủ' });
+    }
+});
+
 module.exports = router;
