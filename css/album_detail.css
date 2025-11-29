@@ -1,0 +1,142 @@
+  /* CSS bổ sung nhỏ cho phần Tiêu đề Album */
+  .album-header-section {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .album-header-info h2 {
+      margin: 0;
+      color: #333;
+  }
+
+  .album-header-info p {
+      margin: 5px 0 0;
+      color: #666;
+  }
+
+  .btn-practice {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+  }
+
+  .btn-practice:hover {
+      background-color: #218838;
+  }
+
+  /* === CSS CHO THẺ TỪ VỰNG (VOCAB CARD) === */
+  .vocab-item {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px 25px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      /* Bóng mờ nhẹ */
+      border: 1px solid #f0f0f0;
+
+      /* Dàn hàng ngang: Trái - Giữa - Phải */
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.2s ease;
+  }
+
+  .vocab-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* 1. Từ vựng (Bên trái) */
+  .vocab-main {
+      flex: 1;
+      /* Chiếm 1 phần không gian */
+      min-width: 150px;
+  }
+
+  .vocab-word-link {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #2c3e50;
+      /* Màu xanh đen đậm */
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+  }
+
+  .vocab-word-link:hover {
+      color: #3498db;
+      /* Hover chuyển màu xanh dương */
+      border-bottom: 2px solid #3498db;
+  }
+
+  /* 2. Thông tin (Ở giữa) */
+  .vocab-info-center {
+      flex: 2;
+      /* Chiếm không gian rộng nhất */
+      display: flex;
+      flex-direction: column;
+      /* Xếp dọc: Badge trên, Nghĩa dưới (hoặc ngang tùy ý) */
+      align-items: flex-start;
+      padding: 0 20px;
+  }
+
+  /* Badge loại từ (Hình viên thuốc màu xanh đậm) */
+  .badge-type {
+      background-color: #34495e;
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: inline-block;
+  }
+
+  .vocab-def {
+      color: #555;
+      font-size: 1rem;
+      line-height: 1.4;
+  }
+
+  /* 3. Nút bấm (Bên phải) */
+  .vocab-actions-right {
+      display: flex;
+      gap: 10px;
+  }
+
+  /* Nút hình tròn */
+  .btn-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid #e0e0e0;
+      background: #fff;
+      color: #777;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+  }
+
+  .btn-circle:hover {
+      background-color: #f0f8ff;
+      color: #3498db;
+      border-color: #3498db;
+  }
+
+  .btn-delete:hover {
+      background-color: #ffebee;
+      /* Nền hồng nhạt */
+      color: #e74c3c;
+      /* Icon màu đỏ */
+      border-color: #e74c3c;
+  }

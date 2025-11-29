@@ -49,15 +49,11 @@
             <div class="album-grid">
 
                 <article class="album-card">
-                    <div class="card-content">
-                        <h3 class="card-title">Từ vựng IELTS Band 8.0</h3>
-                        <p class="card-stats">
-                            <i class="fas fa-list-ol"></i> 52 từ vựng
-                        </p>
-                    </div>
+            
                     <div class="card-actions">
                         <div class="button-group">
                             <a href="album-detail.html?id=1" class="study-btn">Xem</a>
+                            <a href="practice.html?mode=ai" class="ai-card">Ôn tập</a>
                             <a href="edit-album.html?id=1" class="edit-btn">Sửa</a>
                         </div>
                         <div class="action-links">
@@ -69,12 +65,6 @@
                 </article>
 
                 <article class="album-card">
-                    <div class="card-content">
-                        <h3 class="card-title">Chủ đề: Nấu ăn (Cooking)</h3>
-                        <p class="card-stats">
-                            <i class="fas fa-list-ol"></i> 30 từ vựng
-                        </p>
-                    </div>
                     <div class="card-actions">
                         <div class="button-group">
                             <a href="album-detail.html?id=2" class="study-btn">Xem</a>
@@ -102,7 +92,8 @@
                 <div class="form-modal-content">
                     <form id="create-album-form">
                         <h2>Tạo bộ từ vựng mới</h2>
-                        <p id="modal-error-message" class="form-error-text"></p> <div class="form-group">
+                        <p id="modal-error-message" class="form-error-text"></p>
+                        <div class="form-group">
                             <label for="modal-album-title">Tên bộ từ vựng:</label>
                             <input type="text" id="modal-album-title" name="title" required>
                         </div>
@@ -121,7 +112,8 @@
                     <p id="delete-confirm-message">Bạn có chắc chắn muốn xóa?</p>
                     <div class="form-modal-actions">
                         <button type="button" id="cancel-delete-btn" class="form-btn-cancel">Hủy</button>
-                        <button type="button" id="confirm-delete-btn" class="form-btn-submit form-btn-danger">Xóa</button> 
+                        <button type="button" id="confirm-delete-btn"
+                            class="form-btn-submit form-btn-danger">Xóa</button>
                     </div>
                 </div>
             </div>
@@ -137,7 +129,7 @@
                             <input type="text" id="edit-album-title" name="title" required>
                         </div>
                         <input type="hidden" id="edit-album-id">
-                        
+
                         <div class="form-modal-actions">
                             <button type="button" id="cancel-edit-btn" class="form-btn-cancel">Hủy</button>
                             <button type="submit" class="form-btn-submit">Lưu</button>

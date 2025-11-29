@@ -44,6 +44,8 @@ app.use(express.static(path.join(__dirname, 'html')));
 app.get('/word_detail.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'html', 'word_detail.html'));
 });
+
+
 // 7. KHỞI ĐỘNG SERVER
 app.listen(port, async () => {
     console.log(`Server Wordee đang chạy tại http://localhost:${port}`);

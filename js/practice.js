@@ -1,162 +1,217 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Lấy các phần tử
     const titleEl = document.getElementById('quiz-title');
     const questionTextEl = document.getElementById('question-text');
-    const hintEl = document.getElementById('question-hint');
-    const answerInputEl = document.getElementById('answer-input');
-    const checkBtn = document.getElementById('check-answer-btn');
-    const feedbackZone = document.getElementById('feedback-zone');
+    const questionIpaEl = document.getElementById('question-ipa');
+    const optionsGrid = document.getElementById('options-grid');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
     const counterEl = document.getElementById('question-counter');
     const progressBar = document.getElementById('progress-bar');
-    const submitBtn = document.getElementById('submit-btn');
 
     let quizQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
-    let category = '';
+    let quizTitle = "";
 
-    // 1. Hàm khởi động: Lấy dữ liệu từ API (Giữ nguyên)
-    async function startQuiz() {
-        // ... (Code startQuiz của bạn y hệt như cũ) ...
-        const urlParams = new URLSearchParams(window.location.search);
-        category = urlParams.get('category');
-        const token = localStorage.getItem('token');
-        if (!category) { /* ... */ }
-        titleEl.textContent = `Quiz Chủ đề: ${category}`;
-        try {
-            const response = await fetch(`/api/quiz/start?category=${category}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+    // Normalize question from various possible server shapes into a consistent format
+    function normalizeQuestion(raw) {
+        const q = {};
+        q.raw = raw;
+        q.text = raw.questionText || raw.question || raw.question || raw.prompt || '';
+        q.pronunciation = raw.pronunciation || raw.ipa || '';
+        q.explanation = raw.explanation || raw.explain || raw.explaination || raw.explanationText || '';
+        // Build options array: [{ key: 'A', text: '...', isCorrect: boolean }]
+        const letters = ['A','B','C','D'];
+        const opts = [];
+        if (Array.isArray(raw.options) && raw.options.length) {
+            raw.options.forEach((o, i) => {
+                if (typeof o === 'string') {
+                    opts.push({ key: letters[i] || String(i), text: o, isCorrect: false });
+                } else if (typeof o === 'object') {
+                    // common shapes: { key, text } or { text, isCorrect } or { optionText }
+                    const text = o.text || o.option || o.optionText || String(o);
+                    const key = o.key ?? letters[i] ?? String(i);
+                    const isCorrect = !!(o.isCorrect || (raw.answer && String(raw.answer) === String(o.key)) || false);
+                    opts.push({ key, text, isCorrect });
+                }
             });
-            if (!response.ok) { const err = await response.json(); throw new Error(err.message); }
-            quizQuestions = await response.json();
-            if (quizQuestions.length === 0) { throw new Error('Không có đủ từ vựng để tạo bài quiz.'); }
-            currentQuestionIndex = 0; score = 0;
-            renderQuestion();
-        } catch (err) {
-            questionTextEl.textContent = `Lỗi: ${err.message}`;
+        } else if (raw.choices && Array.isArray(raw.choices)) {
+            raw.choices.forEach((o,i) => {
+                if (typeof o === 'string') opts.push({ key: letters[i]||String(i), text: o, isCorrect:false });
+                else opts.push({ key: o.key ?? letters[i] ?? String(i), text: o.text || o, isCorrect: !!o.isCorrect });
+            });
         }
+
+        // If server provided correct answer key as raw.answer (e.g. 'A') or raw.correctAnswerText
+        let answerKey = null;
+        if (raw.answer) answerKey = String(raw.answer);
+        else if (raw.correctAnswerText) {
+            const found = opts.find(o => String(o.text).trim() === String(raw.correctAnswerText).trim());
+            if (found) answerKey = found.key;
+        } else {
+            const found = opts.find(o => !!o.isCorrect);
+            if (found) answerKey = found.key;
+        }
+
+        // If no options from server, but raw may be like local generator (question/options as objects)
+        if (opts.length === 0 && raw.optionTexts && Array.isArray(raw.optionTexts)) {
+            raw.optionTexts.forEach((t,i) => opts.push({ key: letters[i]||String(i), text: t, isCorrect: false }));
+        }
+
+        // Fallback: if still empty, create placeholders to avoid crash
+        if (opts.length === 0) {
+            for (let i=0;i<4;i++) opts.push({ key: letters[i], text: `Option ${letters[i]}`, isCorrect: false });
+        }
+
+        q.options = opts;
+        q.answer = answerKey; // may be null
+        return q;
     }
 
-    // 2. Hàm hiển thị câu hỏi (Giữ nguyên)
-    function renderQuestion() {
-        if (currentQuestionIndex >= quizQuestions.length) {
-            showResults();
+    // Start quiz: fetch questions
+    async function startQuiz() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const albumId = urlParams.get('albumId');
+        const mode = urlParams.get('mode'); // 'ai' or undefined
+        const token = localStorage.getItem('token');
+
+        if (!albumId) {
+            alert('Không tìm thấy ID bộ từ vựng!');
             return;
         }
-        const question = quizQuestions[currentQuestionIndex];
-        questionTextEl.textContent = question.questionText;
-        hintEl.textContent = `(Gợi ý: Từ này dài ${question.answerLength} ký tự)`;
-        answerInputEl.value = '';
-        answerInputEl.disabled = false;
-        checkBtn.textContent = 'Kiểm tra';
-        checkBtn.disabled = false;
-        feedbackZone.innerHTML = '';
-        counterEl.textContent = `Câu ${currentQuestionIndex + 1} / ${quizQuestions.length}`;
-        const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
-        progressBar.style.width = `${progress}%`;
 
-        // Tự động focus vào ô input
-        answerInputEl.focus();
-    }
-
-    // =================================
-    // ===== 3. HÀM KIỂM TRA ĐÁP ÁN (ĐÃ SỬA) =====
-    // =================================
-    function checkAnswer() {
-        const userAnswer = answerInputEl.value.trim();
-
-        // ===== THÊM KIỂM TRA Ô RỖNG =====
-        if (userAnswer.length === 0) {
-            feedbackZone.innerHTML = '<p class="feedback-incorrect">Bạn chưa điền câu trả lời!</p>';
-            return; // Dừng hàm, không cho "Kiểm tra"
-        }
-        // ==================================
-
-        const correctAnswer = quizQuestions[currentQuestionIndex].answer;
-
-        answerInputEl.disabled = true;
-        checkBtn.textContent = 'Tiếp theo'; // Đổi nút
-
-        let feedbackHTML = '';
-        if (userAnswer.toLowerCase() === correctAnswer.toLowerCase()) {
-            score++;
-            feedbackHTML = `<p class="feedback-correct">Chính xác! <strong>${correctAnswer}</strong></p>`;
+        let apiUrl = '';
+        if (mode === 'ai') {
+            apiUrl = `/api/quiz/ai-album?albumId=${albumId}`;
+            titleEl.textContent = "Đang nhờ AI soạn đề (chờ 5s)...";
+            questionTextEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI đang đọc bộ từ của bạn...';
         } else {
-            feedbackHTML = `
-                        <p class="feedback-incorrect">Sai rồi!</p>
-                        <p>Đáp án đúng là: <strong>${correctAnswer}</strong></p>
-                        <p><em>(Nghĩa là: ${quizQuestions[currentQuestionIndex].translation})</em></p>
-                    `;
+            apiUrl = `/api/quiz/from-album?albumId=${albumId}`;
+            titleEl.textContent = "Đang tải bộ từ...";
         }
-        feedbackZone.innerHTML = feedbackHTML;
 
-        // Chuyển sang câu tiếp theo
-        currentQuestionIndex++;
-    }
+        try {
+            const response = await fetch(apiUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message || JSON.stringify(data));
 
-    // 4. Hàm kết thúc (Giữ nguyên)
-    function showResults() {
-        // ... (Code showResults của bạn y hệt như cũ) ...
-        questionTextEl.textContent = 'Bạn đã hoàn thành bài quiz!';
-        answerInputEl.style.display = 'none';
-        hintEl.style.display = 'none'; // Ẩn luôn gợi ý
-        checkBtn.style.display = 'none';
-        submitBtn.style.display = 'inline-block';
-        const percent = Math.round((score / quizQuestions.length) * 100);
-        feedbackZone.innerHTML = `
-                    <h2>Kết quả: ${score} / ${quizQuestions.length} (${percent}%)</h2>
-                    <p>Nhấn "Nộp bài" để lưu kết quả.</p>
-                `;
-    }
+            // Normalize questions
+            const rawQuestions = data.questions || data || [];
+            quizQuestions = rawQuestions.map(normalizeQuestion);
+            quizTitle = data.albumTitle || data.title || 'Bài luyện';
 
-    // 5. Gắn sự kiện cho nút "Kiểm tra / Tiếp theo" (Giữ nguyên)
-    checkBtn.addEventListener('click', () => {
-        if (checkBtn.textContent === 'Kiểm tra') {
-            checkAnswer();
-        } else {
+            titleEl.textContent = `Ôn tập: ${quizTitle} ${mode === 'ai' ? '(AI)' : ''}`;
+            currentQuestionIndex = 0;
+            score = 0;
             renderQuestion();
+        } catch (err) {
+            questionTextEl.innerHTML = `<span style="color:red; font-size: 1.2rem">Lỗi: ${err.message}</span>`;
+            titleEl.textContent = "Có lỗi xảy ra";
+        }
+    }
+
+    // Render current question
+    function renderQuestion() {
+        const q = quizQuestions[currentQuestionIndex];
+        if (!q) return;
+
+        questionTextEl.textContent = q.text || '';
+        questionIpaEl.textContent = q.pronunciation || '';
+
+        counterEl.textContent = `Câu ${currentQuestionIndex + 1} / ${quizQuestions.length}`;
+        progressBar.style.width = `${((currentQuestionIndex + 1) / quizQuestions.length) * 100}%`;
+
+        optionsGrid.innerHTML = '';
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.type = 'button';
+            btn.dataset.key = opt.key;
+            btn.textContent = `${opt.key}. ${opt.text}`;
+            btn.addEventListener('click', () => onOptionClick(btn, q, opt));
+            optionsGrid.appendChild(btn);
+        });
+
+        nextBtn.style.display = 'none';
+        nextBtn.disabled = true;
+    }
+
+    // Handle option click
+    function onOptionClick(btn, question, opt) {
+        // prevent multiple clicks after answered
+        if (optionsGrid.dataset.answered === 'true') return;
+
+        // mark selection visually
+        Array.from(optionsGrid.querySelectorAll('.option-btn')).forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
+        btn.classList.add('selected');
+
+        // Determine correctness
+        const correctKey = question.answer;
+        let isCorrect = false;
+        if (correctKey) {
+            isCorrect = String(opt.key) === String(correctKey);
+        } else {
+            // fallback to opt.isCorrect flag
+            isCorrect = !!opt.isCorrect;
+        }
+
+        // Show feedback
+        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+        if (!isCorrect) {
+            // highlight the correct button if known
+            if (correctKey) {
+                const correctBtn = optionsGrid.querySelector(`button[data-key="${String(correctKey)}"]`);
+                if (correctBtn) correctBtn.classList.add('correct');
+            } else {
+                // try find option with isCorrect true
+                const found = optionsGrid.querySelectorAll('.option-btn');
+                for (const b of found) {
+                    const k = b.dataset.key;
+                    const optObj = question.options.find(o => String(o.key) === String(k));
+                    if (optObj && optObj.isCorrect) { b.classList.add('correct'); break; }
+                }
+            }
+        } else {
+            score++;
+        }
+
+        // lock options
+        optionsGrid.dataset.answered = 'true';
+        // show next
+        nextBtn.style.display = 'inline-block';
+        nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener('click', () => {
+        // reset answered flag
+        optionsGrid.dataset.answered = 'false';
+        if (currentQuestionIndex < quizQuestions.length - 1) {
+            currentQuestionIndex++;
+            renderQuestion();
+        } else {
+            submitResults();
         }
     });
 
-    // 6. Gắn sự kiện Enter cho ô input (SỬA LẠI)
-    answerInputEl.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            // Chỉ kích hoạt nếu nút đang là "Kiểm tra" hoặc "Tiếp theo"
-            checkBtn.click();
-        }
-    });
+    async function submitResults() {
+        // disable UI
+        nextBtn.disabled = true;
+        optionsGrid.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+        submitBtn.style.display = 'inline-block';
 
-    // 7. Logic Nộp bài (Giữ nguyên)
-    submitBtn.addEventListener('click', async (e) => {
-        // ... (Code submit của bạn y hệt như cũ) ...
-        e.preventDefault();
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang lưu...';
         const token = localStorage.getItem('token');
         try {
-            const response = await fetch('/api/quiz/submit', {
+            await fetch('/api/quiz/submit', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    category: category,
-                    score: score,
-                    totalQuestions: quizQuestions.length
-                })
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ category: quizTitle, score, totalQuestions: quizQuestions.length })
             });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
-            window.location.href = `result.html?score=${data.score}&total=${data.total}`;
+            // navigate to result page
+            window.location.href = `result.html?score=${score}&total=${quizQuestions.length}`;
         } catch (err) {
-            alert('Lỗi khi lưu kết quả: ' + err.message);
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> Nộp bài';
+            alert('Lỗi lưu điểm: ' + err.message);
         }
-    });
+    }
 
-    // 8. Chạy
     startQuiz();
 });

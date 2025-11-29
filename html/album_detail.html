@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết bộ từ vựng - Wordee</title>
+
+    <link rel="stylesheet" href="../css/word_list.css">
+    <link rel="stylesheet" href="../css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="stylesheet" href="../css/album_detail.css">
+</head>
+
+<body>
+
+    <header id="header">
+        <div class="header-left">
+            <div class="logo"><a href="index.html">Wordee</a></div>
+            <nav class="main-nav">
+                <a href="word_list.html">Từ vựng</a>
+                <a href="album.html" class="active">Bộ từ vựng</a>
+                <a href="practice_list.html">Luyện tập</a>
+            </nav>
+        </div>
+        <div class="header-right">
+            <div class="auth-buttons" id="auth-container">
+                <a href="login.html" class="btn-login">Đăng nhập</a>
+            </div>
+        </div>
+    </header>
+
+    <main id="content">
+        <div class="vocab-layout-container">
+
+            <aside class="filter-sidebar">
+                <h3><i class="fas fa-filter"></i> Bộ lọc</h3>
+                <div class="filter-group">        
+                    <h4>Loại từ</h4>
+                    <div class="filter-option"><input type="radio" class="filter-radio" name="filter-type" value="all" checked id="f-all"><label for="f-all">Tất cả</label></div>
+                    <div class="filter-option"><input type="radio" class="filter-radio" name="filter-type" value="danh từ" id="f-n"><label for="f-n">Danh từ</label></div>
+                    <div class="filter-option"><input type="radio" class="filter-radio" name="filter-type" value="động từ" id="f-v"><label for="f-v">Động từ</label></div>
+                    <div class="filter-option"><input type="radio" class="filter-radio" name="filter-type" value="tính từ" id="f-adj"><label for="f-adj">Tính từ</label></div>
+                </div>
+                
+                <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <a href="album.html" style="text-decoration: none; color: #555; display: block;">
+                        <i class="fas fa-arrow-left"></i> Quay lại danh sách Album
+                    </a>
+                </div>
+            </aside>
+
+            <section class="vocab-list-section">
+
+                <div class="album-header-section">
+                    <div class="album-header-info">
+                        <h2 id="album-title">Đang tải tên...</h2>
+                        <p>Số lượng từ: <span id="word-count">...</span></p>
+                    </div>
+                    <div>
+                        <a id="practice-link" href="#" class="btn-practice">
+                            <i class="fas fa-robot"></i> Ôn tập AI
+                        </a>
+                    </div>
+                </div>
+
+                <div class="sort-bar">
+                    <label for="sort-select">Sắp xếp theo:</label>
+                    <select id="sort-select">
+                        <option value="alphabetical_asc">A-Z</option>
+                        <option value="alphabetical_desc">Z-A</option>
+                    </select>
+                </div>
+
+                <div class="vocab-list" id="vocab-list-container">
+                    <p>Đang tải dữ liệu...</p>
+                </div>
+
+            </section>
+
+        </div>
+    </main>
+
+    <footer id="footer">
+        <div class="footer-bottom"><p>&copy; 2025 Wordee.</p></div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/album_detail.js"></script>
+</body>
+</html>

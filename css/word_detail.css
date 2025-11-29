@@ -147,17 +147,28 @@ main#content {
     font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+
+    /* ===== THÊM 3 DÒNG NÀY ĐỂ SỬA LỖI KÉO DÀI ===== */
+    width: auto !important;  /* Ép chiều rộng tự động theo nội dung */
+    display: inline-flex;    /* Để căn giữa icon và chữ */
+    align-items: center;     /* Căn giữa dọc */
+    /* ============================================== */
 }
 
 .add-to-album-btn:hover {
     background-color: var(--accent-blue);
 }
 
+.add-to-album-btn:disabled,
+.add-to-album-btn.saved {
+    background-color: var(--correct-green);
+    cursor: default;
+}
+
 .add-to-album-btn i {
     margin-right: 0.5rem;
 }
-
 /* 3. Phần thân (định nghĩa) */
 .word-body {
     /* (Không cần style đặc biệt) */

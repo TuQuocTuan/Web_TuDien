@@ -242,140 +242,147 @@ main#content {
 }
 
 /* Cột 2: Sidebar danh sách câu */
-.quiz-sidebar {
-    background-color: var(--white);
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    align-self: start;
-    /* Dính lên trên */
-    position: sticky;
-    /* Dính khi cuộn */
-    top: 2rem;
+#quiz-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  margin-bottom: 0.5rem;
 }
 
-.quiz-sidebar h3 {
-    font-size: 1.3rem;
-    color: var(--text-dark);
-    margin-bottom: 1rem;
-    border-bottom: 2px solid var(--border-color);
-    padding-bottom: 0.75rem;
+#question-text {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 1.25rem 0;
 }
 
-/* Lưới các nút câu hỏi */
-.question-nav-list {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    /* 5 câu 1 hàng */
-    gap: 0.75rem;
+#question-ipa {
+  font-size: 0.95rem;
+  color: var(--text-light);
+  margin-bottom: 1rem;
 }
 
-.question-nav-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    aspect-ratio: 1 / 1;
-    /* Giữ hình vuông */
-    width: 100%;
-    border: 1px solid var(--border-color);
-    border-radius: 50%;
-    /* Nút tròn */
-    text-decoration: none;
-    color: var(--text-dark);
-    font-weight: 500;
-    transition: all 0.3s ease;
+/* Options container used by practice.js */
+#options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-top: 0.75rem;
 }
 
-.question-nav-item:hover {
-    background-color: var(--light-gray);
-    border-color: var(--accent-blue);
+/* Buttons for options */
+.option-btn {
+  display: block;
+  width: 100%;
+  padding: 0.95rem 1rem;
+  background: var(--white);
+  color: var(--text-dark);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  text-align: left;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.06s ease;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
 }
 
-/* Câu hiện tại */
-.question-nav-item.current {
-    background-color: var(--primary-blue);
-    color: var(--white);
-    border-color: var(--primary-blue);
+.option-btn:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-blue);
+  background-color: #f6fbff;
 }
 
-/* Câu đã trả lời */
-.question-nav-item.answered {
-    background-color: var(--accent-blue);
-    color: var(--white);
-    border-color: var(--accent-blue);
+/* states */
+.option-btn.selected {
+  border-color: var(--primary-blue);
+  background-color: var(--primary-blue);
+  color: var(--white);
 }
 
-/* =================================
-   BỔ SUNG CSS CHO QUIZ ĐIỀN TỪ
-   (Thêm vào file css/quiz-detail.css)
-   ================================= */
-
-/* Layout 1 cột (đơn giản) */
-.quiz-layout-container-single {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 5%;
+.option-btn.correct {
+  border-color: var(--correct-green);
+  background-color: var(--correct-green);
+  color: var(--white);
 }
 
-/* Ô nhập liệu */
-.answer-options-fill {
-    margin-top: 2rem;
+.option-btn.wrong {
+  border-color: var(--incorrect-red);
+  background-color: var(--incorrect-red);
+  color: var(--white);
+  opacity: 0.95;
 }
 
-#answer-input {
-    width: 100%;
-    padding: 1rem;
-    font-size: 1.1rem;
-    font-family: 'Roboto', sans-serif;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    outline: none;
-    transition: border-color 0.3s, box-shadow 0.3s;
+/* Next / Submit buttons */
+#next-btn, #submit-btn {
+  padding: 0.8rem 1.4rem;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1.25rem;
 }
 
-#answer-input:focus {
-    border-color: var(--primary-blue);
-    box-shadow: 0 0 10px rgba(42, 74, 135, 0.2);
+#next-btn {
+  background: var(--primary-blue);
+  color: var(--white);
+  display: inline-block;
 }
 
-#answer-input:disabled {
-    background-color: var(--light-gray);
+#next-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-
-/* Khu vực báo Đúng/Sai */
-.feedback-zone {
-    margin-top: 2rem;
-    padding: 1.5rem;
-    border-radius: 8px;
-    font-size: 1.1rem;
+#submit-btn {
+  background: #ffffff;
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
 }
 
-.feedback-zone p {
-    margin: 0 0 0.5rem 0;
+/* Fix layout cho vùng Next / Submit */
+.next-btn-container {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end; /* hoặc center / space-between tuỳ ý */
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem; /* tạo khoảng cách với phần dưới */
 }
 
-.feedback-zone strong {
-    color: var(--primary-blue);
+/* dùng chung cho cả hai nút */
+.next-btn-container .next-btn,
+.next-btn-container #next-btn,
+.next-btn-container #submit-btn {
+  min-width: 160px;
+  padding: 0.75rem 1.1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
 }
 
-.feedback-zone .feedback-correct {
-    color: var(--correct-green, #28a745);
-    font-weight: 700;
-    font-size: 1.2rem;
+/* Ẩn nút Xem kết quả ban đầu — practice.js sẽ show() khi cần */
+#submit-btn {
+  display: none;
 }
 
-.feedback-zone .feedback-incorrect {
-    color: var(--incorrect-red, #dc3545);
-    font-weight: 700;
-    font-size: 1.2rem;
+/* đảm bảo options không bị che khuất */
+#options-grid {
+  margin-bottom: 1.25rem;
 }
 
-.question-hint {
-    font-size: 1rem;
-    color: var(--text-light); /* Màu xám nhạt */
-    font-style: italic;
-    text-align: center;
-    margin-top: -1.5rem; /* Kéo lên gần câu hỏi */
-    margin-bottom: 2rem;
+/* Small-screen: đặt nút xếp dọc */
+@media (max-width: 560px) {
+  .next-btn-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .next-btn-container .next-btn { width: 100%; }
+}
+
+@media (max-width: 800px) {
+  #question-text { font-size: 1.25rem; }
+  .quiz-layout-container { grid-template-columns: 1fr; padding: 0 4%; }
+  #options-grid { gap: 0.6rem; }
 }

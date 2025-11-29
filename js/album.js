@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // === LẤY CÁC THÀNH PHẦN (ELEMENTS) ===
     const albumGrid = document.querySelector('.album-grid');
     const token = localStorage.getItem('token'); // Lấy token
-    
+
     // Các thành phần của Modal
     const showModalBtn = document.getElementById('show-create-modal-btn');
     const modalOverlay = document.getElementById('create-album-modal');
@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!token) {
         albumGrid.innerHTML = '<p>Vui lòng <a href="login.html">đăng nhập</a> để xem bộ từ vựng.</p>';
         // Ẩn nút "Tạo bộ từ mới" nếu chưa đăng nhập
-        if(showModalBtn) showModalBtn.style.display = 'none';
-        return; 
+        if (showModalBtn) showModalBtn.style.display = 'none';
+        return;
     }
 
     // === GÁN SỰ KIỆN (EVENT LISTENERS) ===
-    
+
     // 1. Nút "Tạo bộ từ mới" -> Mở Modal
     showModalBtn.addEventListener('click', () => {
         modalOverlay.style.display = 'flex';
@@ -104,13 +104,13 @@ document.addEventListener('DOMContentLoaded', () => {
             albumGrid.innerHTML = `<p>Lỗi tải dữ liệu: ${err.message}</p>`;
         }
     }
-    
+
     /**
      * Xử lý gửi form tạo album
      */
     async function handleCreateAlbum(e) {
-        e.preventDefault(); 
-        modalErrorMsg.textContent = ''; 
+        e.preventDefault();
+        modalErrorMsg.textContent = '';
 
         // CHỈ LẤY TITLE
         const title = document.getElementById('modal-album-title').value;
@@ -124,13 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Authorization': `Bearer ${token}`
                 },
                 // CHỈ GỬI TITLE
-                body: JSON.stringify({ title }) 
+                body: JSON.stringify({ title })
             });
 
             const data = await res.json();
 
             if (res.ok) {
-                modalOverlay.style.display = 'none'; 
+                modalOverlay.style.display = 'none';
                 resetModalForm();
                 appendAlbumToGrid(data.data, albumGrid);
             } else {
@@ -179,34 +179,40 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     function appendAlbumToGrid(album, gridElement) {
         const wordCount = album.words ? album.words.length : 0;
-        
+
         const card = document.createElement('article');
         card.className = 'album-card';
         card.setAttribute('data-id', album._id);
-        
+
         card.innerHTML = `
             <div class="card-content">
                 <div class="card-title-container">
                     <h3 class="card-title">${album.title}</h3>
-                    <i class="fas fa-pencil-alt edit-icon" title="Sửa tên"></i>
                 </div>
                 <p class="card-stats">
                     <i class="fas fa-list-ol"></i> ${wordCount} từ vựng
                 </p>
             </div>
+            
             <div class="card-actions">
-                <div class="button-group">
-                    <a href="album-detail.html?id=${album._id}" class="study-btn">Xem</a>
-                    </div>
-                <div class="action-links">
+                
+                <div class="actions-left">
+                    <a href="album_detail.html?albumId=${album._id}" class="study-btn">Xem</a>
+                    <a href="practice.html?mode=ai&albumId=${album._id}" class="ai-card">Ôn tập</a>
+                </div>
+
+                <div class="actions-right">
+                    <a href="#" class="edit-btn edit-icon">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
                     <a href="#" class="action-link delete" data-id="${album._id}">
-                        <i class="fas fa-trash-alt"></i> Xóa
+                        <i class="fas fa-trash-alt"></i>
                     </a>
                 </div>
+
             </div>
         `;
-        
-        // Chèn thẻ mới này vào *trước* thẻ "Tạo mới"
+
         const createCard = gridElement.querySelector('.create-card');
         if (createCard) {
             gridElement.insertBefore(card, createCard);
@@ -214,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
             gridElement.appendChild(card);
         }
     }
-
     /**
      * Xóa trắng form trong modal
      */
@@ -223,6 +228,65 @@ document.addEventListener('DOMContentLoaded', () => {
         modalErrorMsg.textContent = '';
     }
 
+
+
+    async function showAlbumDetails(albumId) {
+        // 1. Lấy Token (nếu có xác thực)
+        const token = localStorage.getItem('userToken'); // Hoặc nơi bạn lưu token
+
+        try {
+            // 2. Gọi API Backend
+            const response = await fetch(`http://localhost:3000/api/albums/${albumId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.message || 'Lỗi tải album');
+                return;
+            }
+
+            // 3. Đổ dữ liệu vào Modal
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalCount').innerText = data.words.length;
+
+            const listContainer = document.getElementById('modalWordList');
+            listContainer.innerHTML = ''; // Xóa dữ liệu cũ
+
+            if (data.words.length === 0) {
+                listContainer.innerHTML = '<p style="text-align:center; color:gray;">Album trống</p>';
+            } else {
+                // Duyệt qua từng từ và tạo thẻ li
+                data.words.forEach((word, index) => {
+                    const li = document.createElement('li');
+                    li.style.padding = '5px 0';
+                    li.style.borderBottom = '1px dashed #eee';
+                    // Hiển thị: 1. Apple (Quả táo)
+                    li.innerHTML = `<strong>${index + 1}. ${word.word}</strong> <span style="color:#666">(${word.translation})</span>`;
+                    listContainer.appendChild(li);
+                });
+            }
+
+            // 4. Hiển thị Modal
+            document.getElementById('albumModal').style.display = 'block';
+
+        } catch (err) {
+            console.error(err);
+            alert('Không thể kết nối đến server');
+        }
+    }
+
+    // Hàm đóng Modal
+    function closeModal() {
+        document.getElementById('albumModal').style.display = 'none';
+    }
+
+
     /**
      * Xử lý tất cả click trên lưới (Xóa và Sửa)
      */
@@ -230,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Kiểm tra xem có nhấn nút XÓA không
         const deleteButton = e.target.closest('.action-link.delete');
         if (deleteButton) {
-            e.preventDefault(); 
+            e.preventDefault();
             // Lấy thông tin
             const albumId = deleteButton.dataset.id;
             const albumCard = deleteButton.closest('.album-card');
@@ -258,14 +322,14 @@ document.addEventListener('DOMContentLoaded', () => {
             editTitleInput.value = currentTitle;
             editIdInput.value = albumId; // Lưu ID vào input ẩn
             editErrorMsg.textContent = ''; // Xóa lỗi cũ
-            
+
             // Hiển thị modal SỬA
             editModal.style.display = 'flex';
             editTitleInput.focus(); // Focus vào ô nhập liệu
             return; // Dừng lại
         }
     }
-    
+
     /**
      * Hàm này thực thi việc xóa (được gọi bởi nút "Xóa" trên modal)
      */
@@ -277,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const res = await fetch(`/api/albums/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'Authorization': `Bearer ${token}` 
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
@@ -329,7 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         titleElement.textContent = data.data.title; // Lấy title mới nhất từ server
                     }
                 }
-                
+
                 // 3. Ẩn modal và reset
                 editModal.style.display = 'none';
                 editForm.reset();

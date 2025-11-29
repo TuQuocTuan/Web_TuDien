@@ -45,6 +45,24 @@ router.post('/', protect, async (req, res) => {
     }
 });
 
+router.get('/:id', protect, async (req, res) => {
+  try {
+    const album = await Album.findOne({ 
+      _id: req.params.id, 
+      user: req.user.id // Chỉ cho phép xem album của chính mình
+    }).populate('words'); // <--- QUAN TRỌNG: Lấy chi tiết từ vựng
+
+    if (!album) {
+      return res.status(404).json({ message: 'Không tìm thấy Album' });
+    }
+
+    res.json(album);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi server' });
+  }
+});
+
 // === DELETE: XÓA MỘT BỘ TỪ ===
 // (DELETE /api/albums/:id)
 router.delete('/:id', protect, async (req, res) => {
@@ -167,6 +185,29 @@ router.post('/:albumId/words', protect, async (req, res) => {
         console.error("Lỗi khi thêm từ vào album:", err.message);
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
+});
+
+router.delete('/:id/words/:wordId', protect, async (req, res) => {
+  try {
+    const { id, wordId } = req.params;
+
+    // Tìm album và cập nhật
+    const album = await Album.findOneAndUpdate(
+      { _id: id, user: req.user.id }, // Điều kiện: đúng ID album và đúng chủ sở hữu
+      { $pull: { words: wordId } },   // Hành động: Xóa wordId khỏi mảng words
+      { new: true }                   // Trả về dữ liệu mới sau khi xóa
+    );
+
+    if (!album) {
+      return res.status(404).json({ message: 'Không tìm thấy Album hoặc bạn không có quyền.' });
+    }
+
+    res.json({ message: 'Đã xóa từ khỏi album', data: album });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Lỗi server khi xóa từ' });
+  }
 });
 
 module.exports = router;

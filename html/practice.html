@@ -35,41 +35,32 @@
 
     <main id="content">
         <div class="quiz-layout-container-single">
-            <section class="quiz-main">
 
-               
+            <div class="quiz-header">
+                <h1 id="quiz-title">Đang tải bộ từ...</h1>
+            </div>
 
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
-                </div>
-                <span class="question-counter" id="question-counter">Câu 0 / 0</span>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+            </div>
+            <span class="question-counter" id="question-counter">Câu 0 / 0</span>
 
-                 <div class="quiz-header">
-                    <h1 id="quiz-title">Đang tải bài quiz...</h1>
-                    <a href="result.html" class="submit-btn" id="submit-btn" style="display: none;">
-                        <i class="fas fa-check-circle"></i> Nộp bài
-                    </a>
-                </div>
-                
-                <div class="quiz-body">
-                    <p class="question-text" id="question-text">
-                        Xin vui lòng chờ...
-                    </p>
-                    <p class="question-hint" id="question-hint"></p>
-                    <div class="answer-options-fill">
-                        <input type="text" id="answer-input" placeholder="Điền từ còn thiếu...">
-                    </div>
+            <div class="quiz-body">
+                <div class="question-box">
+                    <h2 class="question-text" id="question-text">...</h2>
+                    <p class="question-ipa" id="question-ipa"></p>
                 </div>
 
-                <div class="quiz-navigation">
-                    <button class="nav-btn next" id="check-answer-btn">
-                        Kiểm tra
-                    </button>
+                <div class="options-grid" id="options-grid">
                 </div>
+            </div>
 
-                <div id="feedback-zone" class="feedback-zone"></div>
+            <div class="next-btn-container">
+                <button class="next-btn" id="next-btn">Tiếp theo <i class="fas fa-arrow-right"></i></button>
+                <a href="result.html" class="next-btn" id="submit-btn" style="background: #28a745; color: aliceblue; ">Xem kết quả</a>
+            </div>
 
-            </section>
+        </div>
         </div>
     </main>
 
@@ -102,7 +93,7 @@
 
     <script src="../js/auth.js"></script>
     <script src="../js/practice.js"></script>
-    
+
 </body>
 
 </html>

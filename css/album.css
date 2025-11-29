@@ -45,22 +45,89 @@ a:hover {
     padding: 1rem 5%;
     background-color: var(--white);
     border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     height: 80px;
 }
-.header-left { display: flex; align-items: center; }
-.logo a { font-size: 1.75rem; font-weight: 700; color: var(--primary-blue); margin-right: 2.5rem; }
-.main-nav a { margin: 0 1rem; font-weight: 500; font-size: 1rem; color: var(--text-dark); padding-bottom: 5px; border-bottom: 3px solid transparent; }
-.main-nav a:hover { color: var(--accent-blue); }
-.main-nav a.active { color: var(--primary-blue); border-bottom-color: var(--primary-blue); }
-.header-right { display: flex; align-items: center; }
-.timkiem { display: flex; margin-right: 1.5rem; }
-#thanhtimkiem { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 20px 0 0 20px; font-size: 0.9rem; outline: none; }
-.timkiem button { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-left: none; background-color: #f9f9f9; border-radius: 0 20px 20px 0; cursor: pointer; color: var(--text-light); }
-.auth-buttons a { font-weight: 500; padding: 0.6rem 1.2rem; border-radius: 20px; margin-left: 0.5rem; font-size: 0.9rem; }
-.btn-login { color: var(--primary-blue); }
-.btn-signup { background-color: var(--primary-blue); color: var(--white); }
-.btn-signup:hover { background-color: var(--accent-blue); color: var(--white); }
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.logo a {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-right: 2.5rem;
+}
+
+.main-nav a {
+    margin: 0 1rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-dark);
+    padding-bottom: 5px;
+    border-bottom: 3px solid transparent;
+}
+
+.main-nav a:hover {
+    color: var(--accent-blue);
+}
+
+.main-nav a.active {
+    color: var(--primary-blue);
+    border-bottom-color: var(--primary-blue);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.timkiem {
+    display: flex;
+    margin-right: 1.5rem;
+}
+
+#thanhtimkiem {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 20px 0 0 20px;
+    font-size: 0.9rem;
+    outline: none;
+}
+
+.timkiem button {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-left: none;
+    background-color: #f9f9f9;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    color: var(--text-light);
+}
+
+.auth-buttons a {
+    font-weight: 500;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.btn-login {
+    color: var(--primary-blue);
+}
+
+.btn-signup {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.btn-signup:hover {
+    background-color: var(--accent-blue);
+    color: var(--white);
+}
 
 
 /* =================================
@@ -82,7 +149,8 @@ main#content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap; /* Cho responsive */
+    flex-wrap: wrap;
+    /* Cho responsive */
     gap: 1.5rem;
     margin-bottom: 2.5rem;
     border-bottom: 2px solid var(--border-color);
@@ -116,124 +184,182 @@ main#content {
 /* Lưới các bộ từ */
 .album-grid {
     display: grid;
-    /* Tự động điều chỉnh: tối thiểu 300px, tối đa 1fr */
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem 0;
 }
 
+/* Thẻ Album (Card) */
 .album-card {
-    background-color: var(--white);
+    background-color: var(--white, #fff);
     border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.07);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     display: flex;
-    flex-direction: column; /* Quan trọng để đẩy actions xuống dưới */
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid var(--border-color, #e0e0e0);
 }
 
 .album-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Nội dung bên trong thẻ */
 .card-content {
-    padding: 1.5rem;
+    margin-bottom: 1rem;
 }
 
-.card-title {
-    font-size: 1.5rem;
-    color: var(--primary-blue);
-    margin-bottom: 0.75rem;
-    line-height: 1.3;
+.card-content h3 {
+    font-size: 1.2rem;
+    color: var(--text-dark, #333);
+    margin-bottom: 0.3rem;
+    font-weight: 600;
 }
 
 .card-stats {
-    font-size: 1rem;
-    color: var(--text-light);
+    color: var(--text-light, #666);
+    font-size: 0.85rem;
+}
+
+/* ==========================================
+   PHẦN NÚT BẤM (ACTIONS) - CHIA 2 BÊN
+   ========================================== */
+
+.card-actions {
+    display: flex !important;
+    align-items: center;
+    /* Đẩy 2 nhóm con ra 2 mép ngoài cùng */
+    justify-content: space-between !important;
+
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f0f0;
+    width: 100%;
+}
+
+/* 2. Nhóm TRÁI (Xem, AI) */
+.actions-left {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    /* Khoảng cách giữa nút Xem và AI */
 }
 
-.card-stats i {
-    font-size: 0.9rem;
+/* 3. Nhóm PHẢI (Sửa, Xóa) */
+.actions-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    /* Khoảng cách giữa nút Sửa và Thùng rác */
 }
 
-/* Nút hành động ở cuối thẻ */
-.card-actions {
-    margin-top: auto; /* Đẩy mục này xuống cuối cùng */
-    padding: 0 1.5rem 1.5rem;
-    border-top: 1px solid var(--light-gray);
-    padding-top: 1.2rem;
-}
-
-.study-btn {
-    display: block;
-    width: 100%;
-    background-color: var(--accent-blue);
-    color: var(--white);
-    text-align: center;
-    padding: 0.8rem;
-    border-radius: 8px;
+/* --- Style cho các nút (Giữ nguyên cho đẹp) --- */
+.study-btn,
+.edit-btn,
+.ai-card {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
     font-weight: 500;
-    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    width: auto !important;
+    white-space: nowrap;
+}
+
+/* Nút XEM */
+.study-btn {
+    background-color: var(--primary-blue, #2a4a87);
+    color: white !important;
 }
 
 .study-btn:hover {
-    background-color: var(--primary-blue);
-    color: var(--white);
+    background-color: var(--accent-blue, #4f8bda);
 }
 
-.action-links {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
+/* Nút AI */
+a.ai-card {
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    color: white !important;
+    border: none;
 }
 
-.action-link {
-    font-size: 0.9rem;
-    color: var(--text-light);
+a.ai-card:hover {
+    opacity: 0.9;
+}
+
+/* Nút SỬA */
+.edit-btn {
+    background-color: #f9f9f9;
+    border-color: #ddd;
+    color: #666 !important;
+}
+
+.edit-btn:hover {
+    border-color: var(--primary-blue, #2a4a87);
+    color: var(--primary-blue, #2a4a87) !important;
+    background-color: white;
+}
+
+/* Nút XÓA */
+.action-link.delete {
+    color: #dc3545;
+    font-size: 1rem;
+    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 0.4rem;
-}
-
-.action-link:hover {
-    color: var(--primary-blue);
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    background-color: #fff0f0;
 }
 
 .action-link.delete:hover {
-    color: var(--danger-red);
+    background-color: #dc3545;
+    color: white;
 }
 
-/* Thẻ "Tạo mới" đặc biệt */
+/* Thẻ "Tạo bộ từ mới" */
 .create-card {
-    border: 2px dashed var(--border-color);
-    background-color: var(--light-gray);
-    box-shadow: none;
-    transition: all 0.3s ease;
+    border: 2px dashed #ddd;
+    background-color: #fafafa;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    min-height: 150px;
 }
 
 .create-card a {
+    text-decoration: none;
+    color: #888;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
-    min-height: 200px;
-    color: var(--text-light);
+    gap: 0.5rem;
+    font-weight: 500;
 }
 
 .create-card:hover {
-    border-color: var(--accent-blue);
-    background-color: #f0f6fc;
+    border-color: var(--primary-blue, #2a4a87);
+    background-color: #f0f7ff;
+    color: var(--primary-blue, #2a4a87);
+}
+
+.create-card:hover a {
+    color: var(--primary-blue, #2a4a87);
 }
 
 .create-card i {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.2rem;
 }
 
 .create-card span {
@@ -249,49 +375,66 @@ main#content {
     background-color: #2c2c2c;
     color: #aaa;
     padding: 4rem 5% 2rem 5%;
-    margin-top: 5rem; /* Tách biệt với nội dung */
+    margin-top: 5rem;
+    /* Tách biệt với nội dung */
 }
-.footer-content { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-    gap: 2rem; 
-    max-width: 1200px; 
-    margin: 0 auto; }
-.footer-about h3 { 
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-about h3 {
     font-size: 1.75rem;
-     font-weight: 700; 
-     color: var(--white);
-      margin-bottom: 1rem; 
-    }
-.footer-about p { 
-    font-size: 0.9rem; 
-    line-height: 1.7; 
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 1rem;
 }
-.footer-links h4, .footer-contact h4 {
-     font-size: 1.2rem; 
-     color: var(--white);
-      margin-bottom: 1.2rem;
-     }
-.footer-links ul { list-style: none; }
-.footer-links li { margin-bottom: 0.75rem; }
-.footer-links a { 
-    color: #aaa; 
-    font-size: 0.95rem; 
+
+.footer-about p {
+    font-size: 0.9rem;
+    line-height: 1.7;
 }
-.footer-links a:hover { 
-    color: var(--white); 
+
+.footer-links h4,
+.footer-contact h4 {
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 1.2rem;
 }
-.footer-contact p { 
+
+.footer-links ul {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 0.75rem;
+}
+
+.footer-links a {
+    color: #aaa;
     font-size: 0.95rem;
-     margin-bottom: 0.5rem;
-     }
-.footer-bottom { 
-    text-align: center; 
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+.footer-contact p {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+}
+
+.footer-bottom {
+    text-align: center;
     padding: 1.5rem 0;
-     margin-top: 3rem; 
-     border-top: 1px solid #444;
-      font-size: 0.9rem; 
-    }
+    margin-top: 3rem;
+    border-top: 1px solid #444;
+    font-size: 0.9rem;
+}
 
 /* =================================
    BỔ SUNG CHO CSS/ALBUM.CSS
@@ -300,72 +443,93 @@ main#content {
 
 /* Nút hành động ở cuối thẻ */
 .card-actions {
-    margin-top: auto; /* Đẩy mục này xuống cuối cùng */
-    padding: 1rem 1.5rem 1.5rem;
-    border-top: 1px solid var(--light-gray);
-    padding-top: 1.2rem;
-}
-
-/* MỚI: Nhóm chứa 2 nút Xem và Sửa */
-.button-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
-    gap: 0.75rem;
-}
-
-.study-btn, .edit-btn {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 0.8rem;
-    border-radius: 8px;
-    font-weight: 500;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-/* Nút XEM (Màu chính) */
-.study-btn {
-    background-color: var(--primary-blue);
-    color: var(--white);
-}
-.study-btn:hover {
-    background-color: var(--accent-blue);
-    color: var(--white);
-}
-
-/* Nút SỬA (Màu phụ) */
-.edit-btn {
-    background-color: var(--light-gray);
-    color: var(--text-dark);
-    border: 1px solid var(--border-color);
-}
-.edit-btn:hover {
-    background-color: #e9e9e9;
-}
-
-
-/* Link Xóa (nằm bên dưới) */
-.action-links {
-    text-align: center; /* Căn giữa nút xóa */
-    margin-top: 1rem;
-}
-
-.action-link {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    display: inline-flex; /* Để icon và chữ thẳng hàng */
+    display: flex;
+    justify-content: space-between;
+    /* Nhóm nút bên trái, nút Xóa bên phải */
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.25rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color, #e0e0e0);
 }
 
-.action-link:hover {
-    color: var(--primary-blue);
+/* 2. Nhóm các nút chính (Xem, AI, Sửa) */
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    /* Khoảng cách giữa các nút */
+}
+
+/* --- Style chung cho các nút --- */
+.study-btn,
+.edit-btn,
+.ai-card {
+    display: inline-block;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+/* Nút XEM (Màu xanh chính) */
+.study-btn {
+    background-color: var(--primary-blue, #2a4a87);
+    color: white !important;
+}
+
+.study-btn:hover {
+    background-color: var(--accent-blue, #4f8bda);
+    transform: translateY(-2px);
+}
+
+/* Nút ÔN TẬP AI (Màu cam/vàng nổi bật) */
+a.ai-card {
+    /* Class này trùng tên với thẻ card lớn, ta style lại cho nút nhỏ */
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    color: white !important;
+    border: none;
+}
+
+a.ai-card:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(246, 211, 101, 0.4);
+}
+
+/* Nút SỬA (Màu xám hoặc viền) */
+.edit-btn {
+    background-color: white;
+    border-color: #ccc;
+    color: #666 !important;
+}
+
+.edit-btn:hover {
+    border-color: var(--primary-blue, #2a4a87);
+    color: var(--primary-blue, #2a4a87) !important;
+}
+
+/* 3. Nút XÓA (Thùng rác) */
+.action-links {
+    margin-left: auto;
+    /* Đẩy sát sang phải */
+}
+
+.action-link.delete {
+    color: #dc3545;
+    /* Màu đỏ */
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: color 0.2s;
 }
 
 .action-link.delete:hover {
-    color: var(--danger-red); /* Màu đỏ cảnh báo */
+    color: #a71d2a;
+    text-decoration: underline;
 }
 
 
@@ -377,7 +541,8 @@ main#content {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    display: flex; /* Dùng display: flex thay vì display: none */
+    display: flex;
+    /* Dùng display: flex thay vì display: none */
     align-items: center;
     justify-content: center;
     z-index: 1000;
@@ -389,7 +554,7 @@ main#content {
     border-radius: 8px;
     width: 90%;
     max-width: 450px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     z-index: 1001;
 }
 
@@ -402,18 +567,20 @@ main#content {
 .form-modal-content .form-group {
     margin-bottom: 15px;
 }
+
 .form-modal-content .form-group label {
     display: block;
     margin-bottom: 5px;
     font-weight: 500;
 }
+
 .form-modal-content .form-group input,
 .form-modal-content .form-group textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .form-modal-actions {
@@ -431,33 +598,39 @@ main#content {
     border-radius: 5px;
     cursor: pointer;
 }
+
 .form-modal-actions .form-btn-submit {
-    background-color: #007bff; 
+    background-color: #007bff;
     color: white;
     padding: 10px 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
+
 .form-error-text {
     color: red;
     font-size: 0.9em;
     margin-bottom: 10px;
     min-height: 1.2em;
 }
+
 .form-btn-danger {
     background-color: #dc3545;
     border-color: #dc3545;
 }
+
 .form-btn-danger:hover {
     background-color: #043467;
 }
+
 .form-btn-cancel:hover {
     background-color: rgb(151, 149, 149);
 }
 
 /* === CSS RIÊNG CHO TRANG ALBUM === */
-.form-modal-confirm p { /* Đổi tên */
+.form-modal-confirm p {
+    /* Đổi tên */
     text-align: center;
     font-size: 1.1em;
     margin: 20px 0;
@@ -470,11 +643,13 @@ main#content {
     justify-content: space-between;
     margin-bottom: 10px;
 }
+
 .card-title-container h3 {
     margin-bottom: 0;
     flex-grow: 1;
     margin-right: 10px;
 }
+
 .edit-icon {
     font-size: 0.9em;
     color: #555;
@@ -482,7 +657,7 @@ main#content {
     transition: color 0.2s;
     padding: 5px;
 }
+
 .edit-icon:hover {
     color: #007bff;
 }
-
