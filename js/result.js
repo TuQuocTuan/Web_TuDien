@@ -1,24 +1,59 @@
+// js/result.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Đọc điểm số từ URL
+    // 1. ĐỌC DỮ LIỆU TỪ URL (Do practice.js gửi sang)
     const urlParams = new URLSearchParams(window.location.search);
-    const score = urlParams.get('score');
-    const total = urlParams.get('total');
-    const username = localStorage.getItem('username');
+    
+    // Lấy điểm số
+    const correct = parseInt(urlParams.get('correct')) || 0;
+    const total = parseInt(urlParams.get('total')) || 0;
+    const score = urlParams.get('score') || 0; // Điểm thang 10
+    const incorrect = total - correct;
 
-    // 2. Điền thông tin
-    if (score !== null && total !== null) {
-        const scoreNum = parseInt(score);
-        const totalNum = parseInt(total);
-        const percent = Math.round((scoreNum / totalNum) * 100);
+    // Lấy thông tin để làm lại bài
+    const albumId = urlParams.get('albumId');
+    const mode = urlParams.get('mode');
 
-        document.getElementById('username-display').textContent = username || 'bạn';
-        document.getElementById('score-number').textContent = percent; // Hiển thị %
-        document.getElementById('correct-count').textContent = scoreNum;
-        document.getElementById('total-count').textContent = totalNum;
-        document.getElementById('incorrect-count').textContent = totalNum - scoreNum;
-    } else {
-        // Xử lý nếu ai đó vào thẳng trang result.html
-        document.querySelector('.result-container h1').textContent = 'Không có dữ liệu';
-        document.getElementById('score-number').textContent = '?';
+    // 2. HIỂN THỊ LÊN MÀN HÌNH
+    
+    // Tên user
+    const username = localStorage.getItem('username') || 'Bạn';
+    const userEl = document.getElementById('username-display');
+    if (userEl) userEl.innerText = username;
+
+    // Vòng tròn điểm
+    const scoreEl = document.getElementById('score-number');
+    if (scoreEl) scoreEl.innerText = score;
+
+    // Số câu đúng
+    const correctEl = document.getElementById('correct-count');
+    if (correctEl) correctEl.innerText = correct;
+
+    // Số câu sai
+    const incorrectEl = document.getElementById('incorrect-count');
+    if (incorrectEl) incorrectEl.innerText = incorrect;
+
+    // Tổng số câu
+    const totalEl = document.getElementById('total-count');
+    if (totalEl) totalEl.innerText = total;
+
+    // 3. XỬ LÝ NÚT "THI LẠI" (RETRY)
+    const retryBtn = document.querySelector('.retry-btn'); // Tìm class .retry-btn
+
+    if (retryBtn) {
+        if (albumId) {
+            // Nếu có albumId, tạo link quay lại bài thi
+            let practiceUrl = `practice.html?albumId=${albumId}`;
+            if (mode) {
+                practiceUrl += `&mode=${mode}`;
+            }
+            // Gán link vào nút
+            retryBtn.href = practiceUrl;
+        } else {
+            // Nếu mất ID (do refresh hoặc lỗi), quay về danh sách bài tập
+            retryBtn.href = 'practice_list.html';
+            // Hoặc hiện thông báo lỗi nhẹ
+            console.warn("Không tìm thấy albumId để thi lại");
+        }
     }
 });

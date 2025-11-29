@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. Lấy tên từ từ URL
     const urlParams = new URLSearchParams(window.location.search);
     const wordName = urlParams.get('word');
+    const wordId = urlParams.get('id'); 
+
     const token = localStorage.getItem('token');
 
     // === LẤY CÁC PHẦN TỬ MODAL "THÊM TỪ" ===
@@ -14,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cancelAddBtn = document.getElementById('cancel-add-btn');
     const addToAlbumError = document.getElementById('add-to-album-error');
 
-    if (!wordName) {
+    if (!wordName && !wordId) { // Kiểm tra cả 2
         detailContainer.innerHTML = '<h1>Lỗi</h1><p>Không có từ nào được chỉ định để tra cứu.</p>';
         return;
     }
@@ -22,9 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Hàm Fetch API
     async function fetchWordDetails() {
         try {
-            const response = await fetch(`/api/words/${wordName}`);
+           let apiUrl = '';
+            
+            // Ưu tiên tìm theo ID nếu có, nếu không thì tìm theo tên
+            if (wordId) {
+                apiUrl = `/api/words/${wordId}`; 
+            } else {
+                apiUrl = `/api/words/${wordName}`;
+            }
+
+            const response = await fetch(apiUrl);
+            
             if (response.status === 404) {
-                detailContainer.innerHTML = `<h1>Không tìm thấy</h1><p>Không tìm thấy từ vựng: <strong>${wordName}</strong> trong từ điển.</p>`;
+                const term = wordId || wordName;
+                detailContainer.innerHTML = `<h1>Không tìm thấy</h1><p>Không tìm thấy từ vựng <strong>${term}</strong>.</p>`;
                 return;
             }
             if (!response.ok) throw new Error('Lỗi server');

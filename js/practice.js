@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             quizQuestions = rawQuestions.map(normalizeQuestion);
             quizTitle = data.albumTitle || data.title || 'Bài luyện';
 
-            titleEl.textContent = `Ôn tập: ${quizTitle} ${mode === 'ai' ? '(AI)' : ''}`;
+            titleEl.textContent = `Ôn tập: ${quizTitle} ${mode === 'ai' ? '' : ''}`;
             currentQuestionIndex = 0;
             score = 0;
             renderQuestion();
@@ -132,8 +132,8 @@ document.addEventListener('DOMContentLoaded', () => {
             optionsGrid.appendChild(btn);
         });
 
-        nextBtn.style.display = 'none';
-        nextBtn.disabled = true;
+        if (nextBtn) nextBtn.style.display = 'none';
+        if (submitBtn) submitBtn.style.display = 'none'; // <--- QUAN TRỌNG: Luôn ẩn nút Nộp trước
     }
 
     // Handle option click
@@ -194,23 +194,52 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function submitResults() {
-        // disable UI
+        // 1. Khóa giao diện
         nextBtn.disabled = true;
+        submitBtn.disabled = true;
         optionsGrid.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
-        submitBtn.style.display = 'inline-block';
 
+        // 2. Lấy dữ liệu điểm số (Biến global score và quizQuestions)
+        const correctCount = score;
+        const totalCount = quizQuestions.length;
+        // Điểm thang 10 (làm tròn)
+        const finalScore = totalCount > 0 ? Math.round((correctCount / totalCount) * 10) : 0;
+
+        // 3. Lấy thông tin Album/Mode từ URL HIỆN TẠI (để gửi sang trang kia)
+        const currentUrlParams = new URLSearchParams(window.location.search);
+        const currentAlbumId = currentUrlParams.get('albumId');
+        const currentMode = currentUrlParams.get('mode');
+
+        // 4. Lưu lịch sử lên Server (Giữ nguyên)
         const token = localStorage.getItem('token');
         try {
             await fetch('/api/quiz/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ category: quizTitle, score, totalQuestions: quizQuestions.length })
+                body: JSON.stringify({ 
+                    category: quizTitle, 
+                    score: finalScore, 
+                    totalQuestions: totalCount 
+                })
             });
-            // navigate to result page
-            window.location.href = `result.html?score=${score}&total=${quizQuestions.length}`;
         } catch (err) {
-            alert('Lỗi lưu điểm: ' + err.message);
+            console.error('Lỗi lưu history:', err);
         }
+
+        // 5. CHUYỂN TRANG (QUAN TRỌNG NHẤT)
+        // Tạo URL đích: result.html
+        let redirectUrl = `result.html?correct=${correctCount}&total=${totalCount}&score=${finalScore}`;
+        
+        // Gắn thêm ID và Mode để trang kết quả biết đường quay lại
+        if (currentAlbumId) {
+            redirectUrl += `&albumId=${currentAlbumId}`;
+        }
+        if (currentMode) {
+            redirectUrl += `&mode=${currentMode}`;
+        }
+
+        // Thực hiện chuyển trang
+        window.location.href = redirectUrl;
     }
 
     startQuiz();

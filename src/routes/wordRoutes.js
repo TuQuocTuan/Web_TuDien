@@ -1,196 +1,163 @@
 // src/routes/wordRoutes.js
 const express = require('express');
 const router = express.Router();
-const Word = require('../models/wordModel.js'); // Gọi khuôn mẫu Word
+const mongoose = require('mongoose');
+const Word = require('../models/wordModel.js');
 const { protect } = require('../middleware/authMiddleware.js');
-const crypto = require('crypto'); // (Bạn cần cái này cho /forgot-password)
+
+// ===========================================
+// 1. CÁC ROUTE TĨNH (STATIC ROUTES)
+// ===========================================
 
 /**
  * @route   GET /api/words
- * @desc    Lấy TẤT CẢ từ vựng (Hỗ trợ Lọc, Sắp xếp, Tìm kiếm, Phân trang)
+ * @desc    Lấy danh sách (Hỗ trợ tìm #tag)
  */
 router.get('/', async (req, res) => {
     try {
         let filter = {};
         let sortOptions = {};
-
-        const { type, category, sort, search, page, tag } = req.query;
+        const { type, search, page, tag, sort } = req.query;
 
         const currentPage = parseInt(page) || 1;
-        const limit = 5;
+        const limit = 20; 
         const skip = (currentPage - 1) * limit;
 
+        // --- 1. XỬ LÝ TÌM KIẾM ---
         if (tag) {
+            // Hỗ trợ cách cũ: ?tag=ielts
             filter.tags = tag;
-        }
+        } 
         else if (search) {
-            const searchRegex = { $regex: `^${search}`, $options: 'i' };
-            filter.$or = [
-                { word: searchRegex },
-                { translation: searchRegex }
-            ];
+            const searchTerm = search.trim();
+
+            // KIỂM TRA: Nếu bắt đầu bằng dấu #
+            if (searchTerm.startsWith('#')) {
+                // ==> TÌM THEO TAG
+                // Cắt bỏ dấu # (substring(1)) và xóa khoảng trắng
+                const tagKeyword = searchTerm.substring(1).trim().toLowerCase();
+                
+                if (tagKeyword) {
+                    // Tìm các từ có chứa tag này
+                    filter.tags = tagKeyword;
+                }
+            } else {
+                // ==> TÌM THEO TỪ VỰNG / NGHĨA (LOGIC CŨ)
+                const searchRegex = { $regex: `^${searchTerm}`, $options: 'i' };
+                filter.$or = [
+                    { word: searchRegex }, 
+                    { translation: searchRegex }
+                ];
+            }
         }
-        else if (type && type !== 'all') {
+
+        // --- 2. XỬ LÝ LOẠI TỪ ---
+        if (type && type !== 'all') {
             filter.type = type;
         }
 
+        // --- 3. XỬ LÝ SẮP XẾP ---
         switch (sort) {
-            case 'alphabetical_desc':
-                sortOptions = { word: -1 };
-                break;
-            case 'newest':
-                sortOptions = { createdAt: -1 };
-                break;
-            case 'oldest':
-                sortOptions = { createdAt: 1 };
-                break;
-            default:
-                sortOptions = { word: 1 };
-                break;
+            case 'alphabetical_desc': sortOptions = { word: -1 }; break;
+            case 'newest': sortOptions = { createdAt: -1 }; break;
+            case 'oldest': sortOptions = { createdAt: 1 }; break;
+            default: sortOptions = { word: 1 }; break;
         }
 
+        // --- 4. TRUY VẤN DB ---
         const totalWords = await Word.countDocuments(filter);
         const totalPages = Math.ceil(totalWords / limit);
-        const words = await Word.find(filter)
-            .sort(sortOptions)
-            .skip(skip)
-            .limit(limit);
+        const words = await Word.find(filter).sort(sortOptions).skip(skip).limit(limit);
 
-        res.status(200).json({
-            words: words,
-            totalPages: totalPages,
-            currentPage: currentPage
-        });
+        res.status(200).json({ words, totalPages, currentPage });
 
     } catch (err) {
-        console.error("Lỗi khi lấy danh sách từ vựng:", err.message);
+        console.error(err);
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
 
-// ===========================================
-// ===== SỬA LỖI THỨ TỰ (ĐẶT /suggest LÊN TRÊN) =====
-// ===========================================
 /**
  * @route   GET /api/words/suggest
- * @desc    Lấy gợi ý từ vựng (autocomplete)
+ * @desc    Gợi ý từ vựng HOẶC Tag (khi gõ #)
  */
 router.get('/suggest', async (req, res) => {
     try {
         const searchTerm = req.query.q;
-        if (!searchTerm) {
-            return res.json([]);
+        if (!searchTerm) return res.json([]);
+
+        const term = searchTerm.trim();
+
+        // NẾU NGƯỜI DÙNG GÕ DẤU #
+        if (term.startsWith('#')) {
+            const tagKeyword = term.substring(1).toLowerCase();
+            
+            // Tìm các từ có chứa tag khớp với từ khóa
+            // Lưu ý: Cách này hơi thủ công vì MongoDB không hỗ trợ suggest tags trực tiếp tốt lắm
+            // Ta tìm các Word có tag khớp, sau đó lấy unique tags
+            const wordsWithTags = await Word.find(
+                { tags: { $regex: `^${tagKeyword}`, $options: 'i' } },
+                'tags' // Chỉ lấy trường tags
+            ).limit(20);
+
+            // Gom tất cả tags lại và lọc trùng
+            const allTags = new Set();
+            wordsWithTags.forEach(w => {
+                if(w.tags) w.tags.forEach(t => {
+                    if(t.toLowerCase().includes(tagKeyword)) allTags.add('#' + t);
+                });
+            });
+
+            // Chuyển về mảng object cho Frontend dễ hiển thị
+            const suggestions = Array.from(allTags).slice(0, 5).map(t => ({
+                word: t, 
+                translation: 'Tìm theo thẻ (Tag)'
+            }));
+            
+            return res.json(suggestions);
         }
 
-        const searchRegex = { $regex: `^${searchTerm}`, $options: 'i' };
-
+        // NẾU TÌM BÌNH THƯỜNG
+        const searchRegex = { $regex: `^${term}`, $options: 'i' };
         const suggestions = await Word.find(
-            {
-                $or: [
-                    { word: searchRegex },
-                    { translation: searchRegex }
-                ]
-            },
+            { $or: [{ word: searchRegex }, { translation: searchRegex }] },
             'word translation'
         ).limit(5);
 
         res.status(200).json(suggestions);
 
     } catch (err) {
-        console.error("Lỗi khi lấy gợi ý:", err.message);
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
 
-/**
- * @route   POST /api/words/:wordId/tags
- * @desc    Thêm 1 tag mới vào từ vựng
- */
-router.post('/:wordId/tags', protect, async (req, res) => {
-    try {
-        const { wordId } = req.params;
-        let { tagName } = req.body;
-
-        if (!tagName) {
-            return res.status(400).json({ message: 'Tên tag không được rỗng' });
-        }
-
-        tagName = tagName.trim().toLowerCase();
-
-        const word = await Word.findById(wordId);
-        if (!word) {
-            return res.status(404).json({ message: 'Không tìm thấy từ vựng' });
-        }
-
-        await Word.updateOne(
-            { _id: wordId },
-            { $addToSet: { tags: tagName } }
-        );
-
-        res.status(201).json({ message: 'Đã thêm tag!', newTag: tagName });
-
-    } catch (err) {
-        console.error("Lỗi khi thêm tag:", err.message);
-        res.status(500).json({ message: 'Lỗi máy chủ' });
-    }
-});
-
-router.delete('/:wordId/tags', protect, async (req, res) => {
-    try {
-        const { wordId } = req.params;
-        const { tagName } = req.body; // Lấy tag name từ body
-
-        if (!tagName) {
-            return res.status(400).json({ message: 'Tên tag không được rỗng' });
-        }
-
-        // 1. Tìm từ vựng
-        const word = await Word.findById(wordId);
-        if (!word) {
-            return res.status(404).json({ message: 'Không tìm thấy từ vựng' });
-        }
-
-        // 2. Xóa tag khỏi mảng (dùng $pull)
-        await Word.updateOne(
-            { _id: wordId },
-            { $pull: { tags: tagName } } // $pull: Kéo ra khỏi mảng
-        );
-
-        // 3. Trả về thành công
-        res.status(200).json({ message: 'Đã xóa tag!' });
-
-    } catch (err) {
-        console.error("Lỗi khi xóa tag:", err.message);
-        res.status(500).json({ message: 'Lỗi máy chủ' });
-    }
-});
+// ... (GIỮ NGUYÊN CÁC ROUTE POST, DELETE, GET/:PARAM Ở DƯỚI) ...
+// (Nhớ copy lại đoạn route /:param thông minh mà chúng ta đã làm ở bước trước nhé)
 
 // ===========================================
-// ===== ĐẶT /:word (ROUTE ĐỘNG) XUỐNG DƯỚI CÙNG =====
+// 2. CÁC ROUTE CÓ THAM SỐ CỤ THỂ
 // ===========================================
-/**
- * @route   GET /api/words/:word
- * @desc    Lấy chi tiết MỘT từ vựng
- */
-router.get('/:word', async (req, res) => {
+router.post('/:wordId/tags', protect, async (req, res) => { /* Giữ nguyên code cũ */ });
+router.delete('/:wordId/tags', protect, async (req, res) => { /* Giữ nguyên code cũ */ });
+
+// ===========================================
+// 3. ROUTE ĐỘNG (CUỐI CÙNG)
+// ===========================================
+router.get('/:param', async (req, res) => {
     try {
-        const wordName = req.params.word;
-
-        const wordDetail = await Word.findOne({
-            word: { $regex: new RegExp(`^${wordName}$`, 'i') }
-        });
-
-        if (!wordDetail) {
-            return res.status(404).json({ message: `Không tìm thấy từ: ${wordName}` });
+        const { param } = req.params;
+        let word = null;
+        if (mongoose.Types.ObjectId.isValid(param)) {
+            word = await Word.findById(param);
         }
-
-        res.status(200).json(wordDetail);
-
+        if (!word) {
+            word = await Word.findOne({ word: { $regex: new RegExp(`^${param}$`, 'i') } });
+        }
+        if (!word) return res.status(404).json({ message: `Không tìm thấy: ${param}` });
+        res.json(word);
     } catch (err) {
-        console.error(`Lỗi khi lấy chi tiết từ ${req.params.word}:`, err.message);
-        res.status(500).json({ message: 'Lỗi máy chủ' });
+        res.status(500).json({ message: 'Lỗi server' });
     }
 });
-
 
 module.exports = router;

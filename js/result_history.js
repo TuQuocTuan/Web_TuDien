@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <td data-label="Tên bài thi">${result.category}</td>
                         <td data-label="Ngày làm">${date}</td>
                         <td data-label="Điểm số" class="${scoreClass}">
-                            ${result.score} / ${result.totalQuestions}
+                            ${result.score} 
                         </td>
                     `;
             tableBody.appendChild(row);

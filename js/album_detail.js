@@ -117,6 +117,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-eye"></i>
                     </a>
                     </div>
+                    <div class="vocab-main">
+                 <a href="word_detail.html?id=${word._id}" class="vocab-word-link">
+                ${word.word}
+                 </a>
+    </div>
             `;
             listContainer.appendChild(card);
         });

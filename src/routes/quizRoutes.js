@@ -8,45 +8,31 @@ const User = require('../models/userModel.js');
 const { protect } = require('../middleware/authMiddleware.js');
 
 // ==========================================
-// 1. CẤU HÌNH & HÀM GỌI AI
+// CẤU HÌNH CHUNG
 // ==========================================
-const MODEL_NAME = 'qwen2:0.5b'; // Model nhẹ
+const MODEL_NAME = 'qwen2.5:3b'; // Model nhẹ
+const MAX_QUESTIONS = 10;        // <--- ĐÃ TĂNG LÊN 10
 
-// Hàm gọi AI lấy câu văn (Đã tối ưu Prompt để tránh nói nhiều)
-// Hàm gọi AI lấy câu văn (Phiên bản An toàn & Ổn định nhất)
-// Hàm gọi AI lấy câu văn (Phiên bản "Bất tử" - Không bao giờ trả về null)
+// ==========================================
+// 1. CÁC HÀM HỖ TRỢ AI (FALLBACK & GENERATE)
+// ==========================================
+
 function getSafeFallback(word, trans) {
-    const templates = [
-        `The English word for "${trans}" is ______.`,
-        `Please fill in the blank: "I learned the word ______ today."`,
-        `In this context, the word ______ fits best.`,
-        `Do not forget the meaning of ______: ${trans}.`,
-        `Can you spell the word ______?`,
-        `The word ______ is very common in English.`,
-        `Definition: ______ means "${trans}".`,
-        `Example: Please write the word ______ on the paper.`,
-        `Teacher: "What is the English word for ${trans}?" Student: "It is ______."`,
-        `Remember: ______ = ${trans}.`
-    ];
-    // Chọn ngẫu nhiên
-    const t = templates[Math.floor(Math.random() * templates.length)];
-    return `${t} (Gợi ý: ${trans})`;
+  const templates = [
+    `The English word for "${trans}" is ______.`,
+  ];
+  const t = templates[Math.floor(Math.random() * templates.length)];
+  return `${t} (Gợi ý: ${trans})`;
 }
 
-// ==========================================
-// HÀM GỌI AI (ĐÃ TỐI ƯU CONTEXT)
-// ==========================================
 const getSentenceFromAI = async (word, trans) => {
-  // 1. PROMPT THÔNG MINH HƠN:
-  // - Cung cấp nghĩa (Meaning) để AI đặt câu đúng ngữ cảnh (ví dụ: bank = ngân hàng vs bờ sông)
-  // - Cấm các mẫu câu lười (It is a...)
   const prompt = `
 [INST]
 Target Word: "${word}"
 Meaning: "${trans}"
 Task: Write a simple English sentence (8-15 words) using the Target Word correctly based on the Meaning.
 Rules:
-1. Do NOT define the word (e.g. "Apple is a fruit" -> NO).
+1. Do NOT define the word.
 2. Do NOT start with "It is", "This is", "There is".
 3. Show an action or a situation.
 4. Output ONLY the sentence.
@@ -62,10 +48,10 @@ Rules:
         prompt: prompt,
         stream: false,
         options: {
-          temperature: 0.3, // Tăng nhẹ lên 0.3 để AI viết câu mượt hơn chút
+          temperature: 0.5,
           top_p: 0.9,
           num_predict: 50,
-          stop: ["\n", "Input", "Output", "Target"] 
+          stop: ["\n", "Input", "Output", "Target"]
         }
       }),
     });
@@ -73,50 +59,37 @@ Rules:
     const data = await response.json();
     let sentence = data.response.trim();
 
-    // --- DỌN RÁC (CLEANING) ---
+    // --- DỌN RÁC ---
     const junkPrefixes = ["Sentence:", "Output:", "Answer:", "Here is", "Sure", "Example:"];
     junkPrefixes.forEach(p => {
-        if (sentence.toLowerCase().startsWith(p.toLowerCase())) {
-            sentence = sentence.substring(p.length).trim();
-        }
+      if (sentence.toLowerCase().startsWith(p.toLowerCase())) {
+        sentence = sentence.substring(p.length).trim();
+      }
     });
-    sentence = sentence.replace(/^"|"$/g, '').trim(); // Bỏ ngoặc kép
+    sentence = sentence.replace(/^"|"$/g, '').trim();
 
-    // --- LOGIC THAY THẾ TỪ ---
-    const regexWord = new RegExp(`\\b${word}\\b`, 'gi');
+    // --- LOGIC THAY THẾ TỪ (VÉT CẠN CẢ BIẾN THỂ) ---
+    // Tìm từ gốc + bất kỳ đuôi nào (ví dụ: run -> running, runs...)
+    const smartRegex = new RegExp(`\\b${word}[a-z]*`, 'gi');
     
-    // Kiểm tra xem AI có dùng đúng từ không
-    if (regexWord.test(sentence)) {
-        // Thay thế từ bằng ______
-        sentence = sentence.replace(regexWord, '______');
-        
-        // --- BỘ LỌC CHẤT LƯỢNG (QUALITY CHECK) ---
-        // 1. Nếu câu quá ngắn (< 15 ký tự) -> Dễ là câu vô tri -> Fallback
-        if (sentence.length < 15) return getSafeFallback(word, trans);
-
-        // 2. Nếu câu bắt đầu bằng "It is a..." (dù đã cấm nhưng AI lì) -> Fallback
-        if (/^(It|This|That) is a/i.test(sentence)) return getSafeFallback(word, trans);
-
-        // Đạt chuẩn -> Trả về câu xịn
+    if (smartRegex.test(sentence)) {
+        sentence = sentence.replace(smartRegex, '______');
         return `${sentence} (Gợi ý: ${trans})`;
     } 
     
-    // Nếu AI không dùng từ khóa -> Fallback
+    // Nếu không tìm thấy từ trong câu -> Fallback
     return getSafeFallback(word, trans);
 
   } catch (err) {
-    // Lỗi mạng -> Fallback
     return getSafeFallback(word, trans);
   }
 };
+
 // ==========================================
-// 2. HÀM XỬ LÝ CHÍNH (CHỈ DÙNG AI)
-// ==========================================
-// ==========================================
-// 3. HÀM XỬ LÝ CHÍNH (HYBRID LOGIC)
+// 2. HÀM XỬ LÝ CHÍNH (HYBRID LOGIC)
 // ==========================================
 async function generateQuizHybrid(promptData) {
-  // promptData: [{word: 'ceillist', ...}, {word: 'able', ...}, {word: 'adventure', ...}]
+  // promptData: [{word: 'ceillist', ...}, {word: 'able', ...}]
   
   console.log(`[Quiz] Dang goi AI tao cau hoi cho ${promptData.length} tu...`);
   
@@ -125,19 +98,23 @@ async function generateQuizHybrid(promptData) {
   const backupDistractors = ['Thing', 'Object', 'Item', 'Place', 'Time', 'Way'];
 
   const promises = promptData.map(async (item, index) => {
-    // ... (Giữ nguyên logic gọi AI và tạo options như cũ) ...
+    
     // BƯỚC 1: Gọi AI
     let questionText = await getSentenceFromAI(item.word, item.trans);
 
-    // BƯỚC 2: Fallback
+    // BƯỚC 2: Fallback (Chống cháy nếu hàm AI trả về null/undefined - dù đã có safe fallback ở trên)
     if (!questionText) {
         questionText = `______ (Gợi ý: ${item.trans})`;
     }
 
-    // BƯỚC 3: Tạo Options
+    // BƯỚC 3: Tạo Options (Đáp án)
+    // Lọc bỏ từ đúng khỏi danh sách đáp án sai
     let distractors = allWords.filter(w => w.toLowerCase() !== item.word.toLowerCase());
+    
+    // Trộn và lấy 3 từ làm nhiễu
     distractors = distractors.sort(() => 0.5 - Math.random()).slice(0, 3);
     
+    // Nếu thiếu từ (do danh sách đầu vào < 4 từ), lấy thêm từ dự phòng
     let k = 0;
     while (distractors.length < 3) {
         distractors.push(backupDistractors[k++] || 'Option');
@@ -148,7 +125,9 @@ async function generateQuizHybrid(promptData) {
         ...distractors.map(d => ({ text: d, correct: false }))
     ];
     
+    // Xáo trộn vị trí A, B, C, D
     const shuffledOptions = fullOptions.sort(() => 0.5 - Math.random());
+    
     const optionsMapped = shuffledOptions.map((opt, i) => ({ 
         key: letters[i], 
         text: opt.text 
@@ -156,7 +135,6 @@ async function generateQuizHybrid(promptData) {
     const answerKey = optionsMapped.find((o, i) => shuffledOptions[i].correct).key;
 
     return {
-      // Lưu ý: Tạm thời chưa gán ID ở đây, hoặc gán tạm cũng được
       question: questionText,
       type: 'cloze',
       options: optionsMapped,
@@ -168,12 +146,8 @@ async function generateQuizHybrid(promptData) {
   // Chờ tất cả kết quả
   let results = await Promise.all(promises);
 
-  // --- BƯỚC MỚI: XÁO TRỘN THỨ TỰ CÂU HỎI ---
-  // 1. Xáo trộn mảng kết quả
+  // --- XÁO TRỘN THỨ TỰ CÂU HỎI VÀ GÁN ID ---
   results = results.sort(() => 0.5 - Math.random());
-
-  // 2. Đánh số lại ID (1, 2, 3...) cho đẹp đội hình
-  // Để tránh việc câu đầu tiên lại có id: 3
   results = results.map((q, index) => ({
     ...q,
     id: index + 1
@@ -187,6 +161,7 @@ async function generateQuizHybrid(promptData) {
 // 3. ROUTES
 // ==========================================
 
+// --- Route 1: Tạo Quiz từ Album ---
 router.get('/ai-album', protect, async (req, res) => {
   try {
     const { albumId } = req.query;
@@ -196,7 +171,28 @@ router.get('/ai-album', protect, async (req, res) => {
     if (!album || !album.words.length) return res.status(404).json({ message: 'Album trống.' });
 
     let wordsToLearn = album.words;
-    if (wordsToLearn.length > 5) wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, 5);
+
+    // --- 1. LỌC TRÙNG LẶP (Deduplication) ---
+    // Sử dụng Set để đảm bảo mỗi từ (word text) chỉ xuất hiện 1 lần
+    const uniqueWords = [];
+    const seen = new Set();
+    
+    for (const w of wordsToLearn) {
+        const txt = w.word.toLowerCase().trim();
+        if (!seen.has(txt)) {
+            seen.add(txt);
+            uniqueWords.push(w);
+        }
+    }
+    wordsToLearn = uniqueWords;
+
+    // --- 2. XÁO TRỘN VÀ CẮT LẤY MAX_QUESTIONS (10) ---
+    if (wordsToLearn.length > MAX_QUESTIONS) {
+        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
+    } else {
+        // Nếu ít hơn 10 thì xáo trộn thôi
+        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random());
+    }
 
     const pairs = wordsToLearn.map(w => ({ word: w.word, trans: w.translation || '...' }));
 
@@ -210,15 +206,30 @@ router.get('/ai-album', protect, async (req, res) => {
   }
 });
 
+// --- Route 2: Tạo Quiz từ Saved Words ---
 router.get('/ai-generate', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate('savedWords');
     let wordsToLearn = user.savedWords || [];
 
+    // --- 1. LỌC TRÙNG LẶP CHO SAVED WORDS ---
+    const uniqueWords = [];
+    const seen = new Set();
+    for (const w of wordsToLearn) {
+        const txt = w.word.toLowerCase().trim();
+        if (!seen.has(txt)) {
+            seen.add(txt);
+            uniqueWords.push(w);
+        }
+    }
+    wordsToLearn = uniqueWords;
+
     if (wordsToLearn.length === 0) {
-        wordsToLearn = await Word.aggregate([{ $sample: { size: 5 } }]);
+        // Nếu user không có từ nào, lấy random từ DB
+        wordsToLearn = await Word.aggregate([{ $sample: { size: MAX_QUESTIONS } }]);
     } else {
-        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, 5);
+        // Nếu có từ, xáo trộn và lấy max 10
+        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
     }
 
     const pairs = wordsToLearn.map(w => ({ 
@@ -236,7 +247,7 @@ router.get('/ai-generate', protect, async (req, res) => {
   }
 });
 
-// Các route cũ giữ nguyên
+// Các route khác giữ nguyên
 router.post('/submit', protect, async (req, res) => {
   try {
     const { category, score, totalQuestions } = req.body;

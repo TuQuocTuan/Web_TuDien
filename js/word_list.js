@@ -128,33 +128,46 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAndRenderWords(page = 1) {
         const queryParts = [];
         const currentParams = new URLSearchParams(window.location.search);
+        
+        // 1. Ưu tiên lấy tag từ URL (nếu bấm từ trang chi tiết)
         const currentTag = currentParams.get('tag');
+        
+        // 2. Lấy nội dung thanh tìm kiếm
         const searchQuery = searchInputEl.value.trim();
-        const tagSyntax = /\[tag\]:\s*(.*)/i;
-        const searchMatch = searchQuery.match(tagSyntax);
 
+        // 3. Xây dựng Query String gửi lên Server
         if (currentTag) {
+            // Trường hợp 1: Có ?tag= trên URL (do bấm link)
             queryParts.push(`tag=${encodeURIComponent(currentTag)}`);
             queryParts.push(`page=${page}`);
-        }
-        else if (searchMatch && searchMatch[1]) {
-            const tagName = searchMatch[1].trim();
-            queryParts.push(`tag=${encodeURIComponent(tagName)}`);
-            queryParts.push(`page=${page}`);
-            if (filterTitleEl) filterTitleEl.textContent = `Tag: "${tagName}"`;
-            if (sortSelectEl) sortSelectEl.disabled = true;
-            if (filterGroupContainer) filterGroupContainer.style.display = 'none';
-        }
+            
+            // Cập nhật giao diện cho khớp
+            if (filterTitleEl) filterTitleEl.textContent = `Tag: "${currentTag}"`;
+            // Có thể hiển thị dấu # trong ô input cho đẹp
+            if (searchInputEl && !searchInputEl.value) searchInputEl.value = `#${currentTag}`;
+        } 
         else {
+            // Trường hợp 2: Tìm kiếm bình thường (Gõ chữ hoặc gõ #tag)
+            
+            // Reset tiêu đề bộ lọc
             if (filterTitleEl) filterTitleEl.textContent = 'Bộ lọc';
             if (sortSelectEl) sortSelectEl.disabled = false;
             if (filterGroupContainer) filterGroupContainer.style.display = 'block';
-            if (searchQuery) queryParts.push(`search=${encodeURIComponent(searchQuery)}`);
+
+            // QUAN TRỌNG: Gửi tham số 'search' lên server
+            // Dù người dùng gõ "apple" hay "#toeic", ta cứ gửi y nguyên.
+            // encodeURIComponent sẽ biến dấu # thành %23 để không lỗi URL.
+            if (searchQuery) {
+                queryParts.push(`search=${encodeURIComponent(searchQuery)}`);
+            }
+
+            // Xử lý bộ lọc loại từ (như cũ)
             let typeFilter = '';
             allFilterRadios.forEach(radio => {
                 if (radio.checked && radio.value !== 'all') typeFilter = radio.value;
             });
             if (typeFilter) queryParts.push(`type=${typeFilter}`);
+            
             queryParts.push(`sort=${sortSelectEl.value}`);
             queryParts.push(`page=${page}`);
         }
@@ -169,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
             renderWords(data.words);
             renderPagination(data.totalPages, data.currentPage);
-            // (Không cần attachAudioListeners() vì đã dùng event delegation)
         } catch (err) {
             console.error('Lỗi khi tải từ:', err);
             vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
@@ -178,16 +190,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // === GẮN SỰ KIỆN (Listeners) ===
     if (!tagFromURL) {
+        // Sự kiện lọc loại từ
         allFilterRadios.forEach(radio => {
             radio.addEventListener('change', () => fetchAndRenderWords(1));
         });
+
+        // Sự kiện sắp xếp
         sortSelectEl.addEventListener('change', () => fetchAndRenderWords(1));
+
+        // Sự kiện tìm kiếm (Input & Change)
+        // Sửa: Bỏ check startWith('[tag]'), cứ gõ là tìm
+        let timeout = null;
         searchInputEl.addEventListener('input', () => {
-            const query = searchInputEl.value.trim();
-            if (!query.startsWith('[tag]:')) {
+            // Debounce: Chờ người dùng ngừng gõ 300ms mới gọi API (đỡ lag server)
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
                 fetchAndRenderWords(1);
-            }
+            }, 300); 
         });
+
+        // Hỗ trợ Enter hoặc khi focus out
         searchInputEl.addEventListener('change', () => {
             fetchAndRenderWords(1);
         });
