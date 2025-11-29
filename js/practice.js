@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let apiUrl = '';
         if (mode === 'ai') {
             apiUrl = `/api/quiz/ai-album?albumId=${albumId}`;
-            titleEl.textContent = "Đang nhờ AI soạn đề (chờ 5s)...";
+            titleEl.textContent = 'Đang nhờ AI soạn đề (chờ vài giây nhé !!!)';
             questionTextEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI đang đọc bộ từ của bạn...';
         } else {
             apiUrl = `/api/quiz/from-album?albumId=${albumId}`;

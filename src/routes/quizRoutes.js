@@ -25,17 +25,52 @@ function getSafeFallback(word, trans) {
   return `${t} (Gợi ý: ${trans})`;
 }
 
+function detectWordType(word, trans) {
+    const w = word.toLowerCase();
+    const t = trans.toLowerCase();
+
+    if (/^(làm|ăn|chơi|chạy|đi|ngủ|nói|viết|đọc|học|nghe|nhìn|uống|mặc|đánh|vẽ|hát|múa|tập|giúp|mua|bán|thuê|mượn|trả|lấy|bỏ|đặt|để)\b/i.test(t)) {
+        return 'verb';
+    }
+    const adjSuffixes = ['ful', 'ous', 'ive', 'ble', 'ant', 'ent', 'less', 'al', 'ic', 'y', 'ish'];
+    if (adjSuffixes.some(s => w.endsWith(s)) || /^(rất|khá|hơi|có tính|thuộc|bị|được|màu|to|nhỏ|đẹp|xấu|cao|thấp)\b/i.test(t)) {
+        return 'adjective';
+    }
+    return 'noun';
+}
+
 const getSentenceFromAI = async (word, trans) => {
+  const type = detectWordType(word, trans);
+  let specificRule = "";
+
+  // --- PROMPT "TỰ DO NHƯNG CÓ KỶ LUẬT" ---
+  // Không ép cấu trúc (Structure), chỉ ép Vai trò (Role)
+  
+  if (type === 'verb') {
+      specificRule = `
+      - Grammar Role: This word is a VERB (action).
+      - Instruction: Write a sentence showing someone doing this action.
+      - Freedom: You can use any tense (past, present, future) or form (${word}ing, ${word}s).`;
+  } else if (type === 'adjective') {
+      specificRule = `
+      - Grammar Role: This word is an ADJECTIVE (describing word).
+      - Instruction: Write a creative sentence describing a person, object, or feeling using "${word}".
+      - Constraint: Use the word exactly as an adjective. Do NOT turn it into a noun (e.g., do NOT change "happy" to "happiness").`;
+  } else {
+      specificRule = `
+      - Grammar Role: This word is a NOUN (thing/person/idea).
+      - Instruction: Write a natural sentence where "${word}" is the subject or object.`;
+  }
+
   const prompt = `
 [INST]
 Target Word: "${word}"
-Meaning: "${trans}"
-Task: Write a simple English sentence (8-15 words) using the Target Word correctly based on the Meaning.
+Meaning context: "${trans}"
+
+Task: Write a short, natural English sentence containing the Target Word.
 Rules:
-1. Do NOT define the word.
-2. Do NOT start with "It is", "This is", "There is".
-3. Show an action or a situation.
-4. Output ONLY the sentence.
+${specificRule}
+- Output ONLY the sentence.
 [/INST]
 `;
 
@@ -48,10 +83,10 @@ Rules:
         prompt: prompt,
         stream: false,
         options: {
-          temperature: 0.5,
+          temperature: 0.6, // Tăng lên 0.6 để AI sáng tạo hơn, bớt lặp lại
           top_p: 0.9,
           num_predict: 50,
-          stop: ["\n", "Input", "Output", "Target"]
+          stop: ["\n", "Input", "Output"] 
         }
       }),
     });
@@ -60,24 +95,28 @@ Rules:
     let sentence = data.response.trim();
 
     // --- DỌN RÁC ---
-    const junkPrefixes = ["Sentence:", "Output:", "Answer:", "Here is", "Sure", "Example:"];
+    const junkPrefixes = ["Sentence:", "Output:", "Answer:", "Here is", "Sure", "Example:", "The sentence is"];
     junkPrefixes.forEach(p => {
       if (sentence.toLowerCase().startsWith(p.toLowerCase())) {
         sentence = sentence.substring(p.length).trim();
       }
     });
-    sentence = sentence.replace(/^"|"$/g, '').trim();
+    sentence = sentence.replace(/^["':\s]+|["':\s]+$/g, '');
 
-    // --- LOGIC THAY THẾ TỪ (VÉT CẠN CẢ BIẾN THỂ) ---
-    // Tìm từ gốc + bất kỳ đuôi nào (ví dụ: run -> running, runs...)
+    // --- LOGIC TÌM & THAY THẾ ---
+    // 1. Tìm chính xác từ gốc
+    if (new RegExp(`\\b${word}\\b`, 'gi').test(sentence)) {
+        sentence = sentence.replace(new RegExp(`\\b${word}\\b`, 'gi'), '______');
+        return `${sentence} (Gợi ý: ${trans})`;
+    }
+
+    // 2. Tìm biến thể (Cho phép sáng tạo: happy -> happier, run -> running)
     const smartRegex = new RegExp(`\\b${word}[a-z]*`, 'gi');
-    
     if (smartRegex.test(sentence)) {
         sentence = sentence.replace(smartRegex, '______');
         return `${sentence} (Gợi ý: ${trans})`;
     } 
     
-    // Nếu không tìm thấy từ trong câu -> Fallback
     return getSafeFallback(word, trans);
 
   } catch (err) {
