@@ -3,6 +3,7 @@
     "@google/genai": "^1.30.0",
     "@google/generative-ai": "^0.24.1",
     "bcryptjs": "^3.0.2",
+    "cohere-ai": "^7.20.0",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",

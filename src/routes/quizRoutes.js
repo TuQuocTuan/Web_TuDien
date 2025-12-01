@@ -1,4 +1,8 @@
 // src/routes/quizRoutes.js
+
+// 1. QUAN TRỌNG: Nạp biến môi trường ngay dòng đầu tiên
+require('dotenv').config(); 
+
 const express = require('express');
 const router = express.Router();
 const Word = require('../models/wordModel.js');
@@ -7,169 +11,150 @@ const Result = require('../models/resultModel.js');
 const User = require('../models/userModel.js');
 const { protect } = require('../middleware/authMiddleware.js');
 
+const { CohereClient } = require("cohere-ai");
+
+// 2. DEBUG: Kiểm tra xem Key có tồn tại không
+const apiKey = process.env.COHERE_API_KEY;
+
+if (!apiKey) {
+    console.error("❌ LỖI NGHIÊM TRỌNG: Không tìm thấy COHERE_API_KEY.");
+    console.error("-> Hãy kiểm tra file .env nằm ở thư mục gốc dự án.");
+    console.error("-> Nội dung file .env phải có dòng: COHERE_API_KEY=...");
+} else {
+    // Chỉ in 4 ký tự đầu để bảo mật
+    console.log("✅ Đã tìm thấy API Key:", apiKey.substring(0, 4) + "****************");
+}
+
+// 3. Khởi tạo Client với 'token'
+const cohere = new CohereClient({ 
+    token: apiKey 
+});
+
 // ==========================================
 // CẤU HÌNH CHUNG
 // ==========================================
-const MODEL_NAME = 'qwen2.5:3b'; // Model nhẹ
-const MAX_QUESTIONS = 10;        // <--- ĐÃ TĂNG LÊN 10
+const COHERE_MODEL = "command-r7b-12-2024"; // Model ổn định, ít lỗi quyền hơn
+const MAX_QUESTIONS = 10;
 
 // ==========================================
-// 1. CÁC HÀM HỖ TRỢ AI (FALLBACK & GENERATE)
+// HỖ TRỢ AI
 // ==========================================
-
 function getSafeFallback(word, trans) {
   const templates = [
     `The English word for "${trans}" is ______.`,
+    `Definition: ______ means "${trans}".`,
+    `Please complete: The word ______ is defined as "${trans}".`
   ];
   const t = templates[Math.floor(Math.random() * templates.length)];
   return `${t} (Gợi ý: ${trans})`;
 }
 
 function detectWordType(word, trans) {
-    const w = word.toLowerCase();
-    const t = trans.toLowerCase();
+  const w = word.toLowerCase();
+  const t = trans.toLowerCase();
 
-    if (/^(làm|ăn|chơi|chạy|đi|ngủ|nói|viết|đọc|học|nghe|nhìn|uống|mặc|đánh|vẽ|hát|múa|tập|giúp|mua|bán|thuê|mượn|trả|lấy|bỏ|đặt|để)\b/i.test(t)) {
-        return 'verb';
-    }
-    const adjSuffixes = ['ful', 'ous', 'ive', 'ble', 'ant', 'ent', 'less', 'al', 'ic', 'y', 'ish'];
-    if (adjSuffixes.some(s => w.endsWith(s)) || /^(rất|khá|hơi|có tính|thuộc|bị|được|màu|to|nhỏ|đẹp|xấu|cao|thấp)\b/i.test(t)) {
-        return 'adjective';
-    }
-    return 'noun';
+  if (/^(làm|ăn|chơi|chạy|đi|ngủ|nói|viết|đọc|học|nghe|nhìn|uống|mặc|đánh|vẽ|hát|múa|tập|giúp|mua|bán|thuê|mượn|trả|lấy|bỏ|đặt|để)\b/i.test(t)) {
+    return 'verb';
+  }
+  const adjSuffixes = ['ful', 'ous', 'ive', 'ble', 'ant', 'ent', 'less', 'al', 'ic', 'y', 'ish'];
+  if (adjSuffixes.some(s => w.endsWith(s)) || /^(rất|khá|hơi|có tính|thuộc|bị|được|màu|to|nhỏ|đẹp|xấu|cao|thấp)\b/i.test(t)) {
+    return 'adjective';
+  }
+  return 'noun';
 }
 
+// ==========================================
+// Hàm gọi Cohere v2 chat (ĐÃ FIX LỖI MESSAGE)
+// ==========================================
 const getSentenceFromAI = async (word, trans) => {
+  // Nếu không có Key thì fallback ngay lập tức, không gọi API để tránh crash
+  if (!process.env.COHERE_API_KEY) return getSafeFallback(word, trans);
+
   const type = detectWordType(word, trans);
   let specificRule = "";
 
-  // --- PROMPT "TỰ DO NHƯNG CÓ KỶ LUẬT" ---
-  // Không ép cấu trúc (Structure), chỉ ép Vai trò (Role)
-  
   if (type === 'verb') {
-      specificRule = `
-      - Grammar Role: This word is a VERB (action).
-      - Instruction: Write a sentence showing someone doing this action.
-      - Freedom: You can use any tense (past, present, future) or form (${word}ing, ${word}s).`;
+    specificRule = `- This word is a VERB.\n- Write a sentence showing someone doing this action.`;
   } else if (type === 'adjective') {
-      specificRule = `
-      - Grammar Role: This word is an ADJECTIVE (describing word).
-      - Instruction: Write a creative sentence describing a person, object, or feeling using "${word}".
-      - Constraint: Use the word exactly as an adjective. Do NOT turn it into a noun (e.g., do NOT change "happy" to "happiness").`;
+    specificRule = `- This word is an ADJECTIVE.\n- Use it to describe something.`;
   } else {
-      specificRule = `
-      - Grammar Role: This word is a NOUN (thing/person/idea).
-      - Instruction: Write a natural sentence where "${word}" is the subject or object.`;
+    specificRule = `- This word is a NOUN.\n- Use it as a subject or object.`;
   }
 
   const prompt = `
-[INST]
 Target Word: "${word}"
-Meaning context: "${trans}"
+Meaning: "${trans}"
 
-Task: Write a short, natural English sentence containing the Target Word.
-Rules:
+Write 1 short English sentence containing the target word.
 ${specificRule}
-- Output ONLY the sentence.
-[/INST]
+Output ONLY the sentence.
 `;
 
   try {
-    const response = await fetch('http://127.0.0.1:11434/api/generate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: MODEL_NAME,
-        prompt: prompt,
-        stream: false,
-        options: {
-          temperature: 0.6, // Tăng lên 0.6 để AI sáng tạo hơn, bớt lặp lại
-          top_p: 0.9,
-          num_predict: 50,
-          stop: ["\n", "Input", "Output"] 
-        }
-      }),
+    // Gọi API V2
+    const response = await cohere.v2.chat({
+      model: COHERE_MODEL, 
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 60,
+      temperature: 0.6
     });
 
-    const data = await response.json();
-    let sentence = data.response.trim();
-
-    // --- DỌN RÁC ---
-    const junkPrefixes = ["Sentence:", "Output:", "Answer:", "Here is", "Sure", "Example:", "The sentence is"];
-    junkPrefixes.forEach(p => {
-      if (sentence.toLowerCase().startsWith(p.toLowerCase())) {
-        sentence = sentence.substring(p.length).trim();
-      }
-    });
-    sentence = sentence.replace(/^["':\s]+|["':\s]+$/g, '');
-
-    // --- LOGIC TÌM & THAY THẾ ---
-    // 1. Tìm chính xác từ gốc
-    if (new RegExp(`\\b${word}\\b`, 'gi').test(sentence)) {
-        sentence = sentence.replace(new RegExp(`\\b${word}\\b`, 'gi'), '______');
-        return `${sentence} (Gợi ý: ${trans})`;
+    let sentence = "";
+    if (response.message && response.message.content && response.message.content.length > 0) {
+        sentence = response.message.content[0].text.trim();
     }
 
-    // 2. Tìm biến thể (Cho phép sáng tạo: happy -> happier, run -> running)
-    const smartRegex = new RegExp(`\\b${word}[a-z]*`, 'gi');
-    if (smartRegex.test(sentence)) {
-        sentence = sentence.replace(smartRegex, '______');
-        return `${sentence} (Gợi ý: ${trans})`;
-    } 
-    
+    if (!sentence) return getSafeFallback(word, trans);
+
+    sentence = sentence.replace(/^["':\s]+|["':\s]+$/g, "");
+
+    const regex = new RegExp(`\\b${word}[a-z]*`, "gi");
+    if (regex.test(sentence)) {
+      sentence = sentence.replace(regex, "______");
+      return `${sentence} (Gợi ý: ${trans})`;
+    }
+
     return getSafeFallback(word, trans);
 
   } catch (err) {
+    console.error("COHERE API ERROR:", err.message); // In lỗi gọn hơn
     return getSafeFallback(word, trans);
   }
 };
 
 // ==========================================
-// 2. HÀM XỬ LÝ CHÍNH (HYBRID LOGIC)
+// Tạo quiz hybrid
 // ==========================================
 async function generateQuizHybrid(promptData) {
-  // promptData: [{word: 'ceillist', ...}, {word: 'able', ...}]
-  
-  console.log(`[Quiz] Dang goi AI tao cau hoi cho ${promptData.length} tu...`);
-  
+  console.log(`[Quiz] Dang goi AI (Cohere) tao cau hoi cho ${promptData.length} tu...`);
+
   const letters = ['A', 'B', 'C', 'D'];
   const allWords = promptData.map(p => p.word);
   const backupDistractors = ['Thing', 'Object', 'Item', 'Place', 'Time', 'Way'];
 
-  const promises = promptData.map(async (item, index) => {
-    
-    // BƯỚC 1: Gọi AI
+  const promises = promptData.map(async (item) => {
     let questionText = await getSentenceFromAI(item.word, item.trans);
+    
+    // Fallback bổ sung
+    if (!questionText) questionText = `______ (Gợi ý: ${item.trans})`;
 
-    // BƯỚC 2: Fallback (Chống cháy nếu hàm AI trả về null/undefined - dù đã có safe fallback ở trên)
-    if (!questionText) {
-        questionText = `______ (Gợi ý: ${item.trans})`;
-    }
-
-    // BƯỚC 3: Tạo Options (Đáp án)
-    // Lọc bỏ từ đúng khỏi danh sách đáp án sai
     let distractors = allWords.filter(w => w.toLowerCase() !== item.word.toLowerCase());
-    
-    // Trộn và lấy 3 từ làm nhiễu
     distractors = distractors.sort(() => 0.5 - Math.random()).slice(0, 3);
-    
-    // Nếu thiếu từ (do danh sách đầu vào < 4 từ), lấy thêm từ dự phòng
+
     let k = 0;
     while (distractors.length < 3) {
-        distractors.push(backupDistractors[k++] || 'Option');
+      distractors.push(backupDistractors[k++] || 'Option');
     }
 
     const fullOptions = [
-        { text: item.word, correct: true }, 
-        ...distractors.map(d => ({ text: d, correct: false }))
+      { text: item.word, correct: true },
+      ...distractors.map(d => ({ text: d, correct: false }))
     ];
-    
-    // Xáo trộn vị trí A, B, C, D
+
     const shuffledOptions = fullOptions.sort(() => 0.5 - Math.random());
-    
-    const optionsMapped = shuffledOptions.map((opt, i) => ({ 
-        key: letters[i], 
-        text: opt.text 
+    const optionsMapped = shuffledOptions.map((opt, i) => ({
+      key: letters[i],
+      text: opt.text
     }));
     const answerKey = optionsMapped.find((o, i) => shuffledOptions[i].correct).key;
 
@@ -182,25 +167,17 @@ async function generateQuizHybrid(promptData) {
     };
   });
 
-  // Chờ tất cả kết quả
   let results = await Promise.all(promises);
-
-  // --- XÁO TRỘN THỨ TỰ CÂU HỎI VÀ GÁN ID ---
   results = results.sort(() => 0.5 - Math.random());
-  results = results.map((q, index) => ({
-    ...q,
-    id: index + 1
-  }));
+  results = results.map((q, index) => ({ ...q, id: index + 1 }));
 
   console.log("[Quiz] Hoan thanh!");
   return JSON.stringify(results);
 }
 
 // ==========================================
-// 3. ROUTES
+// ROUTES
 // ==========================================
-
-// --- Route 1: Tạo Quiz từ Album ---
 router.get('/ai-album', protect, async (req, res) => {
   try {
     const { albumId } = req.query;
@@ -210,31 +187,26 @@ router.get('/ai-album', protect, async (req, res) => {
     if (!album || !album.words.length) return res.status(404).json({ message: 'Album trống.' });
 
     let wordsToLearn = album.words;
-
-    // --- 1. LỌC TRÙNG LẶP (Deduplication) ---
-    // Sử dụng Set để đảm bảo mỗi từ (word text) chỉ xuất hiện 1 lần
     const uniqueWords = [];
     const seen = new Set();
-    
     for (const w of wordsToLearn) {
+      if(w.word) {
         const txt = w.word.toLowerCase().trim();
         if (!seen.has(txt)) {
             seen.add(txt);
             uniqueWords.push(w);
         }
+      }
     }
     wordsToLearn = uniqueWords;
 
-    // --- 2. XÁO TRỘN VÀ CẮT LẤY MAX_QUESTIONS (10) ---
     if (wordsToLearn.length > MAX_QUESTIONS) {
-        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
+      wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
     } else {
-        // Nếu ít hơn 10 thì xáo trộn thôi
-        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random());
+      wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random());
     }
 
     const pairs = wordsToLearn.map(w => ({ word: w.word, trans: w.translation || '...' }));
-
     const rawJson = await generateQuizHybrid(pairs);
     const quizData = JSON.parse(rawJson);
 
@@ -245,35 +217,34 @@ router.get('/ai-album', protect, async (req, res) => {
   }
 });
 
-// --- Route 2: Tạo Quiz từ Saved Words ---
 router.get('/ai-generate', protect, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).populate('savedWords');
     let wordsToLearn = user.savedWords || [];
 
-    // --- 1. LỌC TRÙNG LẶP CHO SAVED WORDS ---
     const uniqueWords = [];
     const seen = new Set();
     for (const w of wordsToLearn) {
+      if(w.word) {
         const txt = w.word.toLowerCase().trim();
         if (!seen.has(txt)) {
             seen.add(txt);
             uniqueWords.push(w);
         }
+      }
     }
     wordsToLearn = uniqueWords;
 
     if (wordsToLearn.length === 0) {
-        // Nếu user không có từ nào, lấy random từ DB
-        wordsToLearn = await Word.aggregate([{ $sample: { size: MAX_QUESTIONS } }]);
+      wordsToLearn = await Word.aggregate([{ $sample: { size: MAX_QUESTIONS } }]);
     } else {
-        // Nếu có từ, xáo trộn và lấy max 10
-        wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
+      if (wordsToLearn.length > MAX_QUESTIONS) wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random()).slice(0, MAX_QUESTIONS);
+      else wordsToLearn = wordsToLearn.sort(() => 0.5 - Math.random());
     }
 
-    const pairs = wordsToLearn.map(w => ({ 
-        word: w.word, 
-        trans: w.translation || w.meaning || 'nghĩa' 
+    const pairs = wordsToLearn.map(w => ({
+      word: w.word,
+      trans: w.translation || w.meaning || 'nghĩa'
     }));
 
     const rawJson = await generateQuizHybrid(pairs);
@@ -286,28 +257,33 @@ router.get('/ai-generate', protect, async (req, res) => {
   }
 });
 
-// Các route khác giữ nguyên
 router.post('/submit', protect, async (req, res) => {
   try {
     const { category, score, totalQuestions } = req.body;
     const newResult = new Result({ user: req.user.id, category, score, totalQuestions });
     await newResult.save();
     res.status(201).json({ message: 'Đã lưu!', score: newResult.score });
-  } catch (err) { res.status(500).json({ message: 'Lỗi lưu.' }); }
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi lưu.' });
+  }
 });
 
 router.get('/history', protect, async (req, res) => {
   try {
     const results = await Result.find({ user: req.user.id }).sort({ createdAt: -1 });
     res.status(200).json(results);
-  } catch (err) { res.status(500).json({ message: 'Lỗi server.' }); }
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server.' });
+  }
 });
 
 router.delete('/history', protect, async (req, res) => {
   try {
     await Result.deleteMany({ user: req.user.id });
     res.status(200).json({ message: 'Đã xóa history.' });
-  } catch (err) { res.status(500).json({ message: 'Lỗi server.' }); }
+  } catch (err) {
+    res.status(500).json({ message: 'Lỗi server.' });
+  }
 });
 
 module.exports = router;
