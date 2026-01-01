@@ -34,7 +34,7 @@
         </div>
     </header>
 
-    <main id="content">
+   <main id="content">
         <div class="result-container">
 
             <h1>Kết quả bài làm</h1>
@@ -64,13 +64,19 @@
             </div>
 
             <div class="result-actions">
-                <a href="practice.html" class="action-btn retry-btn">
-                    <i class="fas fa-redo"></i> Ôn lại bài tập
+                <button id="toggle-details-btn" class="action-btn details-btn">
+                    <i class="fas fa-eye"></i> Xem chi tiết
+                </button>
+                <a href="practice.html" id="retry-link" class="action-btn retry-btn">
+                    <i class="fas fa-redo"></i> Làm lại
                 </a>
                 <a href="album.html" class="action-btn home-btn">
-                    <i class="fas fa-home"></i> Về trang album
+                    <i class="fas fa-home"></i> Về danh sách
                 </a>
             </div>
+
+            <div id="details-container" class="details-list" style="display: none;">
+                </div>
 
         </div>
     </main>

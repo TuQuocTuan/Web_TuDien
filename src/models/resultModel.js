@@ -1,8 +1,7 @@
-// src/models/resultModel.js
 const mongoose = require('mongoose');
 
 const resultSchema = new mongoose.Schema({
-    // ID của user làm bài (lấy từ token)
+    // ID của user làm bài
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -22,7 +21,20 @@ const resultSchema = new mongoose.Schema({
     totalQuestions: {
         type: Number,
         required: true
-    }
+    },
+    
+    // --- [MỚI] THÊM PHẦN NÀY ĐỂ LƯU CHI TIẾT ---
+    questions: [
+        {
+            questionText: { type: String, required: true }, // Nội dung câu hỏi
+            userAnswer: { type: String, required: true },   // Đáp án bạn chọn
+            correctAnswer: { type: String, required: true },// Đáp án đúng
+            isCorrect: { type: Boolean, default: false },    // Kết quả đúng/sai
+            explanation: { type: String }
+        }
+    ]
+    // -------------------------------------------
+
 }, { 
     // Tự động thêm ngày làm bài (createdAt)
     timestamps: true 

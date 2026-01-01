@@ -1,7 +1,7 @@
 // src/routes/quizRoutes.js
 
 // 1. QUAN TRỌNG: Nạp biến môi trường ngay dòng đầu tiên
-require('dotenv').config(); 
+require('dotenv').config();
 
 const express = require('express');
 const router = express.Router();
@@ -17,17 +17,17 @@ const { CohereClient } = require("cohere-ai");
 const apiKey = process.env.COHERE_API_KEY;
 
 if (!apiKey) {
-    console.error("❌ LỖI NGHIÊM TRỌNG: Không tìm thấy COHERE_API_KEY.");
-    console.error("-> Hãy kiểm tra file .env nằm ở thư mục gốc dự án.");
-    console.error("-> Nội dung file .env phải có dòng: COHERE_API_KEY=...");
+  console.error("❌ LỖI NGHIÊM TRỌNG: Không tìm thấy COHERE_API_KEY.");
+  console.error("-> Hãy kiểm tra file .env nằm ở thư mục gốc dự án.");
+  console.error("-> Nội dung file .env phải có dòng: COHERE_API_KEY=...");
 } else {
-    // Chỉ in 4 ký tự đầu để bảo mật
-    console.log("✅ Đã tìm thấy API Key:", apiKey.substring(0, 4) + "****************");
+  // Chỉ in 4 ký tự đầu để bảo mật
+  console.log("✅ Đã tìm thấy API Key:", apiKey.substring(0, 4) + "****************");
 }
 
 // 3. Khởi tạo Client với 'token'
-const cohere = new CohereClient({ 
-    token: apiKey 
+const cohere = new CohereClient({
+  token: apiKey
 });
 
 // ==========================================
@@ -93,7 +93,7 @@ Output ONLY the sentence.
   try {
     // Gọi API V2
     const response = await cohere.v2.chat({
-      model: COHERE_MODEL, 
+      model: COHERE_MODEL,
       messages: [{ role: "user", content: prompt }],
       max_tokens: 60,
       temperature: 0.6
@@ -101,7 +101,7 @@ Output ONLY the sentence.
 
     let sentence = "";
     if (response.message && response.message.content && response.message.content.length > 0) {
-        sentence = response.message.content[0].text.trim();
+      sentence = response.message.content[0].text.trim();
     }
 
     if (!sentence) return getSafeFallback(word, trans);
@@ -134,7 +134,7 @@ async function generateQuizHybrid(promptData) {
 
   const promises = promptData.map(async (item) => {
     let questionText = await getSentenceFromAI(item.word, item.trans);
-    
+
     // Fallback bổ sung
     if (!questionText) questionText = `______ (Gợi ý: ${item.trans})`;
 
@@ -190,11 +190,11 @@ router.get('/ai-album', protect, async (req, res) => {
     const uniqueWords = [];
     const seen = new Set();
     for (const w of wordsToLearn) {
-      if(w.word) {
+      if (w.word) {
         const txt = w.word.toLowerCase().trim();
         if (!seen.has(txt)) {
-            seen.add(txt);
-            uniqueWords.push(w);
+          seen.add(txt);
+          uniqueWords.push(w);
         }
       }
     }
@@ -225,11 +225,11 @@ router.get('/ai-generate', protect, async (req, res) => {
     const uniqueWords = [];
     const seen = new Set();
     for (const w of wordsToLearn) {
-      if(w.word) {
+      if (w.word) {
         const txt = w.word.toLowerCase().trim();
         if (!seen.has(txt)) {
-            seen.add(txt);
-            uniqueWords.push(w);
+          seen.add(txt);
+          uniqueWords.push(w);
         }
       }
     }
@@ -259,12 +259,24 @@ router.get('/ai-generate', protect, async (req, res) => {
 
 router.post('/submit', protect, async (req, res) => {
   try {
-    const { category, score, totalQuestions } = req.body;
-    const newResult = new Result({ user: req.user.id, category, score, totalQuestions });
+    // 1. Nhận thêm 'questions' từ Frontend gửi lên
+    const { category, score, totalQuestions, questions } = req.body;
+
+    // 2. Tạo bản ghi mới, bao gồm cả mảng questions
+    const newResult = new Result({
+      user: req.user.id,
+      category,
+      score,
+      totalQuestions,
+      questions: questions || [] // Lưu mảng câu hỏi (nếu có)
+    });
+
     await newResult.save();
-    res.status(201).json({ message: 'Đã lưu!', score: newResult.score });
+
+    res.status(201).json({ message: 'Đã lưu kết quả!', score: newResult.score });
   } catch (err) {
-    res.status(500).json({ message: 'Lỗi lưu.' });
+    console.error(err); // Log lỗi ra để dễ debug
+    res.status(500).json({ message: 'Lỗi lưu kết quả.' });
   }
 });
 

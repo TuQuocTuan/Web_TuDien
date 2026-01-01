@@ -253,3 +253,152 @@ main#content {
     background-color: var(--danger-red, #dc3545);
     color: var(--white);
 }
+
+/* --- CSS cho nút Xem chi tiết trong bảng --- */
+.btn-view-detail {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-view-detail:hover {
+    background-color: #2980b9;
+}
+
+/* --- CSS cho Modal (Popup) --- */
+.modal {
+    display: none;
+    /* Mặc định ẩn */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Màu nền đen mờ */
+    animation: fadeIn 0.3s;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    /* Căn giữa */
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    /* Chiều rộng modal */
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.modal-header {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: #333;
+}
+
+.close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 60vh;
+    /* Giới hạn chiều cao để scroll nếu dài */
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    text-align: right;
+    border-radius: 0 0 8px 8px;
+}
+
+.btn-close-modal {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* --- CSS cho nội dung câu hỏi trong Modal --- */
+.review-item {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.review-question {
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.review-answer {
+    padding: 8px;
+    margin: 4px 0;
+    border-radius: 4px;
+    background-color: #f1f1f1;
+}
+
+.review-answer.correct {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.review-answer.wrong {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    text-decoration: line-through;
+}
+
+.user-choice-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

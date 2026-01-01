@@ -78,6 +78,7 @@
                             <th>Tên bài thi (Chủ đề)</th>
                             <th>Ngày làm</th>
                             <th>Điểm số</th>
+                            <th style="text-align: center;">Chi tiết</th>
                         </tr>
                     </thead>
                     <tbody id="history-table-body">
@@ -93,7 +94,19 @@
 
         </div>
     </main>
-
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chi tiết bài làm</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+            <div class="modal-body" id="modal-review-content">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-close-modal">Đóng</button>
+            </div>
+        </div>
+    </div>
     <footer id="footer">
         <div class="footer-content">
             <div class="footer-about">
