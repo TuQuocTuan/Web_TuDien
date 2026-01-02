@@ -21,6 +21,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // ==========================================
+    // ===== HÀM MỚI: LƯU LỊCH SỬ TRA CỨU =====
+    // ==========================================
+    async function addToHistory(dbWordId) { // <--- PHẦN MỚI THÊM VÀO
+        if (!token) return; // Chưa đăng nhập thì không lưu
+
+        try {
+            // Gọi API lưu lịch sử (chạy ngầm, không cần await kết quả để chặn UI)
+            fetch('/api/user/add-history', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ wordId: dbWordId })
+            }).then(res => {
+                if (res.ok) console.log('Đã lưu vào lịch sử.');
+            });
+        } catch (err) {
+            console.error('Lỗi ngầm định khi lưu lịch sử:', err);
+        }
+    }
+    // ==========================================
+
     // 2. Hàm Fetch API
     async function fetchWordDetails() {
         try {
@@ -44,6 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const word = await response.json();
             currentWordId = word._id;
+
+            // <--- GỌI HÀM LƯU LỊCH SỬ TẠI ĐÂY --->
+            addToHistory(currentWordId); 
+            // -------------------------------------
 
             // 3. Vẽ HTML
             detailContainer.innerHTML = `

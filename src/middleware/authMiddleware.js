@@ -15,6 +15,15 @@ const protect = async (req, res, next) => {
             next(); 
         } catch (error) {
             console.error('Lỗi xác thực token:', error);
+
+            // Kiểm tra nếu lỗi là do hết hạn
+            if (error.name === 'TokenExpiredError') {
+                return res.status(401).json({ 
+                    message: 'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại',
+                    error: 'token_expired' 
+                });
+            }
+
             res.status(401).json({ message: 'Token không hợp lệ, truy cập bị từ chối' });
         }
     }

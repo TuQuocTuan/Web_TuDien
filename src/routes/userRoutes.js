@@ -5,6 +5,92 @@ const User = require('../models/userModel');
 const Word = require('../models/wordModel'); // <-- Cần Word model
 const { protect } = require('../middleware/authMiddleware.js');
 
+// ============================================================
+// 1. ROUTE LƯU LỊCH SỬ (Đưa lên đầu để ưu tiên)
+// ============================================================
+router.post('/add-history', protect, async (req, res) => {
+    try {
+        const { wordId } = req.body;
+        const userId = req.user._id;
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'Không tìm thấy user' });
+        }
+
+        // Đảm bảo mảng searchHistory tồn tại
+        if (!user.searchHistory) {
+            user.searchHistory = [];
+        }
+
+        // Xóa từ cũ nếu đã tồn tại để đưa lên đầu (tránh trùng lặp)
+        user.searchHistory = user.searchHistory.filter(item => item.wordId.toString() !== wordId);
+
+        // Thêm vào đầu mảng (SỬA LẠI TÊN BIẾN CHO KHỚP MODEL)
+        user.searchHistory.unshift({
+            wordId: wordId,      // Khớp với userModel
+            actedAt: new Date()  // Khớp với userModel
+        });
+
+        // Giới hạn 50 từ gần nhất
+        if (user.searchHistory.length > 50) {
+            user.searchHistory.pop();
+        }
+
+        await user.save();
+        res.status(200).json({ message: 'Đã lưu lịch sử' });
+
+    } catch (error) {
+        console.error('Lỗi thêm lịch sử:', error);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+});
+
+// ============================================================
+// 2. ROUTE XEM LỊCH SỬ (CÓ LỌC THEO NGÀY)
+// ============================================================
+router.get('/history', protect, async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { date } = req.query; // Lấy ngày từ URL (ví dụ: ?date=2026-01-02)
+
+        const user = await User.findById(userId).populate('searchHistory.wordId');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User không tồn tại' });
+        }
+
+        let historyData = user.searchHistory;
+
+        // --- LOGIC LỌC NGÀY ---
+        if (date) {
+            const filterDate = new Date(date);
+            
+            // Tạo khoảng thời gian từ 00:00:00 đến 23:59:59 của ngày đó
+            const startOfDay = new Date(filterDate.setHours(0, 0, 0, 0));
+            const endOfDay = new Date(filterDate.setHours(23, 59, 59, 999));
+
+            // Lọc những từ nằm trong khoảng thời gian này
+            historyData = historyData.filter(item => {
+                const itemDate = new Date(item.actedAt || item.searchedAt); // Hỗ trợ cả dữ liệu cũ/mới
+                return itemDate >= startOfDay && itemDate <= endOfDay;
+            });
+        }
+        // ----------------------
+
+        res.status(200).json({
+            success: true,
+            data: historyData
+        });
+
+    } catch (error) {
+        console.error('Lỗi lấy lịch sử:', error);
+        res.status(500).json({ message: 'Lỗi server' });
+    }
+});
+
+
+
 router.get('/my-daily-words', protect, async (req, res) => {
     try {
         const user = req.user;

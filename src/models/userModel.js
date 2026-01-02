@@ -36,7 +36,22 @@ const userSchema = new mongoose.Schema({
     }],
     dailyWordsTimestamp: {
         type: Date
-    }
+    },
+
+    // === PHẦN THÊM MỚI BẮT ĐẦU TỪ ĐÂY ===
+    searchHistory: [{
+        wordId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Word', // Liên kết (join) với bảng Word để lấy chi tiết từ
+            required: true
+        },
+        searchedAt: {
+            type: Date,
+            default: Date.now // Tự động lưu thời gian lúc tra cứu
+        }
+    }]
+    // === KẾT THÚC PHẦN THÊM MỚI ===
+
 }, {
     // Tự động thêm dấu thời gian (created_at, updated_at)
     timestamps: true
