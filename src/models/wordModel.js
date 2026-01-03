@@ -1,31 +1,26 @@
-// src/models/wordModel.js
 const mongoose = require('mongoose');
 
 const wordSchema = new mongoose.Schema({
-    // Từ Tiếng Anh (ví dụ: 'Apple')
+    // 1. CÁC TRƯỜNG CƠ BẢN (Giữ nguyên)
     word: {
         type: String,
         required: true,
         trim: true,
         unique: true
     },
-    // Nghĩa Tiếng Việt (ví dụ: 'Quả táo')
     translation: {
         type: String,
         required: true,
         trim: true
     },
-    // Loại từ (ví dụ: 'noun', 'verb')
     type: {
-        type: String,
+        type: String, // noun, verb, adj...
         trim: true
     },
-    // Phiên âm (ví dụ: '/ˈæpəl/')
     pronunciation: {
         type: String,
         trim: true
     },
-    // Câu ví dụ
     example_en: {
         type: String,
         trim: true
@@ -37,8 +32,29 @@ const wordSchema = new mongoose.Schema({
     tags: [{
         type: String,
         trim: true,
-        lowercase: true // Tự động đổi "School" thành "school"
+        lowercase: true
     }],
+
+    // 2. [MỚI] TRƯỜNG QUAN HỆ TỪ VỰNG (Phục vụ gợi ý Context-based)
+    related_words: {
+        // Từ đồng nghĩa (Ví dụ: Beautiful -> [Pretty, Gorgeous])
+        synonyms: [{
+            type: String,
+            trim: true
+        }],
+        // Từ trái nghĩa (Ví dụ: Beautiful -> [Ugly])
+        antonyms: [{
+            type: String,
+            trim: true
+        }],
+        // Từ cùng gia đình (Word Family) (Ví dụ: Beauty (n), Beautifully (adv))
+        family: [{
+            type: String,
+            trim: true
+        }]
+    },
+
+    // 3. CÁC TRƯỜNG KHÁC (Giữ nguyên logic cũ của bạn)
     dailyWords: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Word'
@@ -47,6 +63,9 @@ const wordSchema = new mongoose.Schema({
         type: Date
     }
 }, { timestamps: true });
+
+// Tạo text index để tìm kiếm nhanh hơn nếu cần
+wordSchema.index({ word: 'text', translation: 'text' });
 
 const Word = mongoose.model('Word', wordSchema);
 

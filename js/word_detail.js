@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(`/api/words/${currentWordId}/tags`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-                body: JSON.stringify({ tagName: tagName })
+                body: JSON.stringify({ tag: tagName })
             });
 
             const data = await response.json();

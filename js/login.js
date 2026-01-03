@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     if (data.isNewbie === true) {
                         // Nếu là newbie -> điền khảo sát
-                        window.location.href = 'khaosat.html';
+                        window.location.href = 'index.html';
                     } else {
                         // Nếu không -> về trang chủ
                         window.location.href = 'index.html';
