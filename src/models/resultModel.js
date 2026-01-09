@@ -29,8 +29,7 @@ const resultSchema = new mongoose.Schema({
             questionText: { type: String, required: true }, // Nội dung câu hỏi
             userAnswer: { type: String, required: true },   // Đáp án bạn chọn
             correctAnswer: { type: String, required: true },// Đáp án đúng
-            isCorrect: { type: Boolean, default: false },    // Kết quả đúng/sai
-            explanation: { type: String }
+            isCorrect: { type: Boolean, default: false }    // Kết quả đúng/sai
         }
     ]
     // -------------------------------------------
