@@ -417,3 +417,36 @@ main#content {
     color: white;
     border-color: #007bff;
 }
+
+/* Style cho nút phân trang */
+.pagination-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.pagination-btn {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+    min-width: 35px;
+}
+
+.pagination-btn:hover:not(.disabled) {
+    background-color: #e9ecef;
+}
+
+.pagination-btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

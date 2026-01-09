@@ -2,11 +2,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userModel');
-const Word = require('../models/wordModel'); // <-- Cần Word model
+const Word = require('../models/wordModel'); 
 const { protect } = require('../middleware/authMiddleware.js');
 
 // ============================================================
-// 1. ROUTE LƯU LỊCH SỬ (Đưa lên đầu để ưu tiên)
+// 1. ROUTE LƯU LỊCH SỬ (Giữ nguyên)
 // ============================================================
 router.post('/add-history', protect, async (req, res) => {
     try {
@@ -18,21 +18,20 @@ router.post('/add-history', protect, async (req, res) => {
             return res.status(404).json({ message: 'Không tìm thấy user' });
         }
 
-        // Đảm bảo mảng searchHistory tồn tại
         if (!user.searchHistory) {
             user.searchHistory = [];
         }
 
-        // Xóa từ cũ nếu đã tồn tại để đưa lên đầu (tránh trùng lặp)
+        // Xóa từ cũ nếu đã tồn tại để đưa lên đầu
         user.searchHistory = user.searchHistory.filter(item => item.wordId.toString() !== wordId);
 
-        // Thêm vào đầu mảng (SỬA LẠI TÊN BIẾN CHO KHỚP MODEL)
+        // Thêm vào đầu mảng
         user.searchHistory.unshift({
-            wordId: wordId,      // Khớp với userModel
-            actedAt: new Date()  // Khớp với userModel
+            wordId: wordId,      
+            actedAt: new Date()  
         });
 
-        // Giới hạn 50 từ gần nhất
+        // Giới hạn 50 từ gần nhất trong DB
         if (user.searchHistory.length > 50) {
             user.searchHistory.pop();
         }
@@ -47,40 +46,87 @@ router.post('/add-history', protect, async (req, res) => {
 });
 
 // ============================================================
-// 2. ROUTE XEM LỊCH SỬ (CÓ LỌC THEO NGÀY)
+// 2. ROUTE XEM LỊCH SỬ (CÓ PHÂN TRANG + BỘ LỌC)
+// URL: GET /api/user/history?page=1&limit=5&type=today
+// ============================================================
+// ============================================================
+// 2. ROUTE XEM LỊCH SỬ (ĐÃ SỬA LOGIC LỌC NGÀY)
+// URL: GET /api/user/history?page=1&limit=5&date=2025-01-09
 // ============================================================
 router.get('/history', protect, async (req, res) => {
     try {
         const userId = req.user._id;
-        const { date } = req.query; // Lấy ngày từ URL (ví dụ: ?date=2026-01-02)
+        
+        // 1. Lấy tham số từ URL
+        const { type, date, page, limit } = req.query;
 
+        // 2. Cấu hình phân trang
+        const pageNumber = parseInt(page) || 1;
+        const pageSize = parseInt(limit) || 10;
+
+        // 3. Tìm user
         const user = await User.findById(userId).populate('searchHistory.wordId');
 
         if (!user) {
             return res.status(404).json({ message: 'User không tồn tại' });
         }
 
-        let historyData = user.searchHistory;
+        // 4. Lấy mảng lịch sử (loại bỏ null và đảo ngược để lấy mới nhất)
+        let allHistory = user.searchHistory
+            .filter(item => item.wordId) 
+            .reverse();
 
-        // --- LOGIC LỌC NGÀY ---
-        if (date) {
-            const filterDate = new Date(date);
+        // 5. LOGIC LỌC NGÀY (Đã sửa lại cho linh hoạt)
+        
+        // Trường hợp 1: Frontend gửi type='today' (hoặc bạn muốn test nhanh trên Postman)
+        if (type === 'today') {
+            const start = new Date();
+            start.setHours(0, 0, 0, 0);
+            const end = new Date();
+            end.setHours(23, 59, 59, 999);
             
-            // Tạo khoảng thời gian từ 00:00:00 đến 23:59:59 của ngày đó
-            const startOfDay = new Date(filterDate.setHours(0, 0, 0, 0));
-            const endOfDay = new Date(filterDate.setHours(23, 59, 59, 999));
+            allHistory = allHistory.filter(item => {
+                const itemDate = new Date(item.actedAt || item.searchedAt);
+                return itemDate >= start && itemDate <= end;
+            });
+        } 
+        // Trường hợp 2: Có tham số 'date' gửi lên (Frontend đang chạy theo cách này)
+        else if (date) { 
+            // date dạng 'YYYY-MM-DD'
+            const targetDate = new Date(date);
+            const start = new Date(targetDate);
+            start.setHours(0, 0, 0, 0);
+            const end = new Date(targetDate);
+            end.setHours(23, 59, 59, 999);
 
-            // Lọc những từ nằm trong khoảng thời gian này
-            historyData = historyData.filter(item => {
-                const itemDate = new Date(item.actedAt || item.searchedAt); // Hỗ trợ cả dữ liệu cũ/mới
-                return itemDate >= startOfDay && itemDate <= endOfDay;
+            allHistory = allHistory.filter(item => {
+                const itemDate = new Date(item.actedAt || item.searchedAt);
+                // So sánh timestamp để chính xác hơn
+                return itemDate.getTime() >= start.getTime() && itemDate.getTime() <= end.getTime();
             });
         }
-        // ----------------------
+        // Trường hợp 3: Không có type, không có date -> Lấy tất cả (Mặc định)
 
+        // 6. TÍNH TOÁN PHÂN TRANG (Cắt mảng trên RAM)
+        const totalResults = allHistory.length;
+        const totalPages = Math.ceil(totalResults / pageSize);
+        
+        // Xử lý trường hợp trang yêu cầu vượt quá tổng số trang (tránh lỗi mảng rỗng không mong muốn)
+        const safePage = pageNumber > totalPages && totalPages > 0 ? totalPages : pageNumber;
+        
+        const startIndex = (safePage - 1) * pageSize;
+        const endIndex = startIndex + pageSize;
+
+        // Cắt dữ liệu
+        const paginatedData = allHistory.slice(startIndex, endIndex);
+
+        // 7. TRẢ VỀ KẾT QUẢ
         res.status(200).json({
             success: true,
-            data: historyData
+            data: paginatedData,       
+            currentPage: safePage,   
+            totalPages: totalPages,    
+            totalResults: totalResults 
         });
 
     } catch (error) {
@@ -89,17 +135,17 @@ router.get('/history', protect, async (req, res) => {
     }
 });
 
-
-
+// ============================================================
+// 3. ROUTE DAILY WORDS (Giữ nguyên)
+// ============================================================
 router.get('/my-daily-words', protect, async (req, res) => {
     try {
         const user = req.user;
         const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
         const now = Date.now();
 
-        // 1. KIỂM TRA THỜI GIAN (LOGIC CHỐNG F5 - Giữ nguyên)
+        // 1. KIỂM TRA THỜI GIAN (LOGIC CHỐNG F5)
         if (user.dailyWords && user.dailyWords.length > 0 && user.dailyWordsTimestamp && (now - user.dailyWordsTimestamp.getTime() < TWENTY_FOUR_HOURS)) {
-
             console.log(`User ${user.username} đang dùng 12 từ cũ (cache).`);
             await user.populate('dailyWords');
             return res.status(200).json(user.dailyWords);
@@ -109,48 +155,30 @@ router.get('/my-daily-words', protect, async (req, res) => {
         console.log(`Đang tạo 12 từ mới cho ${user.username}...`);
 
         let newWords;
-
-        // ===========================================
-        // ===== LOGIC MỚI: KIỂM TRA SỞ THÍCH =====
-        // ===========================================
-
-        // 3. Lấy các thể loại user đã chọn (ví dụ: ['school', 'sports'])
         const userCategories = user.favoriteCategories;
 
         if (userCategories && userCategories.length > 0) {
-            // 3A. NẾU USER CÓ SỞ THÍCH:
             console.log(`Đang tìm 12 từ theo thể loại: ${userCategories.join(', ')}`);
-
-            // Dùng $match để lọc theo thể loại, $sample để lấy ngẫu nhiên
             newWords = await Word.aggregate([
-                { $match: { category: { $in: userCategories } } }, // Lọc
-                { $sample: { size: 12 } }                          // Lấy ngẫu nhiên
+                { $match: { category: { $in: userCategories } } }, 
+                { $sample: { size: 12 } }                          
             ]);
 
-            // (Dự phòng: Nếu các thể loại đó có quá ít từ (hoặc = 0),
-            //  chúng ta quay lại lấy ngẫu nhiên)
             if (newWords.length === 0) {
                 console.log('Không tìm thấy từ theo thể loại, quay về lấy ngẫu nhiên...');
                 newWords = await Word.aggregate([{ $sample: { size: 12 } }]);
             }
-
         } else {
-            // 3B. NẾU USER KHÔNG CÓ SỞ THÍCH: Lấy 12 từ ngẫu nhiên
             console.log('User không có thể loại, lấy 12 từ ngẫu nhiên...');
             newWords = await Word.aggregate([{ $sample: { size: 12 } }]);
         }
-        // ===========================================
-        // ===== HẾT LOGIC MỚI =====
-        // ===========================================
 
         const newWordIds = newWords.map(word => word._id);
 
-        // 4. CẬP NHẬT USER (Giữ nguyên)
         user.dailyWords = newWordIds;
         user.dailyWordsTimestamp = new Date(now);
         await user.save();
 
-        // 5. Trả về 12 từ mới
         res.status(200).json(newWords);
 
     } catch (err) {
@@ -159,22 +187,20 @@ router.get('/my-daily-words', protect, async (req, res) => {
     }
 });
 
-
-// API: POST /api/user/complete-survey
+// ============================================================
+// 4. ROUTE SURVEY (Giữ nguyên)
+// ============================================================
 router.post('/complete-survey', async (req, res) => {
     try {
-        // 1. Lấy ID user (giả sử gửi kèm) và các lựa chọn
-        // (Cách tốt hơn là lấy từ token, nhưng ta sẽ làm sau)
         const { username, categories } = req.body;
 
-        // 2. Tìm user và cập nhật
         const updatedUser = await User.findOneAndUpdate(
-            { username: username }, // Tìm user bằng username
+            { username: username }, 
             {
-                isNewbie: false, // <-- Đổi trạng thái newbie
-                favoriteCategories: categories // <-- Lưu các lựa chọn (sẽ bị lỗi, xem ghi chú)
+                isNewbie: false, 
+                favoriteCategories: categories 
             },
-            { new: true } // Trả về user đã cập nhật
+            { new: true } 
         );
 
         if (!updatedUser) {
@@ -188,7 +214,5 @@ router.post('/complete-survey', async (req, res) => {
         res.status(500).json({ message: 'Lỗi máy chủ' });
     }
 });
-
-
 
 module.exports = router;

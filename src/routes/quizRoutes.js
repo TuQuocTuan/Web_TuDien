@@ -280,42 +280,54 @@ router.post('/submit', protect, async (req, res) => {
   }
 });
 
+// ==========================================
+// API LẤY LỊCH SỬ (CÓ PHÂN TRANG + BỘ LỌC)
+// ==========================================
 router.get('/history', protect, async (req, res) => {
   try {
-    // 1. Lấy tham số từ Frontend gửi lên (?type=...&date=...)
-    const { type, date } = req.query;
+    const { type, date, page, limit } = req.query;
 
-    // 2. Query mặc định: Chỉ lấy bài làm của User đang đăng nhập
+    // 1. Cấu hình phân trang
+    const pageNumber = parseInt(page) || 1; // Mặc định trang 1
+    const pageSize = parseInt(limit) || 10; // Mặc định 10 dòng/trang
+    const skip = (pageNumber - 1) * pageSize;
+
+    // 2. Query cơ bản
     let query = { user: req.user.id };
 
-    // 3. Xử lý logic lọc
+    // 3. Logic bộ lọc (Giữ nguyên như cũ)
     if (type === 'today') {
-      // Lấy từ 00:00:00 đến 23:59:59 của HÔM NAY
       const start = new Date();
       start.setHours(0, 0, 0, 0);
-      
       const end = new Date();
       end.setHours(23, 59, 59, 999);
-      
-      query.createdAt = { $gte: start, $lte: end };
-    } 
-    else if (type === 'date' && date) {
-      // Lấy từ 00:00:00 đến 23:59:59 của NGÀY ĐƯỢC CHỌN
-      // date gửi lên dạng string "YYYY-MM-DD"
-      const start = new Date(date);
-      start.setHours(0, 0, 0, 0);
-
-      const end = new Date(date);
-      end.setHours(23, 59, 59, 999);
-
       query.createdAt = { $gte: start, $lte: end };
     }
-    // Nếu type === 'all' hoặc không có type -> Giữ nguyên query mặc định (Lấy tất cả)
+    else if (type === 'date' && date) {
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+      query.createdAt = { $gte: start, $lte: end };
+    }
 
-    // 4. Gọi Database
-    const results = await Result.find(query).sort({ createdAt: -1 });
-    
-    res.status(200).json(results);
+    // 4. Đếm tổng số bản ghi (Để tính totalPages)
+    const totalDocs = await Result.countDocuments(query);
+    const totalPages = Math.ceil(totalDocs / pageSize);
+
+    // 5. Lấy dữ liệu phân trang
+    const results = await Result.find(query)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(pageSize);
+
+    // 6. Trả về cấu trúc mới
+    res.status(200).json({
+      data: results,       // Danh sách kết quả
+      currentPage: pageNumber,
+      totalPages: totalPages,
+      totalResults: totalDocs
+    });
 
   } catch (err) {
     console.error("Lỗi lấy lịch sử:", err);

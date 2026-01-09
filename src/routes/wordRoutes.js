@@ -12,15 +12,26 @@ const User = require('../models/userModel');
 // ===========================================
 
 // Route: Lấy danh sách từ (giữ nguyên)
+// ===========================================
+// 1. CÁC ROUTE TĨNH
+// ===========================================
+
+// Route: Lấy danh sách từ (Đã nâng cấp phân trang chuẩn)
 router.get('/', async (req, res) => {
     try {
         let filter = {};
-        const { type, search, tag, sort, page } = req.query;
-        const limit = 20; 
-        const skip = ((parseInt(page) || 1) - 1) * limit;
+        // 1. Lấy thêm tham số 'limit' từ query
+        const { type, search, tag, sort, page, limit } = req.query;
 
-        if (tag) filter.tags = tag;
-        else if (search) {
+        // 2. Cấu hình phân trang
+        const pageNumber = parseInt(page) || 1;      // Mặc định trang 1
+        const pageSize = parseInt(limit) || 10;      // Mặc định 10 từ/trang (hoặc lấy từ tham số gửi lên)
+        const skip = (pageNumber - 1) * pageSize;
+
+        // 3. Xử lý bộ lọc (Giữ nguyên logic cũ)
+        if (tag) {
+            filter.tags = tag;
+        } else if (search) {
             const s = search.trim();
             if (s.startsWith('#')) {
                 const t = s.substring(1).trim().toLowerCase();
@@ -30,20 +41,39 @@ router.get('/', async (req, res) => {
                 filter.$or = [{ word: r }, { translation: r }];
             }
         }
-        if (type && type !== 'all') filter.type = type;
 
-        let sortOptions = { word: 1 };
+        if (type && type !== 'all') {
+            filter.type = type;
+        }
+
+        // 4. Xử lý sắp xếp (Giữ nguyên logic cũ)
+        let sortOptions = { word: 1 }; // Mặc định A-Z
         if (sort === 'newest') sortOptions = { createdAt: -1 };
 
+        // 5. Đếm tổng số từ (Để tính totalPages)
         const totalWords = await Word.countDocuments(filter);
-        const words = await Word.find(filter).sort(sortOptions).skip(skip).limit(limit);
+        const totalPages = Math.ceil(totalWords / pageSize);
 
-        res.status(200).json({ words, totalPages: Math.ceil(totalWords / limit) });
+        // 6. Lấy dữ liệu phân trang
+        const words = await Word.find(filter)
+            .sort(sortOptions)
+            .skip(skip)
+            .limit(pageSize);
+
+        // 7. Trả về kết quả (Đầy đủ thông tin như bên History)
+        res.status(200).json({
+            words: words,              // Danh sách từ
+            currentPage: pageNumber,   // Trang hiện tại (Quan trọng để UI tô màu nút)
+            totalPages: totalPages,    // Tổng số trang
+            totalResults: totalWords,  // Tổng số từ tìm thấy
+            limit: pageSize            // Số lượng từ mỗi trang
+        });
+
     } catch (err) {
+        console.error("Lỗi lấy danh sách từ:", err);
         res.status(500).json({ message: 'Lỗi server' });
     }
 });
-
 // Route: Suggest Search (giữ nguyên)
 router.get('/suggest', async (req, res) => {
     try {
@@ -79,7 +109,7 @@ router.get('/recommendations', protect, async (req, res) => {
         const user = await User.findById(userId).populate('searchHistory.wordId');
 
         // --- [CODE MỚI] LOGIC GIỚI HẠN THỜI GIAN ---
-        
+
         // Tạo mốc thời gian: Lấy thời điểm hiện tại trừ đi 3 ngày
         const daysLimit = 3;
         const pastDate = new Date();
@@ -119,10 +149,12 @@ router.get('/recommendations', protect, async (req, res) => {
 
         if (userInterestTags.length > 0) {
             recommendations = await Word.aggregate([
-                { $match: { 
-                    tags: { $in: userInterestTags },  // Có tag liên quan đến 3 ngày gần đây
-                    _id: { $nin: searchWordIds }      // Không trùng từ vừa tra
-                }},
+                {
+                    $match: {
+                        tags: { $in: userInterestTags },  // Có tag liên quan đến 3 ngày gần đây
+                        _id: { $nin: searchWordIds }      // Không trùng từ vừa tra
+                    }
+                },
                 { $sample: { size: 12 } }
             ]);
         }
@@ -130,7 +162,7 @@ router.get('/recommendations', protect, async (req, res) => {
         // 6. Nếu thiếu thì Random bù vào
         if (recommendations.length < 12) {
             const countNeeded = 12 - recommendations.length;
-            
+
             // Lấy thêm ID của recommendations hiện tại để tránh random trúng nó
             const currentRecommendIds = recommendations.map(r => r._id);
             const excludeIds = [...searchWordIds, ...currentRecommendIds];
@@ -176,7 +208,7 @@ router.delete('/:wordId/tags', protect, async (req, res) => {
 
         // Nếu độ dài không đổi nghĩa là không tìm thấy tag đó để xóa
         if (word.tags.length === oldLength) {
-             return res.status(400).json({ message: 'Tag này không tồn tại trong từ' });
+            return res.status(400).json({ message: 'Tag này không tồn tại trong từ' });
         }
 
         await word.save();
@@ -197,17 +229,17 @@ router.get('/:param', async (req, res) => {
         let word = null;
         if (mongoose.Types.ObjectId.isValid(param)) word = await Word.findById(param);
         if (!word) word = await Word.findOne({ word: { $regex: new RegExp(`^${param}$`, 'i') } });
-        
+
         if (!word) return res.status(404).json({ message: 'Không tìm thấy' });
-        
+
         // [QUAN TRỌNG] LƯU LỊCH SỬ TÌM KIẾM NẾU NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP
         // Đoạn này giúp API /recommendations học được user thích gì
-        if (req.user) { 
+        if (req.user) {
             // Lưu ý: Middleware protect không bắt buộc ở route này, 
             // nên bạn cần check req.user từ middleware optionalAuth (nếu có)
             // Hoặc xử lý ở client gửi API riêng để lưu history.
         }
-        
+
         res.json(word);
     } catch (err) {
         res.status(500).json({ message: 'Lỗi server' });
