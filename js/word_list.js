@@ -74,46 +74,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // HÀM 2: VẼ PHÂN TRANG
+    // HÀM 2: VẼ PHÂN TRANG (Phiên bản an toàn, chống lỗi NaN)
     function renderPagination(totalPages, currentPage) {
         paginationContainer.innerHTML = '';
-        if (totalPages <= 1) return;
-        const prevButton = createPageLink('<i class="fas fa-angle-left"></i>', currentPage - 1);
-        if (currentPage === 1) prevButton.classList.add('disabled');
+
+        // 1. Ép kiểu an toàn để tránh lỗi cộng chuỗi và NaN
+        let total = parseInt(totalPages);
+        let current = parseInt(currentPage);
+
+        if (isNaN(total)) total = 0;
+        if (isNaN(current)) current = 1;
+
+        if (total <= 1) return;
+
+        // 2. Nút Previous
+        const prevButton = createPageLink('<i class="fas fa-angle-left"></i>', current - 1);
+        if (current === 1) prevButton.classList.add('disabled');
         paginationContainer.appendChild(prevButton);
+
+        // 3. Tính toán các trang cần hiển thị
         const pagesToShow = new Set();
-        pagesToShow.add(1); pagesToShow.add(totalPages); pagesToShow.add(currentPage);
-        if (currentPage > 1) pagesToShow.add(currentPage - 1);
-        if (currentPage < totalPages) pagesToShow.add(currentPage + 1);
-        if (currentPage > 3) pagesToShow.add(currentPage - 2);
-        if (currentPage < totalPages - 2) pagesToShow.add(currentPage + 2);
-        const sortedPages = Array.from(pagesToShow).sort((a, b) => a - b);
+        pagesToShow.add(1);          // Luôn hiện trang 1
+        pagesToShow.add(total);      // Luôn hiện trang cuối
+        pagesToShow.add(current);    // Luôn hiện trang hiện tại
+
+        if (current > 1) pagesToShow.add(current - 1);
+        if (current < total) pagesToShow.add(current + 1);
+        if (current > 3) pagesToShow.add(current - 2);
+        if (current < total - 2) pagesToShow.add(current + 2);
+
+        // 4. Lọc và sắp xếp
+        const sortedPages = Array.from(pagesToShow)
+            .filter(page => page > 0 && page <= total)
+            .sort((a, b) => a - b);
+
+        // 5. Vẽ các nút số
         let lastPage = 0;
         sortedPages.forEach(page => {
             if (lastPage !== 0 && page - lastPage > 1) {
                 paginationContainer.appendChild(createPageLink('...', null, true));
             }
-            paginationContainer.appendChild(createPageLink(page, page, false, currentPage));
+            // Truyền current đã ép kiểu vào
+            paginationContainer.appendChild(createPageLink(page, page, false, current));
             lastPage = page;
         });
-        const nextButton = createPageLink('<i class="fas fa-angle-right"></i>', currentPage + 1);
-        if (currentPage === totalPages) nextButton.classList.add('disabled');
+
+        // 6. Nút Next
+        const nextButton = createPageLink('<i class="fas fa-angle-right"></i>', current + 1);
+        if (current === total) nextButton.classList.add('disabled');
         paginationContainer.appendChild(nextButton);
     }
 
-    // HÀM 3: HÀM TẠO NÚT
+    // HÀM 3: HÀM TẠO NÚT (Bạn đang bị thiếu hàm này nên nó báo lỗi)
     function createPageLink(pageText, pageNumber, isDots = false, currentPage = 0) {
         const pageLink = document.createElement('a');
         pageLink.href = '#';
         pageLink.className = 'page-link';
         pageLink.innerHTML = pageText;
+
         if (isDots) {
             pageLink.classList.add('dots');
         } else {
+            // So sánh pageNumber và currentPage (đã ép kiểu số)
             if (pageNumber === currentPage) {
                 pageLink.classList.add('active');
             }
+
             pageLink.addEventListener('click', (e) => {
                 e.preventDefault();
+                // Chỉ gọi API nếu có pageNumber và nút không bị disable
                 if (pageNumber && !pageLink.classList.contains('disabled')) {
                     fetchAndRenderWords(pageNumber);
                 }
@@ -121,17 +150,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return pageLink;
     }
-
     // (ĐÃ XÓA HÀM attachAudioListeners() VÌ DÙNG EVENT DELEGATION BÊN DƯỚI)
 
     // HÀM 4: LẤY DỮ LIỆU TỪ API (Hàm chính)
     async function fetchAndRenderWords(page = 1) {
         const queryParts = [];
         const currentParams = new URLSearchParams(window.location.search);
-        
+
         // 1. Ưu tiên lấy tag từ URL (nếu bấm từ trang chi tiết)
         const currentTag = currentParams.get('tag');
-        
+
         // 2. Lấy nội dung thanh tìm kiếm
         const searchQuery = searchInputEl.value.trim();
 
@@ -140,15 +168,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Trường hợp 1: Có ?tag= trên URL (do bấm link)
             queryParts.push(`tag=${encodeURIComponent(currentTag)}`);
             queryParts.push(`page=${page}`);
-            
+
             // Cập nhật giao diện cho khớp
             if (filterTitleEl) filterTitleEl.textContent = `Tag: "${currentTag}"`;
             // Có thể hiển thị dấu # trong ô input cho đẹp
             if (searchInputEl && !searchInputEl.value) searchInputEl.value = `#${currentTag}`;
-        } 
+        }
         else {
             // Trường hợp 2: Tìm kiếm bình thường (Gõ chữ hoặc gõ #tag)
-            
+
             // Reset tiêu đề bộ lọc
             if (filterTitleEl) filterTitleEl.textContent = 'Bộ lọc';
             if (sortSelectEl) sortSelectEl.disabled = false;
@@ -167,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (radio.checked && radio.value !== 'all') typeFilter = radio.value;
             });
             if (typeFilter) queryParts.push(`type=${typeFilter}`);
-            
+
             queryParts.push(`sort=${sortSelectEl.value}`);
             queryParts.push(`page=${page}`);
         }
@@ -181,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error('Lỗi mạng');
             const data = await response.json();
             renderWords(data.words);
-            renderPagination(data.totalPages, data.currentPage);
+            renderPagination(data.totalPages, page);
         } catch (err) {
             console.error('Lỗi khi tải từ:', err);
             vocabListContainer.innerHTML = '<p style="padding: 1rem; color: red;">Lỗi tải từ vựng.</p>';
@@ -206,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
                 fetchAndRenderWords(1);
-            }, 300); 
+            }, 300);
         });
 
         // Hỗ trợ Enter hoặc khi focus out

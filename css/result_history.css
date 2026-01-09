@@ -402,3 +402,18 @@ main#content {
         opacity: 1;
     }
 }
+
+.filter-btn {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    background: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.filter-btn.active-filter {
+    background-color: #007bff;
+    /* Màu xanh chủ đạo */
+    color: white;
+    border-color: #007bff;
+}

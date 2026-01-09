@@ -17,26 +17,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    isNewbie: {
-        type: Boolean,
-        default: true
-    },
-    favoriteCategories: [{
-        type: String // Lưu trữ các thể loại yêu thích của user
-    }],
+    // Đã xóa: isNewbie
+    // Đã xóa: favoriteCategories
+
     passwordResetToken: {
         type: String
     },
     passwordResetExpires: {
         type: Date
-    }, 
-    dailyWords: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Word'
-    }],
-    dailyWordsTimestamp: {
-        type: Date
     },
+    
+    // Đã xóa: dailyWords
+    // Đã xóa: dailyWordsTimestamp
 
     // === PHẦN THÊM MỚI BẮT ĐẦU TỪ ĐÂY ===
     searchHistory: [{

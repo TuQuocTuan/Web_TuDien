@@ -282,9 +282,43 @@ router.post('/submit', protect, async (req, res) => {
 
 router.get('/history', protect, async (req, res) => {
   try {
-    const results = await Result.find({ user: req.user.id }).sort({ createdAt: -1 });
+    // 1. Lấy tham số từ Frontend gửi lên (?type=...&date=...)
+    const { type, date } = req.query;
+
+    // 2. Query mặc định: Chỉ lấy bài làm của User đang đăng nhập
+    let query = { user: req.user.id };
+
+    // 3. Xử lý logic lọc
+    if (type === 'today') {
+      // Lấy từ 00:00:00 đến 23:59:59 của HÔM NAY
+      const start = new Date();
+      start.setHours(0, 0, 0, 0);
+      
+      const end = new Date();
+      end.setHours(23, 59, 59, 999);
+      
+      query.createdAt = { $gte: start, $lte: end };
+    } 
+    else if (type === 'date' && date) {
+      // Lấy từ 00:00:00 đến 23:59:59 của NGÀY ĐƯỢC CHỌN
+      // date gửi lên dạng string "YYYY-MM-DD"
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+
+      query.createdAt = { $gte: start, $lte: end };
+    }
+    // Nếu type === 'all' hoặc không có type -> Giữ nguyên query mặc định (Lấy tất cả)
+
+    // 4. Gọi Database
+    const results = await Result.find(query).sort({ createdAt: -1 });
+    
     res.status(200).json(results);
+
   } catch (err) {
+    console.error("Lỗi lấy lịch sử:", err);
     res.status(500).json({ message: 'Lỗi server.' });
   }
 });

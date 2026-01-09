@@ -7,7 +7,7 @@ const resultSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    // Thể loại (ví dụ: "school", "sports")
+    // Tên album
     category: {
         type: String,
         required: true

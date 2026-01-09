@@ -37,32 +37,23 @@
         <div class="history-layout-container">
 
             <aside class="filter-sidebar">
-                <h3><i class="fas fa-filter"></i> Lọc theo ngày</h3>
+                <h3 style="margin-bottom: 15px; font-size: 1.2rem; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+                    Bộ lọc</h3>
 
-                <div class="filter-group">
-                    <div class="filter-option">
-                        <input type="radio" id="filter-all" name="filter-date" value="all" checked>
-                        <label for="filter-all">Tất cả</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="radio" id="filter-today" name="filter-date" value="today">
-                        <label for="filter-today">Hôm nay</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="radio" id="filter-yesterday" name="filter-date" value="yesterday">
-                        <label for="filter-yesterday">1 ngày trước</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="radio" id="filter-7days" name="filter-date" value="7days">
-                        <label for="filter-7days">7 ngày trước</label>
-                    </div>
-                    <div class="filter-option">
-                        <input type="radio" id="filter-30days" name="filter-date" value="30days">
-                        <label for="filter-30days">30 ngày trước</label>
-                    </div>
+                <div class="filter-actions" style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button id="btn-filter-all" class="filter-btn active-filter">Tất cả</button>
+                    <button id="btn-filter-today" class="filter-btn">Hôm nay</button>
                 </div>
 
-                <button class="clear-history-btn">
+                <div class="date-input-wrapper">
+                    <label for="date-picker" style="display:block; margin-bottom: 5px; font-weight: 500;">Hoặc chọn
+                        ngày:</label>
+                    <input type="date" id="date-picker" class="form-control"
+                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+
+                <button class="clear-history-btn"
+                    style="margin-top: 30px; width: 100%; padding: 10px; background: #ff4d4d; color: white; border: none; border-radius: 4px; cursor: pointer;">
                     <i class="fas fa-trash-alt"></i> Xóa lịch sử
                 </button>
             </aside>
