@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const wordSchema = new mongoose.Schema({
-    // 1. CÁC TRƯỜNG CƠ BẢN (Giữ nguyên)
+    // 1. CÁC TRƯỜNG CƠ BẢN 
     word: {
         type: String,
         required: true,
@@ -35,30 +35,6 @@ const wordSchema = new mongoose.Schema({
         lowercase: true
     }],
 
-    // // 2. [MỚI] TRƯỜNG QUAN HỆ TỪ VỰNG (Phục vụ gợi ý Context-based)
-    // related_words: {
-    //     // Từ đồng nghĩa (Ví dụ: Beautiful -> [Pretty, Gorgeous])
-    //     synonyms: [{
-    //         type: String,
-    //         trim: true
-    //     }],
-    //     // Từ trái nghĩa (Ví dụ: Beautiful -> [Ugly])
-    //     antonyms: [{
-    //         type: String,
-    //         trim: true
-    //     }],
-    //     // Từ cùng gia đình (Word Family) (Ví dụ: Beauty (n), Beautifully (adv))
-    //     family: [{
-    //         type: String,
-    //         trim: true
-    //     }]
-    // },
-
-    // 3. CÁC TRƯỜNG KHÁC (Giữ nguyên logic cũ của bạn)
-    // dailyWords: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Word'
-    // }],
     dailyWordsTimestamp: {
         type: Date
     }

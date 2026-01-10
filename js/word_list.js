@@ -183,8 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (filterGroupContainer) filterGroupContainer.style.display = 'block';
 
             // QUAN TRỌNG: Gửi tham số 'search' lên server
-            // Dù người dùng gõ "apple" hay "#toeic", ta cứ gửi y nguyên.
-            // encodeURIComponent sẽ biến dấu # thành %23 để không lỗi URL.
             if (searchQuery) {
                 queryParts.push(`search=${encodeURIComponent(searchQuery)}`);
             }

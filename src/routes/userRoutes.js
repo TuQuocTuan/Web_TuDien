@@ -45,11 +45,6 @@ router.post('/add-history', protect, async (req, res) => {
     }
 });
 
-// ============================================================
-// 2. ROUTE XEM LỊCH SỬ (CÓ PHÂN TRANG + BỘ LỌC)
-// URL: GET /api/user/history?page=1&limit=5&type=today
-// ============================================================
-// ============================================================
 // 2. ROUTE XEM LỊCH SỬ (ĐÃ SỬA LOGIC LỌC NGÀY)
 // URL: GET /api/user/history?page=1&limit=5&date=2025-01-09
 // ============================================================
@@ -71,14 +66,14 @@ router.get('/history', protect, async (req, res) => {
             return res.status(404).json({ message: 'User không tồn tại' });
         }
 
-        // 4. Lấy mảng lịch sử (loại bỏ null và đảo ngược để lấy mới nhất)
+        // 4. Lấy mảng lịch sử 
         let allHistory = user.searchHistory
             .filter(item => item.wordId) 
             .reverse();
 
-        // 5. LOGIC LỌC NGÀY (Đã sửa lại cho linh hoạt)
+        // 5. LOGIC LỌC NGÀY 
         
-        // Trường hợp 1: Frontend gửi type='today' (hoặc bạn muốn test nhanh trên Postman)
+        // Trường hợp 1: Frontend gửi type='today' 
         if (type === 'today') {
             const start = new Date();
             start.setHours(0, 0, 0, 0);
@@ -90,7 +85,7 @@ router.get('/history', protect, async (req, res) => {
                 return itemDate >= start && itemDate <= end;
             });
         } 
-        // Trường hợp 2: Có tham số 'date' gửi lên (Frontend đang chạy theo cách này)
+        // Trường hợp 2: Có tham số 'date' gửi lên 
         else if (date) { 
             // date dạng 'YYYY-MM-DD'
             const targetDate = new Date(date);
@@ -136,7 +131,7 @@ router.get('/history', protect, async (req, res) => {
 });
 
 // ============================================================
-// 3. ROUTE DAILY WORDS (Giữ nguyên)
+// 3. ROUTE DAILY WORDS 
 // ============================================================
 router.get('/my-daily-words', protect, async (req, res) => {
     try {

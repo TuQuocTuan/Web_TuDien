@@ -52,7 +52,6 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// (Sau này chúng ta sẽ thêm logic cho /login ở đây)
 router.post('/login', async (req, res) => {
     // 1. Yêu cầu gói 'jsonwebtoken'
     const jwt = require('jsonwebtoken');

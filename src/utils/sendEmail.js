@@ -1,7 +1,7 @@
 // src/utils/sendEmail.js
 const nodemailer = require('nodemailer');
 
-// 1. Cấu hình "Người vận chuyển" (Transporter)
+// 1. Cấu hình (Transporter)
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Dùng dịch vụ Gmail
     auth: {
@@ -37,9 +37,9 @@ const sendWelcomeEmail = async (userEmail, username) => {
     } catch (err) {
         console.error('Lỗi khi gửi email:', err.message);
     }
-}; // <-- DẤU NGOẶC KẾT THÚC CỦA sendWelcomeEmail (ĐÃ SỬA)
+}; // <-- DẤU NGOẶC KẾT THÚC CỦA sendWelcomeEmail 
 
-// 3. Tạo hàm gửi mail Reset (Bây giờ đã nằm riêng)
+// 3. Tạo hàm gửi mail Reset
 const sendResetEmail = async (userEmail, resetURL) => {
     try {
         const mailOptions = {
@@ -69,7 +69,6 @@ const sendResetEmail = async (userEmail, resetURL) => {
     }
 };
 
-// 4. Xuất hàm này ra để file khác dùng (Bây giờ đã đúng)
 module.exports = { 
     sendWelcomeEmail, 
     sendResetEmail 

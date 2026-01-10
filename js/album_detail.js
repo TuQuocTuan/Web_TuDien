@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    // === 6. HÀM VẼ GIAO DIỆN (GIỐNG HỆT ẢNH BẠN GỬI) ===
+    // === 6. HÀM VẼ GIAO DIỆN===
     function renderList(words) {
         listContainer.innerHTML = '';
 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     window.removeWordFromAlbum = async function (wordId) {
-        // 1. Hỏi xác nhận cho chắc
+        // 1. Hỏi xác nhận 
         if (!confirm('Bạn có chắc muốn xóa từ này khỏi Album không?')) return;
 
         const albumId = new URLSearchParams(window.location.search).get('albumId');
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 let currentCount = parseInt(countEl.innerText);
                 countEl.innerText = Math.max(0, currentCount - 1);
 
-                // alert('Đã xóa từ thành công!'); // Có thể bỏ nếu thấy phiền
+                // alert('Đã xóa từ thành công!');
             } else {
                 alert(data.message || 'Lỗi khi xóa từ');
             }

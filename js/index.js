@@ -126,14 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!grid) return;
 
         try {
-            // --- SỬA LỖI Ở ĐÂY: THÊM HEADER AUTHENTICATION ---
             // Gọi API lấy từ gợi ý (recommendations) thay vì my-daily-words cũ nếu muốn dùng logic mới
-            // Hoặc dùng route cũ nếu bạn chưa đổi tên route
             const response = await fetch('/api/words/recommendations', { 
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` // <--- QUAN TRỌNG NHẤT
+                    'Authorization': `Bearer ${token}` 
                 }
             });
 
@@ -166,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         words.forEach(word => {
             const card = document.createElement('div');
-            card.className = 'word-card'; // Đảm bảo bạn có CSS cho class này
+            card.className = 'word-card'; 
             
             // Logic click vào thẻ -> chuyển trang chi tiết
             card.onclick = () => {

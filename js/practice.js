@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const counterEl = document.getElementById('question-counter');
     const progressBar = document.getElementById('progress-bar');
 
-    // [MỚI] Thêm element hiển thị giải thích (cần thêm thẻ này vào HTML nếu chưa có)
+    // Thêm element hiển thị giải thích (cần thêm thẻ này vào HTML nếu chưa có)
     // Nếu trong HTML không có div id='explanation-area' thì code sẽ tự tạo
     let explanationEl = document.getElementById('explanation-area');
     if (!explanationEl) {
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Biến lưu lịch sử làm bài
     let userAnswersLog = [];
 
-    // --- 1. HÀM CHUẨN HÓA DỮ LIỆU (Được làm gọn và an toàn hơn) ---
+    // --- 1. HÀM CHUẨN HÓA DỮ LIỆU  ---
     function normalizeQuestion(raw) {
         const q = {};
         q.raw = raw;

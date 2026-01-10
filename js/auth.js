@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </div>
 `;
 
-    // "Tiêm" HTML này vào cuối trang
+    // HTML này vào cuối trang
     document.body.insertAdjacentHTML('beforeend', modalHTML);
 
     // Lấy các phần tử của modal vừa tạo

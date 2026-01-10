@@ -308,6 +308,5 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cancelAddBtn) cancelAddBtn.addEventListener('click', () => addToAlbumModal.style.display = 'none');
     if (saveToAlbumBtn) saveToAlbumBtn.addEventListener('click', executeSaveToAlbum);
 
-    // 10. Chạy
     fetchWordDetails();
 });

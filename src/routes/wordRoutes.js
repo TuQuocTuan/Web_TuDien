@@ -7,11 +7,7 @@ const SearchHistory = require('../models/searchHistoryModel.js'); // Bắt buộ
 const { protect } = require('../middleware/authMiddleware.js');
 const User = require('../models/userModel');
 
-// ===========================================
-// 1. CÁC ROUTE TĨNH
-// ===========================================
-
-// Route: Lấy danh sách từ (giữ nguyên)
+// Route: Lấy danh sách từ 
 // ===========================================
 // 1. CÁC ROUTE TĨNH
 // ===========================================
@@ -128,9 +124,6 @@ router.get('/recommendations', protect, async (req, res) => {
             .filter(word => word !== null);
 
         // 3. Lấy ID để loại trừ (Tránh gợi ý lại những từ vừa tra 3 ngày qua)
-        // Lưu ý: Nếu bạn muốn KHÔNG BAO GIỜ gợi ý lại từ đã tra (dù tra 1 năm trước),
-        // thì bước này bạn nên lấy từ user.searchHistory gốc thay vì recentHistory.
-        // Ở đây mình để theo recentHistory cho đúng flow "tươi mới".
         const searchWordIds = historyWords.map(w => w._id);
 
         // 4. Tổng hợp Tags (Chỉ từ những từ tra trong 3 ngày qua) -> "Sở thích tươi mới"
@@ -221,7 +214,7 @@ router.delete('/:wordId/tags', protect, async (req, res) => {
     }
 });
 // ===========================================
-// ROUTE ĐỘNG (ĐỂ CUỐI CÙNG)
+// ROUTE ĐỘNG 
 // ===========================================
 router.get('/:param', async (req, res) => {
     try {
@@ -235,9 +228,6 @@ router.get('/:param', async (req, res) => {
         // [QUAN TRỌNG] LƯU LỊCH SỬ TÌM KIẾM NẾU NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP
         // Đoạn này giúp API /recommendations học được user thích gì
         if (req.user) {
-            // Lưu ý: Middleware protect không bắt buộc ở route này, 
-            // nên bạn cần check req.user từ middleware optionalAuth (nếu có)
-            // Hoặc xử lý ở client gửi API riêng để lưu history.
         }
 
         res.json(word);
