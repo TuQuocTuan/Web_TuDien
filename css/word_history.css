@@ -348,3 +348,45 @@ main#content {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* Container chứa dropdown */
+.user-menu-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Nội dung Dropdown (ẩn mặc định) */
+.user-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+/* Các link bên trong dropdown */
+.user-dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.user-dropdown-content a:hover {
+    background-color: #f1f1f1;
+}
+
+/* Class hiển thị khi click */
+.user-dropdown-content.show {
+    display: block;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #ddd;
+    margin: 5px 0;
+}
