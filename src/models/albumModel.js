@@ -7,7 +7,6 @@ const albumSchema = new mongoose.Schema({
         trim: true,
         lowercase: true // (Tự động đổi "Sports" -> "sports" để làm tag)
     },
-    // (ĐÃ XÓA KHỐI DESCRIPTION)
     user: {
         type: mongoose.Schema.ObjectId,
         ref: 'User', 

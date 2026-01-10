@@ -23,7 +23,7 @@ const resultSchema = new mongoose.Schema({
         required: true
     },
     
-    // --- [MỚI] THÊM PHẦN NÀY ĐỂ LƯU CHI TIẾT ---
+    // --- PHẦN NÀY ĐỂ LƯU CHI TIẾT ---
     questions: [
         {
             questionText: { type: String, required: true }, // Nội dung câu hỏi
