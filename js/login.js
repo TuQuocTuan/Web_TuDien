@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        // SỬA LẠI: Lấy 'username' thay vì 'email'
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
 
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                // SỬA LẠI: Gửi 'username' thay vì 'email'
                 body: JSON.stringify({
                     username: username,
                     password: password

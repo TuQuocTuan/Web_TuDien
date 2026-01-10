@@ -66,7 +66,7 @@ router.post('/login', async (req, res) => {
 
         // 4. Nếu không tìm thấy user -> Báo lỗi
         if (!user) {
-            return res.status(404).json({ message: 'Email này không tồn tại.' });
+            return res.status(404).json({ message: 'Username này không tồn tại.' });
         }
 
         // 5. So sánh mật khẩu
