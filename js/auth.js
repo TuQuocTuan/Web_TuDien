@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     else {
         // ===================================
-        // 2. NẾU CHƯA ĐĂNG NHẬP (Code mới)
+        // 2. NẾU CHƯA ĐĂNG NHẬP
         // ===================================
         // Giữ nguyên 2 nút "Đăng nhập" / "Đăng ký"
         // Và tìm tất cả các link "riêng tư"
