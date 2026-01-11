@@ -26,6 +26,11 @@ body {
     background-color: var(--light-gray);
     color: var(--text-dark);
     line-height: 1.6;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Chiều cao tối thiểu = 100% màn hình */
+    margin: 0;         /* Đảm bảo không bị cuộn thừa */
 }
 
 /* =================================
@@ -34,6 +39,8 @@ body {
 main#content {
     width: 100%;
     padding: 3rem 0;
+
+    flex: 1; /* Tự động giãn ra để lấp đầy khoảng trống, đẩy footer xuống */
 }
 
 .history-layout-container {
